@@ -71,32 +71,46 @@ def explosion_sounds():
     if explosion_picker == 1:
         explosion2.play()
 
-def saveObjects(sectornum, object_list):
-    for i in range(len(object_list)):
-        if isinstance(object_list[i], float):
-            object_list[i] = round(object_list[i], 1)
-    if len(object_list) >= 1000:
-        object_list = object_list[:1000]
+def saveObjects(sectornum, save_list, width, height):
+    for i in range(len(save_list)):
+        if isinstance(save_list[i], float):
+            save_list[i] = round(save_list[i], 1)
+        if len(save_list) >= 8:
+            # turning x and y coords into float percentages
+            if i % 8 == 0:
+                save_list[i] = round(save_list[i]/width, 3)
+            if i % 8 == 1:
+                save_list[i] = round(save_list[i]/height, 3)
+                        
+    if len(save_list) >= 1000:
+        save_list = save_list[:1000]
         print("Error: overflow in Main/saveObjects")
     savelist = []
-    listhelper = int(len(object_list)/200) #200 = entities per level
+    listhelper = int(len(save_list)/200) #200 = entities per level
     for i in range(listhelper):
-        savelist.append(object_list[:200])
-        object_list = object_list[200:]
-    savelist.append(object_list)    
+        savelist.append(save_list[:200])
+        save_list = save_list[200:]
+    savelist.append(save_list)    
     listhelper = 5- len(savelist)
     for i in range(listhelper):
         savelist.append([])    
     for i in range(5):
         filehelper.set(savelist[i], sectornum*5+i)
 
-def getObjects(sectornum):
+def getObjects(sectornum, width, height):
     object_list = []
     for i in range(5):
         object_list += filehelper.get(sectornum*5+i)
     if object_list != []:
         while object_list[-1] == '':
-            object_list.pop()        
+            object_list.pop()
+    # turning x and y float percentages back into coords
+    if len(object_list) >= 8:
+        for i in range(len(object_list)):
+            if i % 8 == 0:
+                object_list[i] = round(object_list[i]*width)     
+            if i % 8 == 1:
+                object_list[i] = round(object_list[i]*height)
     return object_list
 
 def drawSector(location, number):
@@ -224,7 +238,7 @@ def main():
         if status == "pauseinit":
             pygame.mouse.set_visible(True)
             pauseinitUI(screen)
-            saveObjects(sectornum, object_list)
+            saveObjects(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
@@ -317,7 +331,7 @@ def main():
 
         if status == "gameinit":       
             # changing variable setup
-            object_list = getObjects(sectornum)
+            object_list = getObjects(sectornum, width, height)
             rotation = 90
             serialnumber = 2
             extratime = extratime_setter
@@ -416,12 +430,12 @@ def main():
                             pygame.draw.rect(screen, (120,22,78), portalcoords[i])
                             if portalcollision(object_list, portalcoords[i]) and lasttransit > 150:
                                 if sectorGeneration(sectornum):
-                                    saveObjects(sectornum, [-1])
+                                    saveObjects(sectornum, [-1], width, height)
                                 else:
-                                    saveObjects(sectornum, object_list)
+                                    saveObjects(sectornum, object_list[:], width, height)
                                 sectornum = destinations[i]
                                 lasttransit = 0
-                                new_objects = getObjects(sectornum)
+                                new_objects = getObjects(sectornum, width, height)
                                 if new_objects[0] == "-1":
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
