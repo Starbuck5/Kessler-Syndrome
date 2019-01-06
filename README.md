@@ -1,4 +1,5 @@
-# Kessler-SyndromeJust a project my friend and I are working on.
+# Kessler-Syndrome
+Just a project my friend and I are working on.
 
 Game idea:
 Protagonist framed for crimes on Earth, exiled to space to collect orbital debris.
