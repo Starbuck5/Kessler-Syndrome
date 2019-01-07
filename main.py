@@ -145,7 +145,7 @@ def main():
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
-    specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 4)]
+    specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
 
     #scaling
