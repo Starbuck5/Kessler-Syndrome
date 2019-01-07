@@ -469,32 +469,38 @@ def main():
                     hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 0,0]
                     
                     if object_list[4 + (object_number1 * 8)] == 1: #main ship
-                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 60, 60]
+                        hitBox1 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
                     elif object_list[4 + (object_number1 * 8)] == 2 or object_list[4 + (object_number1 * 8)] == 8: #shots
                         hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 5, 5]
                     elif object_list[4 + (object_number1 * 8)] == 6: #aliens
                         hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 60, 60]
-                    elif object_list[4 + (object_number1 * 8)] == 0:
+                    elif object_list[4 + (object_number1 * 8)] == 0: #zvezda
                         hitBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)],specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
                     elif 9 < object_list[4 + (object_number1 * 8)] < 40: #pixel things
                         object_type = object_list[4+object_number1*8]
                         hixBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], graphlist[object_type-10].get_size()[0], 
                                    graphlist[object_type-10].get_size()[1]]
                     if object_list[4 + (object_number2 * 8)] == 1: #main ship
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 60, 60]
+                        hitBox2 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
                     elif object_list[4 + (object_number2 * 8)] == 2 or object_list[4 + (object_number2 * 8)] == 8: #shots
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 5, 5]
                     elif object_list[4 + (object_number2 * 8)] == 6: #aliens
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[2 + (object_number2 * 8)], 60, 60]
-                    elif object_list[4 + (object_number2 * 8)] == 0:
+                    elif object_list[4 + (object_number2 * 8)] == 0: #zvezda
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
                     elif 9 < object_list[4 + (object_number2 * 8)] < 40: #pixel things
                         object_type = object_list[4+object_number2*8]
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], graphlist[object_type-10].get_size()[0],
                                    graphlist[object_type-10].get_size()[1]]                        
 
+                    # shows all the hitboxes
+                    if hitBox1[2] != 0 and hitBox1[3] != 0:
+                        pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
+                    if hitBox2[2] != 0 and hitBox1[3] != 0:
+                        pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
+                    
                     if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
-                        if abs(hitBox1[0]-hitBox2[0]) <= ((hitBox1[2]/2) + (hitBox2[2]/2)) and abs(hitBox1[1]-hitBox2[1]) <= ((hitBox1[3]/2) + (hitBox2[3]/2)):
+                        if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
                             intersection = True
                 return intersection
                          
@@ -543,12 +549,10 @@ def main():
                                   [object_list[0]+left_xrot*scalar3, object_list[1]+left_yrot*scalar3]]
             else:
                 ship_pointlist = [[0,0],[0,0]]
-            #printer(ship_pointlist, object_list, color, scalar3, scalar2, scalar1, scalarscalar)
             printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+rightflame_xrot*scalar3, object_list[1]+rightflame_yrot*scalar3], [object_list[0]-bottomflame_xrot*scalar3, object_list[1]+bottomflame_yrot*scalar3],
                                    [object_list[0]+leftflame_xrot*scalar3, object_list[1]+leftflame_yrot*scalar3]]
-                #pygame.draw.aalines(screen, (255, 255, 255), False, flame_pointlist, True)
                 pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
                 pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
             if flame == True and timer1 == 0:
