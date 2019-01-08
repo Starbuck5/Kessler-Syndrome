@@ -309,20 +309,21 @@ def main():
         if status == "garageinit":
             #ship lv [armor, fuel]
             ShipLv = filehelper.get(3)
-            inventory = filehelper.get(2)
-            garageinitUI(screen, ShipLv, inventory)
+            homeInventory = filehelper.get(2)
+            garageinitUI(screen, ShipLv, homeInventory)
             status = "garage"
 
         if status == "garage":
             ShipLv = filehelper.get(3)
-            inventory = filehelper.get(2)
-            garageHelp = GarageUI(screen, ShipLv, inventory)
+            homeInventory = filehelper.get(2)
+            garageHelp = GarageUI(screen, ShipLv, homeInventory)
             status = garageHelp[0]
             ShipLv = garageHelp[1]
-            inventory = garageHelp[2]
+            homeInventory = garageHelp[2]
             filehelper.set(ShipLv,3)
-            filehelper.set(inventory,2)
+            filehelper.set(homeInventory,2)
             if status == "game":
+                shipInventory = [0,0,0,0]
                 object_list[2] = 0
                 object_list[3] = 0
                 object_list[4] = 5
@@ -362,7 +363,8 @@ def main():
             currentfuel = totalfuel
 
             #inventory
-            inventory = filehelper.get(2)
+            homeInventory = filehelper.get(2)
+            shipInventory = [0,0,0,0]
 
             if file_settings[3] == 0:
                 level1(screen, width, height)
@@ -515,12 +517,17 @@ def main():
                             filehelper.set(inventory, 2)
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
+                            homeInventory[0] = homeInventory[0] + shipInventory[0]
+                            homeInventory[1] = homeInventory[1] + shipInventory[1]
+                            homeInventory[2] = homeInventory[2] + shipInventory[2]
+                            homeInventory[3] = homeInventory[3] + shipInventory[3]
+                            filehelper.set(homeInventory, 2)
                             currentfuel = 1000 + ((ShipLv[1] - 1) * 50)
                         object_list += printerlist_add
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "sat1:" + str(inventory[0]) + "     sat2:" + str(inventory[1]) + "     sat3:" + str(inventory[2]) + "     sat4:" + str(inventory[3]), 3])
+            Texthelper.write(screen, [(0, 0), "sat1:" + str(shipInventory[0]) + "     sat2:" + str(shipInventory[1]) + "     sat3:" + str(shipInventory[2]) + "     sat4:" + str(shipInventory[3]), 3])
 
             # deaderizer
             object_list = deaderizer(object_list)
