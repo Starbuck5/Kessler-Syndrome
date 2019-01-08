@@ -358,7 +358,7 @@ def main():
 
             #fuel and armor
             ShipLv = filehelper.get(3)
-            totalfuel = 2000 + ((ShipLv[1] - 1) * 100)
+            totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
             currentfuel = totalfuel
 
             #inventory
@@ -515,6 +515,7 @@ def main():
                             filehelper.set(inventory, 2)
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
+                            currentfuel = 1000 + ((ShipLv[1] - 1) * 50)
                         object_list += printerlist_add
             # collision detection
 
