@@ -191,6 +191,7 @@ def main():
     # variable setup
     d_parts = [30]
     d_sats = [10, 11, 12, 13, 71, 72, 73, 91]
+    d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
     lower_rotation_constant = math.degrees(math.asin(10 / 325 ** 0.5))
     flame_rotation_constant = math.degrees(math.atan(6 / 5))
@@ -482,6 +483,9 @@ def main():
                         object_type = object_list[4+object_number1*8]
                         hixBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], graphlist[object_type-10].get_size()[0], 
                                    graphlist[object_type-10].get_size()[1]]
+                    elif 69 < object_list[4 + (object_number1 * 8)] < 100:
+                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], 40, 40]
+                        
                     if object_list[4 + (object_number2 * 8)] == 1: #main ship
                         hitBox2 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
                     elif object_list[4 + (object_number2 * 8)] == 2 or object_list[4 + (object_number2 * 8)] == 8: #shots
@@ -493,7 +497,9 @@ def main():
                     elif 9 < object_list[4 + (object_number2 * 8)] < 40: #pixel things
                         object_type = object_list[4+object_number2*8]
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], graphlist[object_type-10].get_size()[0],
-                                   graphlist[object_type-10].get_size()[1]]                        
+                                   graphlist[object_type-10].get_size()[1]]
+                    elif 69 < object_list[4 + (object_number2 * 8)] < 100:
+                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], 40, 40]
 
                     # shows all the hitboxes
                     if hitBox1[2] != 0 and hitBox1[3] != 0:
@@ -510,7 +516,7 @@ def main():
                 for i2 in range(int(len(object_list)/8)):                   
                     if collinfo(i,i2) == True:
                         printerlist_add = []
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats:
+                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
                             shipInventory[object_list[4+i2*8]-10] += 1
@@ -522,6 +528,11 @@ def main():
                             homeInventory[3] = homeInventory[3] + shipInventory[3]
                             filehelper.set(homeInventory, 2)
                             currentfuel = 1000 + ((ShipLv[1] - 1) * 50)
+                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100:
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            object_list[(i2*8)+6] = -1
+                            object_list[(i*8)+6] = -1
+                            status = "gameoverinit"
                         object_list += printerlist_add
             # collision detection
 
