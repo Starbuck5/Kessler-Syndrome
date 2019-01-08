@@ -513,8 +513,7 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            inventory[object_list[4+i2*8]-10] += 1
-                            filehelper.set(inventory, 2)
+                            shipInventory[object_list[4+i2*8]-10] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
                             homeInventory[0] = homeInventory[0] + shipInventory[0]
