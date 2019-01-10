@@ -362,6 +362,8 @@ def main():
             ShipLv = filehelper.get(3)
             totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
             currentfuel = totalfuel
+            totalarmor = 10 + ShipLv[0]
+            currentarmor = totalarmor
 
             #inventory
             homeInventory = filehelper.get(2)
@@ -484,7 +486,7 @@ def main():
                         hixBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], graphlist[object_type-10].get_size()[0], 
                                    graphlist[object_type-10].get_size()[1]]
                     elif 69 < object_list[4 + (object_number1 * 8)] < 100:
-                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], 40, 40]
+                        hitBox1 = [object_list[(object_number1 * 8)]-20, object_list[1+(object_number1*8)]-20, 40, 40]
                         
                     if object_list[4 + (object_number2 * 8)] == 1: #main ship
                         hitBox2 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
@@ -499,7 +501,7 @@ def main():
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], graphlist[object_type-10].get_size()[0],
                                    graphlist[object_type-10].get_size()[1]]
                     elif 69 < object_list[4 + (object_number2 * 8)] < 100:
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], 40, 40]
+                        hitBox2 = [object_list[(object_number2 * 8)]-20, object_list[1+(object_number2*8)]-20, 40, 40]
 
                     # shows all the hitboxes
                     if hitBox1[2] != 0 and hitBox1[3] != 0:
@@ -527,13 +529,20 @@ def main():
                             homeInventory[2] = homeInventory[2] + shipInventory[2]
                             homeInventory[3] = homeInventory[3] + shipInventory[3]
                             filehelper.set(homeInventory, 2)
-                            currentfuel = 1000 + ((ShipLv[1] - 1) * 50)
+                            currentfuel = totalfuel
+                            currentarmor = totalarmor
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100:
+                            xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
+                            yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
+                            force = xForce + yForce
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            object_list[(i*8)+6] = -1
-                            status = "gameoverinit"
+                            currentarmor = currentarmor - force
                         object_list += printerlist_add
+                        
+            if currentarmor <= 0:
+                object_list[6] = -1
+                status = "gameoverinit"
             # collision detection
 
             #inventory
@@ -583,10 +592,14 @@ def main():
             if flame == False:
                 enginesound.fadeout(10)
             flame = False
-            
+            #fuel
             screen.blit(fuelpic, (1600, 1000))
             pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
             pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+            #armor
+            screen.blit(armorpic, (1600, 900))
+            pygame.draw.rect(screen, (178,34,34), [1650, 900, 200, 50])
+            pygame.draw.rect(screen, (139,0,0), [1650, 900, 200*currentarmor/totalarmor, 50])
             #Texthelper.write(screen, [(1700, 1000), str(currentfuel), 3])
             if FPSDISPLAY:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
