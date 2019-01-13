@@ -143,7 +143,7 @@ def main():
                  loadImage("Assets\\sat4.tif"), "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", #random elements to pad indices
                  loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\armor.tif")
+    armorpic = loadImage("Assets\\armor3.tif")
     earthpic = loadImage("Assets\\earth.tif")
     specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
@@ -190,7 +190,7 @@ def main():
         
     # variable setup
     d_parts = [30]
-    d_sats = [10, 11, 12, 13, 71, 72, 73, 91]
+    d_sats = [10, 11, 12, 13, 71, 72, 73, 80, 81, 82, 91]
     d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
     lower_rotation_constant = math.degrees(math.asin(10 / 325 ** 0.5))
@@ -470,9 +470,8 @@ def main():
                 intersection = False
                 if object_number1 != object_number2: #exempts object intersecting itself
                     #hitBox = [xpos, ypos, width, height] xpos and ypos is orgin
-                    hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 0,0]
-                    hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 0,0]
                     
+                    hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 0,0]
                     if object_list[4 + (object_number1 * 8)] == 1: #main ship
                         hitBox1 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
                     elif object_list[4 + (object_number1 * 8)] == 2 or object_list[4 + (object_number1 * 8)] == 8: #shots
@@ -485,9 +484,10 @@ def main():
                         object_type = object_list[4+object_number1*8]
                         hixBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], graphlist[object_type-10].get_size()[0], 
                                    graphlist[object_type-10].get_size()[1]]
-                    elif 69 < object_list[4 + (object_number1 * 8)] < 100:
-                        hitBox1 = [object_list[(object_number1 * 8)]-20, object_list[1+(object_number1*8)]-20, 40, 40]
-                        
+                    elif 69 < object_list[4 + (object_number1 * 8)] < 100: #asteroids
+                        hitBox1 = Asteroid.getHitbox(object_list[object_number1*8], object_list[1+object_number1*8], object_list[4+object_number1*8])
+
+                    hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 0,0]                            
                     if object_list[4 + (object_number2 * 8)] == 1: #main ship
                         hitBox2 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
                     elif object_list[4 + (object_number2 * 8)] == 2 or object_list[4 + (object_number2 * 8)] == 8: #shots
@@ -500,8 +500,8 @@ def main():
                         object_type = object_list[4+object_number2*8]
                         hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], graphlist[object_type-10].get_size()[0],
                                    graphlist[object_type-10].get_size()[1]]
-                    elif 69 < object_list[4 + (object_number2 * 8)] < 100:
-                        hitBox2 = [object_list[(object_number2 * 8)]-20, object_list[1+(object_number2*8)]-20, 40, 40]
+                    elif 69 < object_list[4 + (object_number2 * 8)] < 100: #asteroids
+                        hitBox2 = Asteroid.getHitbox(object_list[object_number2*8], object_list[1+object_number2*8], object_list[4+object_number2*8])
 
                     # shows all the hitboxes
                     if hitBox1[2] != 0 and hitBox1[3] != 0:
@@ -597,9 +597,9 @@ def main():
             pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
             pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
             #armor
-            screen.blit(armorpic, (1600, 900))
-            pygame.draw.rect(screen, (178,34,34), [1650, 900, 200, 50])
-            pygame.draw.rect(screen, (139,0,0), [1650, 900, 200*currentarmor/totalarmor, 50])
+            screen.blit(armorpic, (1600, 930))
+            pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
+            pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
             #Texthelper.write(screen, [(1700, 1000), str(currentfuel), 3])
             if FPSDISPLAY:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])

@@ -172,50 +172,6 @@ def sectorGeneration(sectornum):
         output = True
     return output
 
-'''
-def makeAsteroidList(scalar2):
-    asteroidlist = [[[xpos+17*scalar2, ypos+1*scalar2], [xpos+12*scalar2, ypos+8*scalar2], [xpos-2*scalar2, ypos+17*scalar2],
-                     [xpos-8*scalar2, ypos+11*scalar2], [xpos-16*scalar2, ypos+3*scalar2], [xpos-14*scalar2, ypos-7*scalar2],
-                     [xpos-4*scalar2, ypos-17*scalar2], [xpos+10*scalar2, ypos-10*scalar2]],
-                    [[xpos+16*scalar2, ypos-3*scalar2], [xpos+12*scalar2, ypos+10*scalar2], [xpos-2*scalar2, ypos+17*scalar2],
-                     [xpos-10*scalar2, ypos+14*scalar2], [xpos-19*scalar2, ypos-2*scalar2], [xpos-8*scalar2, ypos-13*scalar2],
-                     [xpos+2*scalar2, ypos-16*scalar2], [xpos+8*scalar2, ypos-12*scalar2]],
-                    [[xpos+16*scalar2, ypos+3*scalar2], [xpos+7*scalar2, ypos+13*scalar2], [xpos-8*scalar2, ypos+14*scalar2],
-                     [xpos-18*scalar2, ypos+4*scalar2], [xpos-11*scalar2, ypos-11*scalar2], [xpos-3*scalar2, ypos-16*scalar2],
-                     [xpos+11*scalar2, ypos-9*scalar2]],
-                    [[xpos+18*scalar2, ypos+0*scalar2], [xpos+10*scalar2, ypos+-10*scalar2], [xpos+0*scalar2, ypos+-17*scalar2],
-                     [xpos+-13*scalar2, ypos+-12*scalar2], [xpos+-20*scalar2, ypos+0*scalar2], [xpos+-11*scalar2, ypos+11*scalar2],
-                     [xpos+0*scalar2, ypos+13*scalar2], [xpos+14*scalar2, ypos+12*scalar2]],
-                    "4", "5", "6", "7", "8", "9",
-                    [[xpos+26*scalar2, ypos-3*scalar2], [xpos+20*scalar2, ypos+10*scalar2], [xpos+4*scalar2, ypos+21*scalar2],
-                     [xpos-8*scalar2, ypos+9*scalar2], [xpos-8*scalar2, ypos+10*scalar2], [xpos-18*scalar2, ypos+14*scalar2],
-                     [xpos-26*scalar2, ypos+10*scalar2], [xpos-25*scalar2, ypos-1*scalar2], [xpos-9*scalar2, ypos-18*scalar2],
-                     [xpos+10*scalar2, ypos-12*scalar2], [xpos+19*scalar2, ypos-16*scalar2]],
-                    [[xpos+24*scalar2, ypos+2*scalar2], [xpos+11*scalar2, ypos+9*scalar2], [xpos+4*scalar2, ypos+24*scalar2],
-                     [xpos-9*scalar2, ypos+19*scalar2], [xpos-22*scalar2, ypos+5*scalar2], [xpos-13*scalar2, ypos-20*scalar2],
-                     [xpos+3*scalar2, ypos-24*scalar2], [xpos+18*scalar2, ypos-13*scalar2]],
-                    [[xpos+23*scalar2, ypos-1*scalar2], [xpos+16*scalar2, ypos+19*scalar2], [xpos-4*scalar2, ypos+26*scalar2],
-                     [xpos-13*scalar2, ypos+13*scalar2], [xpos-26*scalar2, ypos+3*scalar2], [xpos-17*scalar2, ypos-20*scalar2],
-                     [xpos-4*scalar2, ypos-23*scalar2], [xpos+16*scalar2, ypos-14*scalar2]],
-                    [[xpos+27*scalar2, ypos+0*scalar2], [xpos+15*scalar2, ypos+-15*scalar2], [xpos+0*scalar2, ypos+-25*scalar2],
-                     [xpos+-21*scalar2, ypos+-15*scalar2], [xpos+-22*scalar2, ypos+0*scalar2],
-                     [xpos+-19*scalar2, ypos+15*scalar2], [xpos+0*scalar2, ypos+24*scalar2], [xpos+21*scalar2, ypos+17*scalar2]],
-                    "14", "15", "16", "17", "18", "19",
-                    [[xpos+33*scalar2, ypos-4*scalar2], [xpos+27*scalar2, ypos+23*scalar2], [xpos-6*scalar2, ypos+30*scalar2],
-                     [xpos-18*scalar2, ypos+24*scalar2], [xpos-32*scalar2, ypos+5*scalar2], [xpos-25*scalar2, ypos-18*scalar2],
-                     [xpos+6*scalar2, ypos-30*scalar2], [xpos+20*scalar2, ypos-22*scalar2]],
-                    [[xpos+20*scalar2, ypos], [xpos+24*scalar2, ypos+24*scalar2], [xpos-8*scalar2, ypos+32*scalar2], [xpos-23*scalar2, ypos+18*scalar2],
-                     [xpos-33*scalar2, ypos+5*scalar2], [xpos-26*scalar2, ypos-28*scalar2], [xpos+3*scalar2, ypos-33*scalar2],
-                     [xpos+27*scalar2, ypos-22*scalar2]],
-                    [[xpos+30*scalar2, ypos+0*scalar2], [xpos+26*scalar2, ypos+-22*scalar2], [xpos+3*scalar2, ypos+-33*scalar2],
-                     [xpos+-22*scalar2, ypos+-22*scalar2], [xpos+-38*scalar2, ypos+0*scalar2], [xpos+-27*scalar2, ypos+22*scalar2],
-                     [xpos+3*scalar2, ypos+34*scalar2], [xpos+30*scalar2, ypos+23*scalar2]],
-                    [[xpos+39*scalar2, ypos], [xpos+29*scalar2, ypos+-22*scalar2], [xpos, ypos-35*scalar2], [xpos-28*scalar2, ypos-20*scalar2],
-                     [xpos-37*scalar2, ypos], [xpos-24*scalar2, ypos+23*scalar2], [xpos, ypos+35*scalar2], [xpos+19*scalar2, ypos+22*scalar2]],
-                    "24", "25", "26", "27", "28", "29"]
-    return asteroidlist
-'''
-
 def makeAsteroidList(scalar2): #generates a list of offsets for all of the separate asteroid designs
     asteroidlist = [[[17*scalar2, 1*scalar2], [12*scalar2, 8*scalar2], [-2*scalar2, 17*scalar2],
                      [-8*scalar2, 11*scalar2], [-16*scalar2, 3*scalar2], [-14*scalar2, -7*scalar2],
@@ -271,6 +227,16 @@ class Asteroid():
         for i in range(len(offsetList)):
             pointList.append([xpos + offsetList[i][0], ypos + offsetList[i][1]])
         return pointList
+
+    def getHitbox(xpos, ypos, objectID): # in rect format
+        if 69 < objectID < 80:
+            hitrange = 15
+        if 79 < objectID < 90:
+            hitrange = 20
+        if 89 < objectID < 100:
+            hitrange = 25
+        return [xpos-hitrange*Asteroid.scalar2, ypos-hitrange*Asteroid.scalar2, hitrange*2*Asteroid.scalar2, hitrange*2*Asteroid.scalar2]
+        
         
 
 
