@@ -10,11 +10,6 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-#IDEA for resizing within savegames:
-# store x and y coords as floats from 0.0 to 1.0
-# maybe rounded to 4 decimal places
-
-
 def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics):
     for i in range(int(len(object_list)/8)):
         xpos = object_list[(i * 8)]        
@@ -70,6 +65,12 @@ def explosion_sounds():
         explosion1.play()
     if explosion_picker == 1:
         explosion2.play()
+
+def saveGame(sectornum, object_list, width, height):
+    if sectorGeneration(sectornum):
+        saveObjects(sectornum, [-1], width, height)
+    else:
+        saveObjects(sectornum, object_list[:], width, height)
 
 def saveObjects(sectornum, save_list, width, height):
     for i in range(len(save_list)):
@@ -239,7 +240,7 @@ def main():
         if status == "pauseinit":
             pygame.mouse.set_visible(True)
             pauseinitUI(screen)
-            saveObjects(sectornum, object_list[:], width, height)
+            saveGame(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
@@ -434,10 +435,7 @@ def main():
                         if destinations[i] != -1:
                             pygame.draw.rect(screen, (120,22,78), portalcoords[i])
                             if portalcollision(object_list, portalcoords[i]) and lasttransit > 150:
-                                if sectorGeneration(sectornum):
-                                    saveObjects(sectornum, [-1], width, height)
-                                else:
-                                    saveObjects(sectornum, object_list[:], width, height)
+                                saveGame(sectornum, object_list, width, height)
                                 sectornum = destinations[i]
                                 lasttransit = 0
                                 new_objects = getObjects(sectornum, width, height)
@@ -469,7 +467,7 @@ def main():
             def collinfo(object_number1, object_number2):
                 intersection = False
                 if object_number1 != object_number2: #exempts object intersecting itself
-                    #hitBox = [xpos, ypos, width, height] xpos and ypos is orgin
+                    #hitBox = [xpos, ypos, width, height]
                     
                     hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 0,0]
                     if object_list[4 + (object_number1 * 8)] == 1: #main ship
