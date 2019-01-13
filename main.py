@@ -55,6 +55,46 @@ def portalcollision(object_list, portalcoords):
     else:
         return False
 
+def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
+    xpos = object_list[object_location*8]
+    ypos = object_list[1+object_location*8]
+    objectID = object_list[4+object_location*8]
+    
+    hitBox = [xpos, ypos, 0,0]
+    if objectID == 1: #main ship
+        hitBox = [xpos-15*scalar3, ypos-15*scalar3, 30*scalar3, 30*scalar3]
+    elif objectID == 2 or objectID == 8: #shots
+        hitBox = [xpos-2, ypos-2, 4, 4]
+    elif objectID == 6: #aliens
+        hitBox = [xpos, ypos, 60, 60]
+    elif objectID == 0: #zvezda
+        hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
+    elif 9 < objectID < 40: #pixel things
+        hitBox = [xpos, ypos, graphlist[objectID-10].get_size()[0], 
+                   graphlist[objectID-10].get_size()[1]]
+    elif 69 < objectID < 100: #asteroids
+        hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
+    return hitBox
+
+def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist):
+    intersection = False
+    if object_number1 != object_number2: #exempts object intersecting itself
+        #hitBox = [xpos, ypos, width, height]
+
+        hitBox1 = getHitbox(object_list, object_number1, scalar3, specialpics, graphlist)
+        hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist)
+
+        # shows all the hitboxes
+        if hitBox1[2] != 0 and hitBox1[3] != 0:
+            pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
+        if hitBox2[2] != 0 and hitBox1[3] != 0:
+            pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
+        
+        if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
+            if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
+                intersection = True
+    return intersection
+
 def explosion_sounds():
     explosion1 = pygame.mixer.Sound(handlePath("Assets\\Bomb1.wav"))
     explosion2 = pygame.mixer.Sound(handlePath("Assets\\Bomb2.wav"))
@@ -463,58 +503,10 @@ def main():
                 leftflame_yrot = 61 ** (1/2.0) * math.cos(math.radians(rotation + 180 + flame_rotation_constant))
             # rotation section
 
-            # collision detection
-            def collinfo(object_number1, object_number2):
-                intersection = False
-                if object_number1 != object_number2: #exempts object intersecting itself
-                    #hitBox = [xpos, ypos, width, height]
-                    
-                    hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 0,0]
-                    if object_list[4 + (object_number1 * 8)] == 1: #main ship
-                        hitBox1 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
-                    elif object_list[4 + (object_number1 * 8)] == 2 or object_list[4 + (object_number1 * 8)] == 8: #shots
-                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 5, 5]
-                    elif object_list[4 + (object_number1 * 8)] == 6: #aliens
-                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1 + (object_number1 * 8)], 60, 60]
-                    elif object_list[4 + (object_number1 * 8)] == 0: #zvezda
-                        hitBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)],specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
-                    elif 9 < object_list[4 + (object_number1 * 8)] < 40: #pixel things
-                        object_type = object_list[4+object_number1*8]
-                        hixBox1 = [object_list[(object_number1 * 8)], object_list[1+(object_number1*8)], graphlist[object_type-10].get_size()[0], 
-                                   graphlist[object_type-10].get_size()[1]]
-                    elif 69 < object_list[4 + (object_number1 * 8)] < 100: #asteroids
-                        hitBox1 = Asteroid.getHitbox(object_list[object_number1*8], object_list[1+object_number1*8], object_list[4+object_number1*8])
-
-                    hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 0,0]                            
-                    if object_list[4 + (object_number2 * 8)] == 1: #main ship
-                        hitBox2 = [object_list[(object_number1 * 8)]-15*scalar3, object_list[1 + (object_number1 * 8)]-15*scalar3, 30*scalar3, 30*scalar3]
-                    elif object_list[4 + (object_number2 * 8)] == 2 or object_list[4 + (object_number2 * 8)] == 8: #shots
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1 + (object_number2 * 8)], 5, 5]
-                    elif object_list[4 + (object_number2 * 8)] == 6: #aliens
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[2 + (object_number2 * 8)], 60, 60]
-                    elif object_list[4 + (object_number2 * 8)] == 0: #zvezda
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
-                    elif 9 < object_list[4 + (object_number2 * 8)] < 40: #pixel things
-                        object_type = object_list[4+object_number2*8]
-                        hitBox2 = [object_list[(object_number2 * 8)], object_list[1+(object_number2*8)], graphlist[object_type-10].get_size()[0],
-                                   graphlist[object_type-10].get_size()[1]]
-                    elif 69 < object_list[4 + (object_number2 * 8)] < 100: #asteroids
-                        hitBox2 = Asteroid.getHitbox(object_list[object_number2*8], object_list[1+object_number2*8], object_list[4+object_number2*8])
-
-                    # shows all the hitboxes
-                    if hitBox1[2] != 0 and hitBox1[3] != 0:
-                        pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
-                    if hitBox2[2] != 0 and hitBox1[3] != 0:
-                        pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
-                    
-                    if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
-                        if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
-                            intersection = True
-                return intersection
-                         
+            # collision detection                         
             for i in range(int(len(object_list)/8)):
                 for i2 in range(int(len(object_list)/8)):                   
-                    if collinfo(i,i2) == True:
+                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist) == True:
                         printerlist_add = []
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
