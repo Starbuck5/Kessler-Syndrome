@@ -1,7 +1,6 @@
 from pgx import *
 
 def garageinitUI(screen, ShipLv, inventory):
-    screen.fill((0,0,0))
     pygame.mouse.set_visible(True)
     Texthelper.write(screen, [(0, 0), "sat1:" + str(inventory[0]) + "     sat2:" + str(inventory[1]) + "     sat3:" + str(inventory[2]) + "     sat4:" + str(inventory[3]), 3])
     Texthelper.write(screen, [("center", 540-136), "garage", 6])
