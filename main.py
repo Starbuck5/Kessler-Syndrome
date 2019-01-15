@@ -350,6 +350,7 @@ def main():
 
         if status == "garageinit":
             #ship lv [armor, fuel]
+            screen.fill(color)
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
