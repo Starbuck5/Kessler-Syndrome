@@ -2,7 +2,7 @@ from pgx import *
 
 def garageinitUI(screen, ShipLv, inventory):
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "sat1:" + str(inventory[0]) + "     sat2:" + str(inventory[1]) + "     sat3:" + str(inventory[2]) + "     sat4:" + str(inventory[3]), 3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]),3])
     Texthelper.write(screen, [("center", 540-136), "garage", 6])
     pygame.display.flip()
     pygame.time.wait(200)
@@ -20,7 +20,7 @@ def garageinitUI(screen, ShipLv, inventory):
         Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
         pygame.display.flip()
         pygame.time.wait(200)
-    Texthelper.write(screen, [(1300, 540-55), "cost:" + str(ShipLv[0]*3)+ " sat1", 3])
+    Texthelper.write(screen, [(1300, 540-55), "cost:" + str(ShipLv[0]*3)+ " metal", 3])
     pygame.display.flip()
     pygame.time.wait(200)
     Texthelper.write(screen, [(600, 540), "Fuel:", 3])
@@ -37,7 +37,7 @@ def garageinitUI(screen, ShipLv, inventory):
         Texthelper.write(screen, [(1000, 540), "sorry", 3])
         pygame.display.flip()
         pygame.time.wait(200)
-    Texthelper.write(screen, [(1300, 540), "cost:" + str(ShipLv[1]*3)+ " sat2", 3])
+    Texthelper.write(screen, [(1300, 540), "cost:" + str(ShipLv[1]*3)+ " gas", 3])
     pygame.display.flip()
     pygame.time.wait(200)
     Texthelper.write(screen, [("center", 540+55), "Resume", 3])
