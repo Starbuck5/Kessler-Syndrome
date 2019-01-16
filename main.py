@@ -512,7 +512,7 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            shipInventory[object_list[4+i2*8]-10] += 1
+                            shipInventory[random.randint(0,1)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
                             homeInventory[0] = homeInventory[0] + shipInventory[0]
@@ -537,7 +537,7 @@ def main():
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "sat1:" + str(shipInventory[0]) + "     sat2:" + str(shipInventory[1]) + "     sat3:" + str(shipInventory[2]) + "     sat4:" + str(shipInventory[3]), 3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
