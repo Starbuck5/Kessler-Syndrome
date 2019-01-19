@@ -46,7 +46,7 @@ def mouse():
 
 def scaleImage(image, scalar):
     size = image.get_size()
-    image = pygame.transform.scale(image, (size[0]*scalar, size[1]*scalar))
+    image = pygame.transform.scale(image, (round(size[0]*scalar), round(size[1]*scalar)))
     return image
 
 def handlePath(path):
@@ -215,7 +215,7 @@ class Texthelper():
         horizontal_pos = text_location[0]
         for i in range(len(text)):
             if text[i] != " ":
-                text3 = pygame.transform.scale(char_list[char_index.index(text[i])], (round(8*scale), round(12*scale)))
+                text3 = scaleImage(char_list[char_index.index(text[i])], scale)
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
             if text[i] == " " and text[i-1] != " " and i != 0:
