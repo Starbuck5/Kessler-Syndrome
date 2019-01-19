@@ -39,8 +39,6 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
             alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
                             [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
             pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
-
-
         if 9 < object_number < 40:
             screen.blit(graphlist[object_number-10], (xpos, ypos))
         if 69 < object_number < 100:
@@ -76,7 +74,7 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
 
-def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist):
+def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
         #hitBox = [xpos, ypos, width, height]
@@ -85,10 +83,11 @@ def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, 
         hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist)
 
         # shows all the hitboxes
-        if hitBox1[2] != 0 and hitBox1[3] != 0:
-            pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
-        if hitBox2[2] != 0 and hitBox1[3] != 0:
-            pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
+        if DEVMODE:
+            if hitBox1[2] != 0 and hitBox1[3] != 0:
+                pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
+            if hitBox2[2] != 0 and hitBox1[3] != 0:
+                pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
         
         if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
             if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
@@ -211,7 +210,7 @@ def main():
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
     shield_lifespan = 300
-    FPSDISPLAY = True
+    DEVMODE = False
 
     # pygame setup
     pygame.init()
@@ -481,6 +480,13 @@ def main():
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
+                if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
+                    if DEVMODE == True:
+                        modeset = False
+                    if DEVMODE == False:
+                        modeset = True
+                    DEVMODE = modeset
+                    previous_tick2 = ticks
                             
             # input handling
 
@@ -504,7 +510,7 @@ def main():
             # collision detection                         
             for i in range(int(len(object_list)/8)):
                 for i2 in range(int(len(object_list)/8)):                   
-                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist) == True:
+                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
@@ -589,7 +595,7 @@ def main():
             pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
             pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
             #Texthelper.write(screen, [(1700, 1000), str(currentfuel), 3])
-            if FPSDISPLAY:
+            if DEVMODE:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
             pygame.display.flip()
             # printer and flame and score
