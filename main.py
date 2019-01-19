@@ -184,7 +184,7 @@ def main():
                  loadImage("Assets\\sat4.tif"), "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", #random elements to pad indices
                  loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\armor3.tif")
+    armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
     specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
@@ -211,7 +211,6 @@ def main():
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
     shield_lifespan = 300
-    extratime_setter = 25
     FPSDISPLAY = True
 
     # pygame setup
@@ -378,8 +377,6 @@ def main():
             object_list = getObjects(sectornum, width, height)
             rotation = 90
             serialnumber = 2
-            extratime = extratime_setter
-            extratime_trigger = False
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
@@ -531,9 +528,6 @@ def main():
                             currentarmor = currentarmor - force
                         object_list += printerlist_add
                         
-            if currentarmor <= 0:
-                object_list[6] = -1
-                status = "gameoverinit"
             # collision detection
 
             #inventory
@@ -542,21 +536,24 @@ def main():
             # deaderizer
             object_list = deaderizer(object_list)
             
-            # fuel
+            # fuel consumption
             if flame == True:
                 currentfuel -= 1
-            if currentfuel < 0:
+
+            #ship death
+            if currentarmor < 0 or currentfuel < 0:
                 object_list[6] = -10
-                if object_list[12] == 3:
-                    object_list[12] = 5
-                    object_list[14] = shield_lifespan
-                    object_list[15] = True
-                    rotation = 90
-                    object_list[8] = width/2
-                    object_list[9] = height/2
-                else:
-                    extratime_trigger = True
+                saveGame(sectornum, object_list, width, height)
+                sectornum = 1
+                object_list = getObjects(sectornum, width, height)
                 currentfuel = totalfuel
+                currentarmor = totalarmor
+                shipInventory = [0,0,0,0]
+                lasttransit = 0
+                object_list[0] = width/2 - width*0.3
+                object_list[1] = height/2 - height*0.2
+                object_list[2] = 0
+                object_list[3] = 0
 
             #physics!
             object_list = doPhysics(object_list, width, height, max_speed, drag, step_drag)
@@ -598,10 +595,6 @@ def main():
             # printer and flame and score
 
             # helpers
-            if extratime_trigger == True: #lets particle effects dissipate after gameover
-                extratime -= 1
-                if extratime < 0:
-                    status = "gameoverinit"
             previous_inputvar = inputvar #helps with distinct keyclicks
             # helpers
         
