@@ -70,52 +70,36 @@ def loadImage(path):
     image = pygame.image.load(path)
     return image
 
+# missing texture surface setup
+missingTexture = pygame.Surface((8,12))
+missingTexture.fill((255, 0, 220))
+pygame.draw.rect(missingTexture, (0,0,0), (0,0,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (4,0,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (2,2,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (6,2,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (0,4,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (4,4,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (2,6,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (6,6,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (0,8,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (4,8,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (2,10,2,2), 0)
+pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
+
 # font setup
-lettera = loadImage("Assets\\font\\lettera.tif")
-letterb = loadImage("Assets\\font\\letterb.tif")
-letterc = loadImage("Assets\\font\\letterc.tif")
-letterd = loadImage("Assets\\font\\letterd.tif")
-lettere = loadImage("Assets\\font\\lettere.tif")
-letterf = loadImage("Assets\\font\\letterf.tif")
-letterg = loadImage("Assets\\font\\letterg.tif")
-letterh = loadImage("Assets\\font\\letterh.tif")
-letteri = loadImage("Assets\\font\\letteri.tif")
-letterj = loadImage("Assets\\font\\letterj.tif")
-letterk = loadImage("Assets\\font\\letterk.tif")
-letterl = loadImage("Assets\\font\\letterl.tif")
-letterm = loadImage("Assets\\font\\letterm.tif")
-lettern = loadImage("Assets\\font\\lettern.tif")
-lettero = loadImage("Assets\\font\\lettero.tif")
-letterp = loadImage("Assets\\font\\letterp.tif")
-letterq = loadImage("Assets\\font\\letterq.tif")
-letterr = loadImage("Assets\\font\\letterr.tif")
-letters = loadImage("Assets\\font\\letters.tif")
-lettert = loadImage("Assets\\font\\lettert.tif")
-letteru = loadImage("Assets\\font\\letteru.tif")
-letterv = loadImage("Assets\\font\\letterv.tif")
-letterw = loadImage("Assets\\font\\letterw.tif")
-letterx = loadImage("Assets\\font\\letterx.tif")
-lettery = loadImage("Assets\\font\\lettery.tif")
-letterz = loadImage("Assets\\font\\letterz.tif")
-num0 = loadImage("Assets\\font\\number0.tif")
-num1 = loadImage("Assets\\font\\number1.tif")
-num2 = loadImage("Assets\\font\\number2.tif")
-num3 = loadImage("Assets\\font\\number3.tif")
-num4 = loadImage("Assets\\font\\number4.tif")
-num5 = loadImage("Assets\\font\\number5.tif")
-num6 = loadImage("Assets\\font\\number6.tif")
-num7 = loadImage("Assets\\font\\number7.tif")
-num8 = loadImage("Assets\\font\\number8.tif")
-num9 = loadImage("Assets\\font\\number9.tif")
-colon = loadImage("Assets\\font\\colon.tif")
-minus = loadImage("Assets\\font\\minus.tif")
-plus = loadImage("Assets\\font\\plus.tif")
-question = loadImage("Assets\\font\\question.tif")
-leftbracket = loadImage("Assets\\font\\leftbracket.tif")
-rightbracket = loadImage("Assets\\font\\rightbracket.tif")
-char_list = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, lettera, letterb, letterc, letterd, lettere, letterf, letterg, letterh,
-            letteri, letterj, letterk, letterl, letterm, lettern, lettero, letterp, letterq, letterr, letters, lettert,letteru, letterv, letterw,
-            letterx, lettery, letterz, colon, minus, plus, question, leftbracket, rightbracket]
+fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5", "number6", "number7", "number8", "number9", "lettera", "letterb",
+                "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
+                "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
+                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket"]
+
+char_list = []
+for pathID in fontLocation:
+    try:
+        holdervar = loadImage("Assets\\font\\" + pathID + ".tif")
+    except:
+        print("error loading " + pathID + ".tif")
+        holdervar = missingTexture
+    char_list.append(holdervar)
 
 
 class InputGetter():
@@ -174,13 +158,13 @@ class InputGetter():
 
     def getData(self):
         return self.currenttext
-
    
 class Texthelper():
     scalar = 1
     width = 1
     height = 1
     last_click = ()
+    missingTexture = missingTexture
 
     def interpretcoords(text_input):
         text_location = text_input[0]
@@ -215,7 +199,10 @@ class Texthelper():
         horizontal_pos = text_location[0]
         for i in range(len(text)):
             if text[i] != " ":
-                text3 = scaleImage(char_list[char_index.index(text[i])], scale)
+                if text[i] in char_index:
+                    text3 = scaleImage(char_list[char_index.index(text[i])], scale)
+                else:
+                    text3 = scaleImage(Texthelper.missingTexture, scale)
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
             if text[i] == " " and text[i-1] != " " and i != 0:
