@@ -1,45 +1,31 @@
 from pgx import *
 
 def garageinitUI(screen, ShipLv, inventory):
+    waitTime = 300
     pygame.mouse.set_visible(True)
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]),3])
     Texthelper.write(screen, [("center", 540-136), "garage", 6])
+
     pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [(600, 540-55), "Armor:", 3])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [(800, 540-55), "lv " + str(ShipLv[0]), 3])
-    pygame.display.flip()
-    pygame.time.wait(200)
+    pygame.time.wait(waitTime)   
+    Texthelper.write(screen, [(600, 540-55), "Armor: lv " + str(ShipLv[0]), 3])
     if inventory[0] >= ShipLv[0]*3:
         Texthelper.write(screen, [(1000, 540-55), "Upgrade", 3])
-        pygame.display.flip()
-        pygame.time.wait(200)
     else:
         Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
-        pygame.display.flip()
-        pygame.time.wait(200)
     Texthelper.write(screen, [(1300, 540-55), "cost:" + str(ShipLv[0]*3)+ " metal", 3])
+
     pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [(600, 540), "Fuel:", 3])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [(800, 540), "lv " + str(ShipLv[1]), 3])
-    pygame.display.flip()
-    pygame.time.wait(200)
+    pygame.time.wait(waitTime)
+    Texthelper.write(screen, [(600, 540), "Fuel:  lv " + str(ShipLv[1]), 3])
     if inventory[1] >= ShipLv[1]*3:
         Texthelper.write(screen, [(1000, 540), "Upgrade", 3])
-        pygame.display.flip()
-        pygame.time.wait(200)
     else:
         Texthelper.write(screen, [(1000, 540), "sorry", 3])
-        pygame.display.flip()
-        pygame.time.wait(200)
     Texthelper.write(screen, [(1300, 540), "cost:" + str(ShipLv[1]*3)+ " gas", 3])
+
     pygame.display.flip()
-    pygame.time.wait(200)
+    pygame.time.wait(waitTime)
     Texthelper.write(screen, [("center", 540+55), "Resume", 3])
     pygame.display.flip()
 

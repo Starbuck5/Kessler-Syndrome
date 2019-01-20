@@ -348,6 +348,11 @@ def main():
 
         if status == "garageinit":
             #ship lv [armor, fuel]
+            homeInventory[0] = homeInventory[0] + shipInventory[0]
+            homeInventory[1] = homeInventory[1] + shipInventory[1]
+            homeInventory[2] = homeInventory[2] + shipInventory[2]
+            homeInventory[3] = homeInventory[3] + shipInventory[3]
+            filehelper.set(homeInventory, 2)
             screen.fill(color)
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
@@ -370,6 +375,8 @@ def main():
                 object_list[4] = 5
                 object_list[6] = 500
                 object_list[7] = True
+                currentfuel = totalfuel
+                currentarmor = totalarmor
 
         if status == "gameinit":       
             # changing variable setup
@@ -518,13 +525,6 @@ def main():
                             shipInventory[random.randint(0,1)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
-                            homeInventory[0] = homeInventory[0] + shipInventory[0]
-                            homeInventory[1] = homeInventory[1] + shipInventory[1]
-                            homeInventory[2] = homeInventory[2] + shipInventory[2]
-                            homeInventory[3] = homeInventory[3] + shipInventory[3]
-                            filehelper.set(homeInventory, 2)
-                            currentfuel = totalfuel
-                            currentarmor = totalarmor
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100:
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
