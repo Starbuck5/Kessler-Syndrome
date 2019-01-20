@@ -31,15 +31,17 @@ def garageinitUI(screen, ShipLv, inventory):
 
 def GarageUI(screen, ShipLv, inventory):
     status = "garage"
-    if Texthelper.writeButton(screen, [(1000, 540-55), "Upgrade", 3]) and inventory[0] >= ShipLv[0]*3:
-        inventory[0] = inventory[0] - (ShipLv[0]*3)
-        ShipLv[0] += 1
-        status = "garageinit"
-    elif Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]) and inventory[1] >= ShipLv[1]*3:
-        inventory[1] = inventory[1] - (ShipLv[1]*3)
-        ShipLv[1] += 1
-        status = "garageinit"
-    elif Texthelper.writeButton(screen, [("center", 540+55), "Resume", 3]):
+    if inventory[0] >= ShipLv[0]*3:
+        if Texthelper.writeButton(screen, [(1000, 540-55), "Upgrade", 3]):
+            inventory[0] = inventory[0] - (ShipLv[0]*3)
+            ShipLv[0] += 1
+            status = "garageinit"
+    if inventory[1] >= ShipLv[1]*3:
+        if Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]):
+            inventory[1] = inventory[1] - (ShipLv[1]*3)
+            ShipLv[1] += 1
+            status = "garageinit"
+    if Texthelper.writeButton(screen, [("center", 540+55), "Resume", 3]):
         status = "game"
     return [status, ShipLv, inventory]
 
