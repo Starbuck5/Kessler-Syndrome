@@ -1,6 +1,8 @@
 #just a file to de-clutter the main script
 import pygame
+import random
 OS = "windows" #other option = "mac"
+LEGIBLE = True
 
 def keyboard():
     inputvar = []
@@ -91,6 +93,9 @@ fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5"
                 "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
                 "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
                 "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket"]
+if LEGIBLE != True:
+    random.shuffle(fontLocation)
+
 
 char_list = []
 for pathID in fontLocation:
