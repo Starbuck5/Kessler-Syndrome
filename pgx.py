@@ -2,7 +2,6 @@
 import pygame
 import random
 OS = "windows" #other option = "mac"
-LEGIBLE = True
 
 def keyboard():
     inputvar = []
@@ -93,9 +92,6 @@ fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5"
                 "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
                 "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
                 "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket"]
-if LEGIBLE != True:
-    random.shuffle(fontLocation)
-
 
 char_list = []
 for pathID in fontLocation:
@@ -163,6 +159,9 @@ class InputGetter():
 
     def getData(self):
         return self.currenttext
+
+char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]"] 
    
 class Texthelper():
     scalar = 1
@@ -170,6 +169,8 @@ class Texthelper():
     height = 1
     last_click = ()
     missingTexture = missingTexture
+    char_index = char_index[:]
+    scrambleTimeLeft = -1
 
     def interpretcoords(text_input):
         text_location = text_input[0]
@@ -193,8 +194,7 @@ class Texthelper():
     # text_input = [(x, y), "text", text_scale]
     # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
     def write(screen, text_input):
-        char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-                      "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]"]
+        Texthelper.timerhelper()
         text_location = Texthelper.interpretcoords(text_input)[0]
         text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
@@ -204,8 +204,8 @@ class Texthelper():
         horizontal_pos = text_location[0]
         for i in range(len(text)):
             if text[i] != " ":
-                if text[i] in char_index:
-                    text3 = scaleImage(char_list[char_index.index(text[i])], scale)
+                if text[i] in Texthelper.char_index:
+                    text3 = scaleImage(char_list[Texthelper.char_index.index(text[i])], scale)
                 else:
                     text3 = scaleImage(Texthelper.missingTexture, scale)
                 screen.blit(text3, (horizontal_pos, text_location[1]))
@@ -264,6 +264,23 @@ class Texthelper():
                 x_range += 11 * scale
         x_range -= 3 * scale
         return x_range
+
+    def scramble(duration): #unscrambles with an input of -1
+        if duration != -1:
+            random.shuffle(Texthelper.char_index)
+            Texthelper.scrambleTimeLeft = duration
+        else:
+            Texthelper.char_index = char_index[:]
+            Texthelper.scrambleTimeLeft = -1
+
+    def timerhelper():
+        if Texthelper.scrambleTimeLeft >= 0:
+            Texthelper.scrambleTimeLeft -= 1
+        if Texthelper.scrambleTimeLeft == 0:
+            Texthelper.scramble(-1)
+        else:
+            pass
+            
 
 class Filehelper():
     info_file = handlePath("Assets\\gamedata.txt")
