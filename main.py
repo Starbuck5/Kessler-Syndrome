@@ -153,9 +153,13 @@ def getObjects(sectornum, width, height):
                 object_list[i] = round(object_list[i]*height)
     return object_list
 
-def drawSector(location, number):
+def drawSector(location, number, currentsector):
     secsize = 80 #side length of the cubes
-    pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+    if number != currentsector:
+        pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+    if number == currentsector:
+        pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+        Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
     if len(str(number)) == 1:
         Texthelper.write(screen, [(location[0]-10, location[1]-15), str(number), 2])
     else:
@@ -295,50 +299,50 @@ def main():
         if status == "mapscreen":
             pygame.mouse.set_visible(True)
             #consider automating connection drawing by using a map drawing method that would look at sectordesinations
-            drawSector((960, 990), 1)
+            drawSector((960, 990), 1, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960-40, 990), (820+40, 970))
-            drawSector((820, 970), 2)
+            drawSector((820, 970), 2, sectornum)
             screen.blit(infinitypic, (800,855)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (820, 970-40), (810, 840+40))
-            drawSector((810, 840), 4)
+            drawSector((810, 840), 4, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960, 990-40), (970, 830+40))
             pygame.draw.aaline(screen, (255,255,255), (810+40, 840), (970-40, 830))
-            drawSector((970, 830), 5)
+            drawSector((970, 830), 5, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960+40, 990), (1110-40, 980))
-            drawSector((1110, 980), 3)
+            drawSector((1110, 980), 3, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (970, 830-40), (965, 690+40))
-            drawSector((965, 690), 6)
+            drawSector((965, 690), 6, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (965+40, 690), (1115-40, 680))
-            drawSector((1115, 680), 7)
+            drawSector((1115, 680), 7, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (965-40, 690), (830+40, 675))
-            drawSector((830, 675), 8)
+            drawSector((830, 675), 8, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (830, 675-40), (865, 535+40))
-            drawSector((865, 535), 10)
+            drawSector((865, 535), 10, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1115, 680-40), (1060, 525+40))
             pygame.draw.aaline(screen, (255,255,255), (865+40, 535), (1060-40, 525))
-            drawSector((1060, 525), 9)
+            drawSector((1060, 525), 9, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1060, 525-40), (1095, 385+40))         
-            drawSector((1095, 385), 14)
+            drawSector((1095, 385), 14, sectornum)
             screen.blit(infinitypic, (1085,400)) #x-10, y+15
-            drawSector((700, 630), 12)
+            drawSector((700, 630), 12, sectornum)
             screen.blit(infinitypic, (690,645)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (830-40, 675), (700+40, 630))
             pygame.draw.aaline(screen, (255,255,255), (865, 535-40), (830, 400+40))
-            drawSector((830, 400), 11)
+            drawSector((830, 400), 11, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (700,630-40), (690,455+40))
             pygame.draw.aaline(screen, (255,255,255), (690+40, 455), (830-40, 400))
-            drawSector((690, 455), 13)
+            drawSector((690, 455), 13, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (830+40, 400), (965-40, 415))
-            drawSector((965, 415), 17)
+            drawSector((965, 415), 17, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1095, 385-40), (1055, 250+40))
-            drawSector((1055, 250), 15)
+            drawSector((1055, 250), 15, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (840+40,245), (1055-40,250))
             pygame.draw.aaline(screen, (255,255,255), (830,400-40), (840,245+40))
-            drawSector((840, 245), 16)
+            drawSector((840, 245), 16, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (840,245-40), (870,105+40))
-            drawSector((870, 105), 18)
+            drawSector((870, 105), 18, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (870+40,105), (1030-40,90))
-            drawSector((1030, 90), 19)
+            drawSector((1030, 90), 19, sectornum)
             status = mapscreenUI(screen) #<-- placeholder for static text or buttons relating to status that will eventually be on the map screen
             pygame.display.flip()
 
