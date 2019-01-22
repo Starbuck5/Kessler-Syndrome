@@ -39,6 +39,8 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
             alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
                             [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
             pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
+
+
         if 9 < object_number < 40:
             screen.blit(graphlist[object_number-10], (xpos, ypos))
         if 69 < object_number < 100:
@@ -74,7 +76,7 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
 
-def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, DEVMODE):
+def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
         #hitBox = [xpos, ypos, width, height]
@@ -83,11 +85,10 @@ def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, 
         hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist)
 
         # shows all the hitboxes
-        if DEVMODE:
-            if hitBox1[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
-            if hitBox2[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
+        if hitBox1[2] != 0 and hitBox1[3] != 0:
+            pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
+        if hitBox2[2] != 0 and hitBox1[3] != 0:
+            pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
         
         if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
             if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
@@ -153,13 +154,9 @@ def getObjects(sectornum, width, height):
                 object_list[i] = round(object_list[i]*height)
     return object_list
 
-def drawSector(location, number, currentsector):
+def drawSector(location, number):
     secsize = 80 #side length of the cubes
-    if number != currentsector:
-        pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
-    if number == currentsector:
-        pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
-        Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
+    pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
     if len(str(number)) == 1:
         Texthelper.write(screen, [(location[0]-10, location[1]-15), str(number), 2])
     else:
@@ -187,7 +184,7 @@ def main():
                  loadImage("Assets\\sat4.tif"), "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", #random elements to pad indices
                  loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\armor.tif")
+    armorpic = loadImage("Assets\\armor3.tif")
     earthpic = loadImage("Assets\\earth.tif")
     specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
@@ -214,7 +211,8 @@ def main():
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
     shield_lifespan = 300
-    DEVMODE = False
+    extratime_setter = 25
+    FPSDISPLAY = True
 
     # pygame setup
     pygame.init()
@@ -299,50 +297,50 @@ def main():
         if status == "mapscreen":
             pygame.mouse.set_visible(True)
             #consider automating connection drawing by using a map drawing method that would look at sectordesinations
-            drawSector((960, 990), 1, sectornum)
+            drawSector((960, 990), 1)
             pygame.draw.aaline(screen, (255,255,255), (960-40, 990), (820+40, 970))
-            drawSector((820, 970), 2, sectornum)
+            drawSector((820, 970), 2)
             screen.blit(infinitypic, (800,855)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (820, 970-40), (810, 840+40))
-            drawSector((810, 840), 4, sectornum)
+            drawSector((810, 840), 4)
             pygame.draw.aaline(screen, (255,255,255), (960, 990-40), (970, 830+40))
             pygame.draw.aaline(screen, (255,255,255), (810+40, 840), (970-40, 830))
-            drawSector((970, 830), 5, sectornum)
+            drawSector((970, 830), 5)
             pygame.draw.aaline(screen, (255,255,255), (960+40, 990), (1110-40, 980))
-            drawSector((1110, 980), 3, sectornum)
+            drawSector((1110, 980), 3)
             pygame.draw.aaline(screen, (255,255,255), (970, 830-40), (965, 690+40))
-            drawSector((965, 690), 6, sectornum)
+            drawSector((965, 690), 6)
             pygame.draw.aaline(screen, (255,255,255), (965+40, 690), (1115-40, 680))
-            drawSector((1115, 680), 7, sectornum)
+            drawSector((1115, 680), 7)
             pygame.draw.aaline(screen, (255,255,255), (965-40, 690), (830+40, 675))
-            drawSector((830, 675), 8, sectornum)
+            drawSector((830, 675), 8)
             pygame.draw.aaline(screen, (255,255,255), (830, 675-40), (865, 535+40))
-            drawSector((865, 535), 10, sectornum)
+            drawSector((865, 535), 10)
             pygame.draw.aaline(screen, (255,255,255), (1115, 680-40), (1060, 525+40))
             pygame.draw.aaline(screen, (255,255,255), (865+40, 535), (1060-40, 525))
-            drawSector((1060, 525), 9, sectornum)
+            drawSector((1060, 525), 9)
             pygame.draw.aaline(screen, (255,255,255), (1060, 525-40), (1095, 385+40))         
-            drawSector((1095, 385), 14, sectornum)
+            drawSector((1095, 385), 14)
             screen.blit(infinitypic, (1085,400)) #x-10, y+15
-            drawSector((700, 630), 12, sectornum)
+            drawSector((700, 630), 12)
             screen.blit(infinitypic, (690,645)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (830-40, 675), (700+40, 630))
             pygame.draw.aaline(screen, (255,255,255), (865, 535-40), (830, 400+40))
-            drawSector((830, 400), 11, sectornum)
+            drawSector((830, 400), 11)
             pygame.draw.aaline(screen, (255,255,255), (700,630-40), (690,455+40))
             pygame.draw.aaline(screen, (255,255,255), (690+40, 455), (830-40, 400))
-            drawSector((690, 455), 13, sectornum)
+            drawSector((690, 455), 13)
             pygame.draw.aaline(screen, (255,255,255), (830+40, 400), (965-40, 415))
-            drawSector((965, 415), 17, sectornum)
+            drawSector((965, 415), 17)
             pygame.draw.aaline(screen, (255,255,255), (1095, 385-40), (1055, 250+40))
-            drawSector((1055, 250), 15, sectornum)
+            drawSector((1055, 250), 15)
             pygame.draw.aaline(screen, (255,255,255), (840+40,245), (1055-40,250))
             pygame.draw.aaline(screen, (255,255,255), (830,400-40), (840,245+40))
-            drawSector((840, 245), 16, sectornum)
+            drawSector((840, 245), 16)
             pygame.draw.aaline(screen, (255,255,255), (840,245-40), (870,105+40))
-            drawSector((870, 105), 18, sectornum)
+            drawSector((870, 105), 18)
             pygame.draw.aaline(screen, (255,255,255), (870+40,105), (1030-40,90))
-            drawSector((1030, 90), 19, sectornum)
+            drawSector((1030, 90), 19)
             status = mapscreenUI(screen) #<-- placeholder for static text or buttons relating to status that will eventually be on the map screen
             pygame.display.flip()
 
@@ -352,11 +350,6 @@ def main():
 
         if status == "garageinit":
             #ship lv [armor, fuel]
-            homeInventory[0] = homeInventory[0] + shipInventory[0]
-            homeInventory[1] = homeInventory[1] + shipInventory[1]
-            homeInventory[2] = homeInventory[2] + shipInventory[2]
-            homeInventory[3] = homeInventory[3] + shipInventory[3]
-            filehelper.set(homeInventory, 2)
             screen.fill(color)
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
@@ -379,14 +372,14 @@ def main():
                 object_list[4] = 5
                 object_list[6] = 500
                 object_list[7] = True
-                currentfuel = totalfuel
-                currentarmor = totalarmor
 
         if status == "gameinit":       
             # changing variable setup
             object_list = getObjects(sectornum, width, height)
             rotation = 90
             serialnumber = 2
+            extratime = extratime_setter
+            extratime_trigger = False
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
@@ -407,16 +400,23 @@ def main():
 
             pygame.mouse.set_visible(False)
 
-            #fuel and armor
+            #inventory
+            homeInventory = filehelper.get(2)
+            shipInventory = [0,0,0,0]
+
+            #fuel and armor and ammunition
             ShipLv = filehelper.get(3)
             totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
             currentfuel = totalfuel
             totalarmor = 10 + ShipLv[0]
             currentarmor = totalarmor
-
-            #inventory
-            homeInventory = filehelper.get(2)
-            shipInventory = [0,0,0,0]
+            ammunition_unlocked = ShipLv[3]
+            totalammunition = 0
+            if ammunition_unlocked == 1:
+                totalammunition = ShipLv[2]*3
+            else:
+                totalammunition = 0
+            ammunition = totalammunition
 
             if file_settings[3] == 0:
                 level1(screen, width, height)
@@ -458,7 +458,8 @@ def main():
                         rotation -= step_r
                     if "q" in inputvar or "leftarrow" in inputvar:
                         rotation += step_r
-                    if "space" in inputvar and (ticks - previous_tick) > 360:
+                    if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
+                        ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
                         object_list_addition = [object_list[0]+top_xrot*scalar3, object_list[1]-top_yrot*scalar3, xmom_miss, ymom_miss, 2, serialnumber, missile_lifespan, True]
@@ -491,13 +492,6 @@ def main():
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
-                if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
-                    if DEVMODE == True:
-                        modeset = False
-                    if DEVMODE == False:
-                        modeset = True
-                    DEVMODE = modeset
-                    previous_tick2 = ticks
                             
             # input handling
 
@@ -521,50 +515,60 @@ def main():
             # collision detection                         
             for i in range(int(len(object_list)/8)):
                 for i2 in range(int(len(object_list)/8)):                   
-                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
+                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist) == True:
                         printerlist_add = []
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            shipInventory[random.randint(0,1)] += 1
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
+                            shipInventory[random.randint(0,2)] += 1
+                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0:
                             status = "garageinit"
-                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #colliding with asteroids
+                            homeInventory[0] = homeInventory[0] + shipInventory[0]
+                            homeInventory[1] = homeInventory[1] + shipInventory[1]
+                            homeInventory[2] = homeInventory[2] + shipInventory[2]
+                            homeInventory[3] = homeInventory[3] + shipInventory[3]
+                            filehelper.set(homeInventory, 2)
+                            currentfuel = totalfuel
+                            currentarmor = totalarmor
+                            ammunition = totalammunition
+                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100:
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = xForce + yForce
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
-                            Texthelper.scramble(150) #scrambles all game text for 150 ticks
+                        elif object_list[4 + (i * 8)] == 2 and 69 < object_list[4 + (i2 * 8)] < 100:
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            object_list[(i2*8)+6] = -1
                         object_list += printerlist_add
                         
+            if currentarmor <= 0:
+                object_list[6] = -1
+                status = "gameoverinit"
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     cartridges:" + str(shipInventory[2]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
             
-            # fuel consumption
+            # fuel
             if flame == True:
                 currentfuel -= 1
-
-            #ship death
-            if currentarmor < 0 or currentfuel < 0:
+            if currentfuel < 0:
                 object_list[6] = -10
-                saveGame(sectornum, object_list, width, height)
-                sectornum = 1
-                object_list = getObjects(sectornum, width, height)
+                if object_list[12] == 3:
+                    object_list[12] = 5
+                    object_list[14] = shield_lifespan
+                    object_list[15] = True
+                    rotation = 90
+                    object_list[8] = width/2
+                    object_list[9] = height/2
+                else:
+                    extratime_trigger = True
                 currentfuel = totalfuel
-                currentarmor = totalarmor
-                shipInventory = [0,0,0,0]
-                lasttransit = 0
-                object_list[0] = width/2 - width*0.3
-                object_list[1] = height/2 - height*0.2
-                object_list[2] = 0
-                object_list[3] = 0
 
             #physics!
             object_list = doPhysics(object_list, width, height, max_speed, drag, step_drag)
@@ -599,13 +603,19 @@ def main():
             screen.blit(armorpic, (1600, 930))
             pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
             pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
+            #ammunition
+            Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
             #Texthelper.write(screen, [(1700, 1000), str(currentfuel), 3])
-            if DEVMODE:
+            if FPSDISPLAY:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
             pygame.display.flip()
             # printer and flame and score
 
             # helpers
+            if extratime_trigger == True: #lets particle effects dissipate after gameover
+                extratime -= 1
+                if extratime < 0:
+                    status = "gameoverinit"
             previous_inputvar = inputvar #helps with distinct keyclicks
             # helpers
         
@@ -621,3 +631,4 @@ if filehelper.get(0)[0] == "?":
     from setupper import *
     
 main()
+
