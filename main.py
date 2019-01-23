@@ -492,11 +492,7 @@ def main():
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
-                    if DEVMODE == True:
-                        modeset = False
-                    if DEVMODE == False:
-                        modeset = True
-                    DEVMODE = modeset
+                    DEVMODE = not DEVMODE
                     previous_tick2 = ticks
                             
             # input handling
