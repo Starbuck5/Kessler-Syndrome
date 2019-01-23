@@ -381,6 +381,7 @@ def main():
                 object_list[7] = True
                 currentfuel = totalfuel
                 currentarmor = totalarmor
+                ammunition = totalammunition
 
         if status == "gameinit":       
             # changing variable setup
@@ -406,17 +407,24 @@ def main():
             timer1 = 0
 
             pygame.mouse.set_visible(False)
+            
+            #inventory
+            homeInventory = filehelper.get(2)
+            shipInventory = [0,0,0,0]
 
-            #fuel and armor
+            #fuel and armor and ammunition
             ShipLv = filehelper.get(3)
             totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
             currentfuel = totalfuel
             totalarmor = 10 + ShipLv[0]
             currentarmor = totalarmor
-
-            #inventory
-            homeInventory = filehelper.get(2)
-            shipInventory = [0,0,0,0]
+            ammunition_unlocked = ShipLv[3]
+            totalammunition = 0
+            if ammunition_unlocked == 1:
+                totalammunition = ShipLv[2]*3
+            else:
+                totalammunition = 0
+            ammunition = totalammunition
 
             if file_settings[3] == 0:
                 level1(screen, width, height)
@@ -459,6 +467,7 @@ def main():
                     if "q" in inputvar or "leftarrow" in inputvar:
                         rotation += step_r
                     if "space" in inputvar and (ticks - previous_tick) > 360:
+                        ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
                         object_list_addition = [object_list[0]+top_xrot*scalar3, object_list[1]-top_yrot*scalar3, xmom_miss, ymom_miss, 2, serialnumber, missile_lifespan, True]
@@ -533,12 +542,15 @@ def main():
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
                             Texthelper.scramble(150) #scrambles all game text for 150 ticks
+                        elif object_list[4 + (i * 8)] == 2 and 69 < object_list[4 + (i2 * 8)] < 100:
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            object_list[(i2*8)+6] = -1
                         object_list += printerlist_add
                         
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     cartridges:" + str(shipInventory[2]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
@@ -595,7 +607,8 @@ def main():
             screen.blit(armorpic, (1600, 930))
             pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
             pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-            #Texthelper.write(screen, [(1700, 1000), str(currentfuel), 3])
+            #ammunition
+            Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
             if DEVMODE:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
             pygame.display.flip()
