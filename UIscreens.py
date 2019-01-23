@@ -3,10 +3,10 @@ from pgx import *
 def garageinitUI(screen, ShipLv, inventory):
     waitTime = 300
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]) + "     cartridges:" + str(inventory[2]),3])
     Texthelper.write(screen, [("center", 540-136), "garage", 6])
-
     pygame.display.flip()
+    
     pygame.time.wait(waitTime)   
     Texthelper.write(screen, [(600, 540-55), "Armor: lv " + str(ShipLv[0]), 3])
     if inventory[0] >= ShipLv[0]*3:
@@ -14,8 +14,8 @@ def garageinitUI(screen, ShipLv, inventory):
     else:
         Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
     Texthelper.write(screen, [(1300, 540-55), "cost:" + str(ShipLv[0]*3)+ " metal", 3])
-
     pygame.display.flip()
+    
     pygame.time.wait(waitTime)
     Texthelper.write(screen, [(600, 540), "Fuel:  lv " + str(ShipLv[1]), 3])
     if inventory[1] >= ShipLv[1]*3:
@@ -23,11 +23,23 @@ def garageinitUI(screen, ShipLv, inventory):
     else:
         Texthelper.write(screen, [(1000, 540), "sorry", 3])
     Texthelper.write(screen, [(1300, 540), "cost:" + str(ShipLv[1]*3)+ " gas", 3])
-
     pygame.display.flip()
+    
     pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+55), "Resume", 3])
+    Texthelper.write(screen, [(500, 540+55), "torpedoes:", 3])
+    if ShipLv[3] == 1:
+        Texthelper.write(screen, [(800, 540+55), "lv " + str(ShipLv[2]), 3])
+        if inventory[2] >= ShipLv[2]*3:
+            Texthelper.write(screen, [(1000, 540+55), "Upgrade", 3])
+        else:
+            Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
+        Texthelper.write(screen, [(1300, 540+55), "cost:" + str(ShipLv[2]*3)+ " containers", 3])
+    else:
+        Texthelper.write(screen, [(800, 540+55), "lv 0", 3])
+        Texthelper.write(screen, [(1000, 540+55), "locked", 3])
+    Texthelper.write(screen, [("center", 540+110), "Resume", 3])
     pygame.display.flip()
+
 
 def GarageUI(screen, ShipLv, inventory):
     status = "garage"
