@@ -492,6 +492,10 @@ def main():
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
+                if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
+                    DEVMODE = not DEVMODE
+                    previous_tick2 = ticks
+
                             
             # input handling
 
