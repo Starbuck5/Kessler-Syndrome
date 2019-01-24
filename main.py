@@ -472,7 +472,7 @@ def main():
                         rotation -= step_r
                     if "q" in inputvar or "leftarrow" in inputvar:
                         rotation += step_r
-                    if "space" in inputvar and (ticks - previous_tick) > 360:
+                    if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
@@ -534,7 +534,7 @@ def main():
                 for i2 in range(int(len(object_list)/8)):                   
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
+                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
                             if ammunition_unlocked == 1:
@@ -543,7 +543,7 @@ def main():
                                 shipInventory[random.randint(0,1)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             status = "garageinit"
-                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #colliding with asteroids
+                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = xForce + yForce
@@ -551,16 +551,17 @@ def main():
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
                             Texthelper.scramble(150) #scrambles all game text for 150 ticks
-                        elif object_list[4 + (i * 8)] == 2 and 69 < object_list[4 + (i2 * 8)] < 100:
+                        elif object_list[4 + (i * 8)] == 2 and 69 < object_list[4 + (i2 * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
+                            object_list[(i*8)+6] = -1
                         object_list += printerlist_add
                         
             # collision detection
 
             #inventory
             if ammunition_unlocked == 1:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     cartridges:" + str(shipInventory[2]),3])
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     containers:" + str(shipInventory[2]),3])
             else:
                 Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
 
@@ -625,10 +626,6 @@ def main():
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
             pygame.display.flip()
             # printer and flame and score
-
-            # helpers
-            previous_inputvar = inputvar #helps with distinct keyclicks
-            # helpers
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
