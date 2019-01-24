@@ -283,10 +283,11 @@ class Texthelper():
             
 
 class Filehelper():
-    info_file = handlePath("Assets\\gamedata.txt")
+    def __init__(self, filepath):
+        self.info_file = handlePath(filepath)
     #converts file contents back to the ints and strings they started as and returns them by line
     def get(self, line): #line is line # in file being extracted
-        file = open(Filehelper.info_file, "r")
+        file = open(self.info_file, "r")
         contents = file.readlines()
         file.close()
 
@@ -342,14 +343,14 @@ class Filehelper():
         content = "".join(content)
         content += "\n"
 
-        file = open(Filehelper.info_file, "r")
+        file = open(self.info_file, "r")
         contents = file.readlines()
         file.close()
         contents[line] = content
 
-        file = open(Filehelper.info_file, "w")
+        file = open(self.info_file, "w")
         file.writelines(contents)
         file.close()
 
 
-filehelper = Filehelper() #makes lowercase filehelper used throughtout work with the class
+filehelper = Filehelper("Assets\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
