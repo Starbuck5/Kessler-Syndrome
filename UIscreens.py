@@ -53,7 +53,7 @@ def GarageUI(screen, ShipLv, inventory):
             inventory[1] = inventory[1] - (ShipLv[1]*3)
             ShipLv[1] += 1
             status = "garageinit"
-    if Texthelper.writeButton(screen, [("center", 540+55), "Resume", 3]):
+    if Texthelper.writeButton(screen, [("center", 540+110), "Resume", 3]):
         status = "game"
     return [status, ShipLv, inventory]
 
