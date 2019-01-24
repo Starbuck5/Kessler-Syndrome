@@ -379,8 +379,14 @@ def main():
                 object_list[4] = 5
                 object_list[6] = 500
                 object_list[7] = True
+                totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
                 currentfuel = totalfuel
+                totalarmor = 10 + ShipLv[0]
                 currentarmor = totalarmor
+                if ammunition_unlocked == 1:
+                    totalammunition = ShipLv[2]*3
+                else:
+                    totalammunition = 0
                 ammunition = totalammunition
 
         if status == "gameinit":       
@@ -531,7 +537,10 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats:
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            shipInventory[random.randint(0,1)] += 1
+                            if ammunition_unlocked == 1:
+                                shipInventory[random.randint(0,2)] += 1
+                            else:
+                                shipInventory[random.randint(0,1)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             status = "garageinit"
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #colliding with asteroids
@@ -550,7 +559,10 @@ def main():
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     cartridges:" + str(shipInventory[2]),3])
+            if ammunition_unlocked == 1:
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     cartridges:" + str(shipInventory[2]),3])
+            else:
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
