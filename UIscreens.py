@@ -3,7 +3,10 @@ from pgx import *
 def garageinitUI(screen, ShipLv, inventory):
     waitTime = 300
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]) + "     cartridges:" + str(inventory[2]),3])
+    if ShipLv[3] == 1:
+        Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]) + "     cartridges:" + str(inventory[2]),3])
+    else:
+        Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]),3])
     Texthelper.write(screen, [("center", 540-136), "garage", 6])
     pygame.display.flip()
     
@@ -17,7 +20,7 @@ def garageinitUI(screen, ShipLv, inventory):
     pygame.display.flip()
     
     pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540), "Fuel:  lv " + str(ShipLv[1]), 3])
+    Texthelper.write(screen, [(635, 540), "Fuel: lv " + str(ShipLv[1]), 3])
     if inventory[1] >= ShipLv[1]*3:
         Texthelper.write(screen, [(1000, 540), "Upgrade", 3])
     else:
@@ -26,9 +29,9 @@ def garageinitUI(screen, ShipLv, inventory):
     pygame.display.flip()
     
     pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(500, 540+55), "torpedoes:", 3])
+    Texthelper.write(screen, [(470, 540+55), "torpedoes:", 3])
     if ShipLv[3] == 1:
-        Texthelper.write(screen, [(800, 540+55), "lv " + str(ShipLv[2]), 3])
+        Texthelper.write(screen, [(810, 540+55), "lv " + str(ShipLv[2]), 3])
         if inventory[2] >= ShipLv[2]*3:
             Texthelper.write(screen, [(1000, 540+55), "Upgrade", 3])
         else:
@@ -37,6 +40,9 @@ def garageinitUI(screen, ShipLv, inventory):
     else:
         Texthelper.write(screen, [(800, 540+55), "lv 0", 3])
         Texthelper.write(screen, [(1000, 540+55), "locked", 3])
+    pygame.display.flip()
+        
+    pygame.time.wait(waitTime)
     Texthelper.write(screen, [("center", 540+110), "Resume", 3])
     pygame.display.flip()
 
@@ -52,6 +58,11 @@ def GarageUI(screen, ShipLv, inventory):
         if Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]):
             inventory[1] = inventory[1] - (ShipLv[1]*3)
             ShipLv[1] += 1
+            status = "garageinit"
+    if inventory[2] >= ShipLv[2]*3:
+        if Texthelper.writeButton(screen, [(1000, 540+55), "Upgrade", 3]):
+            inventory[2] = inventory[2] - (ShipLv[2]*3)
+            ShipLv[2] += 1
             status = "garageinit"
     if Texthelper.writeButton(screen, [("center", 540+110), "Resume", 3]):
         status = "game"
@@ -118,4 +129,4 @@ def mapscreenUI(screen):
     if Texthelper.writeButton(screen, [(180, 520), "[Commence Flying]", 2.5]):
         status = "game"
     return status
-    
+   
