@@ -280,7 +280,18 @@ class Texthelper():
             Texthelper.scramble(-1)
         else:
             pass
-            
+
+class Screenhelper():
+    greyout = 1
+    def __init__(self,width, height):
+        Screenhelper.greyout = pygame.Surface((width,height))
+        Screenhelper.greyout.fill((125,125,125))
+        Screenhelper.greyout.set_alpha(125)
+        
+    #puts a transparent gray pane over the screen
+    def greyOut(screen):
+        screen.blit(Screenhelper.greyout, (0,0))
+
 
 class Filehelper():
     def __init__(self, filepath):

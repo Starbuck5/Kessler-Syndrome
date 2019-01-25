@@ -245,6 +245,10 @@ def main():
     sectornum = 1
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
+
+    # class setup
+    Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
+    Screenhelper(width,height)
     
     running = True
     while running:
@@ -281,6 +285,7 @@ def main():
             
         if status == "pauseinit":
             pygame.mouse.set_visible(True)
+            Screenhelper.greyOut(screen)
             pauseinitUI(screen)
             saveGame(sectornum, object_list[:], width, height)
             status = "paused"
@@ -296,8 +301,9 @@ def main():
         if status == "gameover":
             status = gameoverUI(screen)
 
-        if status == "mapscreen":
+        if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
+            Screenhelper.greyOut(screen)
             #consider automating connection drawing by using a map drawing method that would look at sectordesinations
             drawSector((960, 990), 1, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960-40, 990), (820+40, 970))
@@ -343,8 +349,12 @@ def main():
             drawSector((870, 105), 18, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (870+40,105), (1030-40,90))
             drawSector((1030, 90), 19, sectornum)
-            status = mapscreenUI(screen) #<-- placeholder for static text or buttons relating to status that will eventually be on the map screen
+            status = mapscreenUI(screen)            
             pygame.display.flip()
+            status = "mapscreen"
+
+        if status == "mapscreen":
+            status = mapscreenUI(screen) 
 
         if status == "exiting":
             pygame.quit()
@@ -397,7 +407,6 @@ def main():
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
-            Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
 
             # sound
             beat_timer = 250
@@ -488,7 +497,7 @@ def main():
                         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     previous_tick2 = ticks
                 if "m" in inputvar:
-                    status = "mapscreen"
+                    status = "mapscreeninit"
                 if "escape" in inputvar or "p" in inputvar or "windows" in inputvar and len(inputvar) == 1:
                     status = "pauseinit"
                 lasttransit += 1
