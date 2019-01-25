@@ -91,7 +91,7 @@ pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5", "number6", "number7", "number8", "number9", "lettera", "letterb",
                 "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
                 "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
-                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket"]
+                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket", "comma", "percent"]
 
 char_list = []
 for pathID in fontLocation:
@@ -161,7 +161,7 @@ class InputGetter():
         return self.currenttext
 
 char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]"] 
+              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]", ",", "%"] 
    
 class Texthelper():
     scalar = 1
