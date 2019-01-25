@@ -91,7 +91,7 @@ pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5", "number6", "number7", "number8", "number9", "lettera", "letterb",
                 "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
                 "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
-                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket", "comma", "percent"]
+                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket", "comma", "percent", "or"]
 
 char_list = []
 for pathID in fontLocation:
@@ -105,19 +105,25 @@ for pathID in fontLocation:
 
 class InputGetter():
     last_input = []
+    BLINKSPEED = 45
     def __init__ (self, initialtext, inputtype):
         self.initialtext = initialtext
         self.inputtype = inputtype
         self.currenttext = initialtext
         self.rawtext = initialtext[1]
         self.clicked = False
+        self.blink = 0
 
     def update(self, screen):
         if self.clicked == False:
             if Texthelper.writeButton(screen, self.currenttext) == True:
                 self.clicked = True
         if self.clicked == True:
-            if Texthelper.writeNullButton(screen, self.currenttext) == False:
+            InputGetter.timerhelper(self)
+            specialtext = self.currenttext[:]
+            if self.blink < InputGetter.BLINKSPEED/2:
+                specialtext[1] += "|"
+            if Texthelper.writeNullButton(screen, specialtext) == False:
                 self.clicked = False
             if self.inputtype == "int":
                 InputGetter.handleThisInt(self)
@@ -154,6 +160,13 @@ class InputGetter():
         self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
         InputGetter.last_input = inputvar
 
+    def timerhelper(self):
+        if self.blink < InputGetter.BLINKSPEED:
+            self.blink += 1
+        if self.blink == InputGetter.BLINKSPEED:
+            self.blink = 0
+        
+
     def getText(self):
         return self.rawtext
 
@@ -161,7 +174,7 @@ class InputGetter():
         return self.currenttext
 
 char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]", ",", "%"] 
+              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]", ",", "%", "|"] 
    
 class Texthelper():
     scalar = 1
