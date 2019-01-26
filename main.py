@@ -198,11 +198,6 @@ def main():
     scalar3 = 1.2 * scalarscalar # controls ship size
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
-    #texthelper setup for scaling
-    Texthelper.scalar = scalarscalar
-    Texthelper.width = width
-    Texthelper.height = height
-
     # settings
     max_speed = 4 * scalarscalar
     missile_lifespan = 130 * scalarscalar
@@ -249,6 +244,14 @@ def main():
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
     Screenhelper(width,height)
+    #texthelper setup for scaling
+    Texthelper.scalar = scalarscalar
+    Texthelper.width = width
+    Texthelper.height = height
+    #announcementbox setup
+    AnnouncementBox.width = width
+    AnnouncementBox.height = height
+    
     
     running = True
     while running:
@@ -447,10 +450,15 @@ def main():
                 filehelper.set(file_settings, 0)
                 file_settings = filehelper.get(0)
 
+
+            #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
+                            #"This is a test of the emergency broadcasting system, thank you very much")
+            
             status = "game"
 
         if status == "game":
             screen.fill(color)
+            #AnnouncementBox.play(screen)
 
             # sound
             if menu_music_fadeout >= 0:
@@ -511,7 +519,7 @@ def main():
                                 sectornum = destinations[i]
                                 lasttransit = 0
                                 new_objects = getObjects(sectornum, width, height)
-                                if new_objects[0] == "-1":
+                                if new_objects[0] == -1 and len(new_objects)<8:
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]

@@ -50,6 +50,10 @@ def scaleImage(image, scalar):
     image = pygame.transform.scale(image, (round(size[0]*scalar), round(size[1]*scalar)))
     return image
 
+def scretchImage(image, size):
+    image = pygame.transform.scale(image, (size[0], size[1]))
+    return image
+
 def handlePath(path):
     newpath = ""
     if OS == "mac":
@@ -172,6 +176,52 @@ class InputGetter():
 
     def getData(self):
         return self.currenttext
+
+
+class AnnouncementBox():
+    width = 1
+    height = 1
+    upcoming = []
+    def __init__(self, image, sound, text):
+        self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
+        self.sound = sound
+        self.text = text
+        self.currenttext = self.text.split()[0]
+        self.besttext = [self.text.split()[0]]
+        self.time = 0
+        self.runningtotal = 0 #used for line break stuff
+        AnnouncementBox.upcoming.append(self)
+
+    def play(screen):
+        if AnnouncementBox.upcoming != []:
+            AnnouncementBox.upcoming[0].draw(screen)
+            if AnnouncementBox.upcoming[0].time == 0:
+                AnnouncementBox.upcoming[0].sound.play()
+            AnnouncementBox.upcoming[0].timehelper()
+
+    def draw(self, screen):
+        screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
+        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.width*0.4),
+                                                 round(AnnouncementBox.height*0.1)), 4)
+        #Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)), self.currenttext, 2])
+        for i in range(len(self.besttext)):
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*i)), self.besttext[i], 2])    
+
+    def timehelper(self):
+        BREAKPOS = 32
+        self.time += 1
+        if self.time % 20 == 0 and len(self.currenttext) < len(self.text):
+            self.currenttext += " " + self.text[len(self.currenttext):].split()[0]
+            position = len(self.besttext)-1
+            self.besttext[position] += " " + self.text[len(self.besttext[position])+self.runningtotal:].split()[0]
+            if len(self.besttext[position]) > BREAKPOS:
+                linebreak = self.besttext[position].rindex(" ")
+                linestuff = self.besttext[position][linebreak:]
+                self.besttext[position] = self.besttext[position][:linebreak]
+                self.runningtotal += len(self.besttext[position])
+                self.besttext.append(linestuff)
+                
+
 
 char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
               "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]", ",", "%", "|"] 
@@ -323,7 +373,7 @@ class Filehelper():
         end = 0
         start = 0
         for i in range(len(parse_line)):
-            if isinstance(parse_line[i], list) != True:
+            if not isinstance(parse_line[i], list):
                 if parse_line[i].rfind("[") != -1:
                     start = i
                     parse_line[i] = parse_line[i][1:]
@@ -337,27 +387,17 @@ class Filehelper():
             parse_line = parse_line[:start] + [parse_line_sub] + parse_line[end:]
        
         for i in range(len(parse_line)):
-            if isinstance(parse_line[i], list):
-                for j in range(len(parse_line[i])):
-                    if parse_line[i][j].isdigit() == True:
-                        parse_line[i][j] = int(parse_line[i][j])
-                    elif "." in parse_line[i][j]:
-                        if parse_line[i][j][-1].isdigit():
-                            parse_line[i][j] = float(parse_line[i][j])  
-                    elif parse_line[i][j] == "True":
-                        parse_line[i][j] = True
-                    elif parse_line[i][j] == "False":
-                        parse_line[i][j] = False
-            else:
-                if parse_line[i].isdigit() == True:
-                        parse_line[i] = int(parse_line[i])
-                elif "." in parse_line[i]:
-                    if parse_line[i][-1].isdigit():
-                        parse_line[i] = float(parse_line[i])                        
-                elif parse_line[i] == "True":
-                    parse_line[i] = True
-                elif parse_line[i] == "False":
-                    parse_line[i] = False
+            if parse_line[i].isdigit():
+                    parse_line[i] = int(parse_line[i])
+            elif "." in parse_line[i]:
+                if parse_line[i][-1].isdigit():
+                    parse_line[i] = float(parse_line[i])
+            elif parse_line[i] != "" and parse_line[i][0] == "-" and parse_line[i][-1].isdigit():
+                parse_line[i] = -int(parse_line[i][1:])
+            elif parse_line[i] == "True":
+                parse_line[i] = True
+            elif parse_line[i] == "False":
+                parse_line[i] = False
         return parse_line
 
     #allows the program to set lines to whatever they want, within what I think they will           
