@@ -215,25 +215,36 @@ def makeAsteroidList(scalar2): #generates a list of offsets for all of the separ
                     "24", "25", "26", "27", "28", "29"]
     return asteroidlist
 
-def Rotation(xpos, ypos, points, rotationPosition):
+def RotatePoint(xpos, ypos, point, rotation):
+    point[1] -= ypos
+    point[0] -= xpos
+    revisedPoint = []
+    if point[0] or point[1]:
+        if point[1] > 0 and point[0] == 0:
+            currentPosition = 90
+        elif point[1] < 0 and point[0] == 0:
+            currentPosition = 270
+        elif point[0] > 0:
+            currentPosition = math.degrees(math.atan(point[1]/point[0]))
+        elif point[0] <= 0:
+            currentPosition = math.degrees(math.atan(point[1]/point[0])) + 180
+        realPosition = currentPosition + rotation
+        distance = (abs(point[0])**2 + abs(point[1])**2)**0.5
+        xPoint = math.cos(math.radians(realPosition)) * distance + xpos
+        yPoint = math.sin(math.radians(realPosition)) * distance + ypos
+        revisedPoint.append([xPoint, yPoint])
+    else:
+        #if the point being rotated around is in the list
+        point[1] += ypos
+        point[0] += xpos
+        revisedPoint.append([point[0], point[1]])
+    return revisedPoint
+
+def Rotate(xpos, ypos, points, rotationPosition):
     revisedPoints = []
     currentPosition = 0
     for i in range(int(len(points))):
-        points[i][1] -= ypos
-        points[i][0] -= xpos
-        if points[i][1] > 0 and points[i][0] == 0:
-            currentPosition = 90
-        elif points[i][1] < 0 and points[i][0] == 0:
-            currentPosition = 270
-        elif points[i][0] > 0:
-            currentPosition = math.degrees(math.atan(points[i][1]/points[i][0]))
-        elif points[i][0] <= 0:
-            currentPosition = math.degrees(math.atan(points[i][1]/points[i][0])) + 180
-        realPosition = currentPosition + rotationPosition
-        distance = (abs(points[i][0])**2 + abs(points[i][1])**2)**0.5
-        xPoint = math.cos(math.radians(realPosition)) * distance + xpos
-        yPoint = math.sin(math.radians(realPosition)) * distance + ypos
-        revisedPoints += [[xPoint, yPoint]]
+        revisedPoints += RotatePoint(xpos, ypos, points[i], rotationPosition)
     return revisedPoints
       
 class Asteroid():

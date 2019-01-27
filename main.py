@@ -43,7 +43,7 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
             screen.blit(graphlist[object_number-10], (xpos, ypos))
         if 69 < object_number < 100:
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
-            newAsteroidList = Rotation(xpos, ypos, AsteroidList, rotationPosition)
+            newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotationPosition)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
             
 
@@ -206,8 +206,7 @@ def main():
     missile_accel = 7 * scalarscalar
     step_x = 0.08 * scalarscalar
     step_y = 0.08 * scalarscalar
-    step_r = 0.06
-    step_r_friction = 0.02
+    step_r = 2.3
     step_drag = 0.004 * scalarscalar
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
@@ -409,8 +408,6 @@ def main():
             # changing variable setup
             object_list = getObjects(sectornum, width, height)
             rotationPosition = 0
-            rotationMom = 0
-            rotationMax = 2.5
             rotation = 90
             serialnumber = 2
             previous_tick = 0
@@ -482,7 +479,7 @@ def main():
             
             # input handling
             inputvar = keyboard()
-            thrust_vector = (math.cos(math.radians(rotation)), math.sin(math.radians(rotation)))
+            thrust_vector = (math.cos(math.radians(rotation-180)), math.sin(math.radians(rotation)))
             ticks = pygame.time.get_ticks()
             if inputvar:
                 if object_list[4] == 1 or object_list[4] == 5:
@@ -491,18 +488,15 @@ def main():
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        rotationMom -= step_r
-                        if rotationMom < -rotationMax:
-                            rotationMom = -rotationMax
+                        rotation += step_r
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        rotationMom += step_r
-                        if rotationMom > rotationMax:
-                            rotationMom = rotationMax
+                        rotation -= step_r
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
-                        object_list_addition = [object_list[0]+top_xrot*scalar3, object_list[1]-top_yrot*scalar3, xmom_miss, ymom_miss, 2, serialnumber, missile_lifespan, True]
+                        front_pointlist = RotatePoint(object_list[0], object_list[1], [object_list[0], object_list[1]-30*scalar3], rotation-90)
+                        object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, serialnumber, missile_lifespan, True]
                         object_list += object_list_addition
                         serialnumber += 1
                         previous_tick = ticks
@@ -534,32 +528,8 @@ def main():
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
                     DEVMODE = not DEVMODE
-                    previous_tick2 = ticks
-                    
-            if rotationMom > 0:
-                rotationMom -= step_r_friction
-            elif rotationMom < 0:
-                rotationMom += step_r_friction
-                            
+                    previous_tick2 = ticks                                             
             # input handling
-
-
-            # rotation section
-            rotation += rotationMom
-            top_xrot = 30 * math.cos(math.radians(rotation))
-            top_yrot = 30 * math.sin(math.radians(rotation))
-            right_yrot = 325 ** (1/2.0) * math.cos(math.radians(rotation - lower_rotation_constant))
-            right_xrot = 325 ** (1/2.0) * math.sin(math.radians(rotation - lower_rotation_constant))
-            left_yrot = 325 ** (1/2.0) * math.cos(math.radians(rotation + 180 + lower_rotation_constant))
-            left_xrot = 325 ** (1/2.0) * math.sin(math.radians(rotation + 180 + lower_rotation_constant))
-            if flame:
-                bottomflame_xrot = 20 * math.cos(math.radians(rotation))
-                bottomflame_yrot = 20 * math.sin(math.radians(rotation))
-                rightflame_xrot = 61 ** (1/2.0) * math.sin(math.radians(rotation - flame_rotation_constant))
-                rightflame_yrot = 61 ** (1/2.0) * math.cos(math.radians(rotation - flame_rotation_constant))
-                leftflame_xrot = 61 ** (1/2.0) * math.sin(math.radians(rotation + 180 + flame_rotation_constant))
-                leftflame_yrot = 61 ** (1/2.0) * math.cos(math.radians(rotation + 180 + flame_rotation_constant))
-            # rotation section
 
             # collision detection                         
             for i in range(int(len(object_list)/8)):
@@ -611,9 +581,9 @@ def main():
                 currentfuel -= 1
 
             #ship death
-            if currentarmor < 0 or currentfuel < 0:
-                object_list[6] = -10
+            if currentarmor <= 0 or currentfuel <= 0:
                 saveGame(sectornum, object_list, width, height)
+                object_list[6] = -10
                 sectornum = 1
                 object_list = getObjects(sectornum, width, height)
                 currentfuel = totalfuel
@@ -630,15 +600,19 @@ def main():
             
             # printer and flame and score            
             if object_list[4] == 1 or object_list[4] == 5:
-                ship_pointlist = [[object_list[0]+top_xrot*scalar3, object_list[1]-top_yrot*scalar3], [object_list[0]+right_xrot*scalar3, object_list[1]+right_yrot*scalar3], [object_list[0], object_list[1]],
-                                  [object_list[0]+left_xrot*scalar3, object_list[1]+left_yrot*scalar3]]
+                #ship_pointlist = [[50, 50 - 30], [50 + 15, 50 + 10], [50, 50], [50 - 15, 50 + 10]]
+                ship_pointlist = [[object_list[0], object_list[1]-30*scalar3], [object_list[0]+15*scalar3, object_list[1]+10*scalar3], [object_list[0], object_list[1]],
+                                  [object_list[0]-15*scalar3, object_list[1]+10*scalar3]]
+                ship_pointlist = Rotate(object_list[0], object_list[1], ship_pointlist, rotation-90)
             else:
                 ship_pointlist = [[0,0],[0,0]]
-            rotationPosition += 1
+            rotationPosition += 0.2
             printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics, rotationPosition)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
-                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+rightflame_xrot*scalar3, object_list[1]+rightflame_yrot*scalar3], [object_list[0]-bottomflame_xrot*scalar3, object_list[1]+bottomflame_yrot*scalar3],
-                                   [object_list[0]+leftflame_xrot*scalar3, object_list[1]+leftflame_yrot*scalar3]]
+                #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
+                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
+                                   [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
+                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, rotation-90)
                 pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
                 pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
             if flame == True and timer1 == 0:
