@@ -398,11 +398,9 @@ def main():
                 currentfuel = totalfuel
                 totalarmor = 10 + ShipLv[0]
                 currentarmor = totalarmor
-                if ShipLv[2] == 0:
-                    totalammunition = 0
-                else:
-                    totalammunition = ShipLv[2]*3
+                totalammunition = ShipLv[2]*3
                 ammunition = totalammunition
+                pygame.mouse.set_visible(False)
 
         if status == "gameinit":       
             # changing variable setup
