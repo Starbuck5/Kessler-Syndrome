@@ -10,7 +10,7 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics, rotationPosition):
     for i in range(int(len(object_list)/8)):
         xpos = object_list[(i * 8)]        
         ypos = object_list[1 + (i * 8)]
@@ -42,7 +42,9 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
         if 9 < object_number < 40:
             screen.blit(graphlist[object_number-10], (xpos, ypos))
         if 69 < object_number < 100:
-            pygame.draw.aalines(screen, (255,255,255), True, Asteroid.getPoints(xpos, ypos, object_number), 4)
+            AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
+            newAsteroidList = Rotation(xpos, ypos, AsteroidList, rotationPosition)
+            pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
             
 
 
@@ -204,7 +206,8 @@ def main():
     missile_accel = 7 * scalarscalar
     step_x = 0.08 * scalarscalar
     step_y = 0.08 * scalarscalar
-    step_r = 2.3 
+    step_r = 0.06
+    step_r_friction = 0.02
     step_drag = 0.004 * scalarscalar
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
@@ -396,15 +399,18 @@ def main():
                 currentfuel = totalfuel
                 totalarmor = 10 + ShipLv[0]
                 currentarmor = totalarmor
-                if ammunition_unlocked == 1:
-                    totalammunition = ShipLv[2]*3
-                else:
+                if ShipLv[2] == 0:
                     totalammunition = 0
+                else:
+                    totalammunition = ShipLv[2]*3
                 ammunition = totalammunition
 
         if status == "gameinit":       
             # changing variable setup
             object_list = getObjects(sectornum, width, height)
+            rotationPosition = 0
+            rotationMom = 0
+            rotationMax = 2.5
             rotation = 90
             serialnumber = 2
             previous_tick = 0
@@ -436,12 +442,11 @@ def main():
             currentfuel = totalfuel
             totalarmor = 10 + ShipLv[0]
             currentarmor = totalarmor
-            ammunition_unlocked = ShipLv[3]
             totalammunition = 0
-            if ammunition_unlocked == 1:
-                totalammunition = ShipLv[2]*3
-            else:
+            if ShipLv[2] == 0:
                 totalammunition = 0
+            else:
+                totalammunition = ShipLv[2]*3
             ammunition = totalammunition
 
             if file_settings[3] == 0:
@@ -486,9 +491,13 @@ def main():
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        rotation -= step_r
+                        rotationMom -= step_r
+                        if rotationMom < -rotationMax:
+                            rotationMom = -rotationMax
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        rotation += step_r
+                        rotationMom += step_r
+                        if rotationMom > rotationMax:
+                            rotationMom = rotationMax
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
@@ -526,11 +535,17 @@ def main():
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
                     DEVMODE = not DEVMODE
                     previous_tick2 = ticks
+                    
+            if rotationMom > 0:
+                rotationMom -= step_r_friction
+            elif rotationMom < 0:
+                rotationMom += step_r_friction
                             
             # input handling
 
 
             # rotation section
+            rotation += rotationMom
             top_xrot = 30 * math.cos(math.radians(rotation))
             top_yrot = 30 * math.sin(math.radians(rotation))
             right_yrot = 325 ** (1/2.0) * math.cos(math.radians(rotation - lower_rotation_constant))
@@ -548,16 +563,17 @@ def main():
 
             # collision detection                         
             for i in range(int(len(object_list)/8)):
-                for i2 in range(int(len(object_list)/8)):                   
+                i2 = i + 1
+                while i2 < int(len(object_list)/8):                   
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
-                            if ammunition_unlocked == 1:
-                                shipInventory[random.randint(0,2)] += 1
-                            else:
+                            if ShipLv[2] == 0:
                                 shipInventory[random.randint(0,1)] += 1
+                            else:
+                                shipInventory[random.randint(0,2)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             status = "garageinit"
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
@@ -568,19 +584,24 @@ def main():
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
                             Texthelper.scramble(150) #scrambles all game text for 150 ticks
-                        elif object_list[4 + (i * 8)] == 2 and 69 < object_list[4 + (i2 * 8)] < 100: #missile v asteroid collision
-                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                        elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
+                            object_list[(i2*8)+6] = -1
+                            object_list[(i*8)+6] = -1
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_only_sats: #missile v satellite collision
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+6] = -1
                             object_list[(i*8)+6] = -1
                         object_list += printerlist_add
+                    i2 += 1
                         
             # collision detection
 
             #inventory
-            if ammunition_unlocked == 1:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     containers:" + str(shipInventory[2]),3])
-            else:
+            if ShipLv[2] == 0:
                 Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
+            else:
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     containers:" + str(shipInventory[2]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
@@ -613,7 +634,8 @@ def main():
                                   [object_list[0]+left_xrot*scalar3, object_list[1]+left_yrot*scalar3]]
             else:
                 ship_pointlist = [[0,0],[0,0]]
-            printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+            rotationPosition += 1
+            printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics, rotationPosition)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+rightflame_xrot*scalar3, object_list[1]+rightflame_yrot*scalar3], [object_list[0]-bottomflame_xrot*scalar3, object_list[1]+bottomflame_yrot*scalar3],
                                    [object_list[0]+leftflame_xrot*scalar3, object_list[1]+leftflame_yrot*scalar3]]
