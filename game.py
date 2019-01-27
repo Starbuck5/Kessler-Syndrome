@@ -1,4 +1,5 @@
 import random
+import math
 
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -213,6 +214,38 @@ def makeAsteroidList(scalar2): #generates a list of offsets for all of the separ
                      [-37*scalar2, 0], [-24*scalar2, 23*scalar2], [0, 35*scalar2], [19*scalar2, 22*scalar2]],
                     "24", "25", "26", "27", "28", "29"]
     return asteroidlist
+
+def RotatePoint(xpos, ypos, point, rotation):
+    point[1] -= ypos
+    point[0] -= xpos
+    revisedPoint = []
+    if point[0] or point[1]:
+        if point[1] > 0 and point[0] == 0:
+            currentPosition = 90
+        elif point[1] < 0 and point[0] == 0:
+            currentPosition = 270
+        elif point[0] > 0:
+            currentPosition = math.degrees(math.atan(point[1]/point[0]))
+        elif point[0] <= 0:
+            currentPosition = math.degrees(math.atan(point[1]/point[0])) + 180
+        realPosition = currentPosition + rotation
+        distance = (abs(point[0])**2 + abs(point[1])**2)**0.5
+        xPoint = math.cos(math.radians(realPosition)) * distance + xpos
+        yPoint = math.sin(math.radians(realPosition)) * distance + ypos
+        revisedPoint.append([xPoint, yPoint])
+    else:
+        #if the point being rotated around is in the list
+        point[1] += ypos
+        point[0] += xpos
+        revisedPoint.append([point[0], point[1]])
+    return revisedPoint
+
+def Rotate(xpos, ypos, points, rotationPosition):
+    revisedPoints = []
+    currentPosition = 0
+    for i in range(int(len(points))):
+        revisedPoints += RotatePoint(xpos, ypos, points[i], rotationPosition)
+    return revisedPoints
       
 class Asteroid():
     asteroidlist = "not yet a thing"
@@ -237,27 +270,3 @@ class Asteroid():
             hitrange = 25
         return [xpos-hitrange*Asteroid.scalar2, ypos-hitrange*Asteroid.scalar2, hitrange*2*Asteroid.scalar2, hitrange*2*Asteroid.scalar2]
         
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-    
