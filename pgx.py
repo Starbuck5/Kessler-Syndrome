@@ -108,7 +108,7 @@ for pathID in fontLocation:
 
 
 class InputGetter():
-    last_input = []
+    ##last_input = []
     BLINKSPEED = 45
     def __init__ (self, initialtext, inputtype):
         self.initialtext = initialtext
@@ -117,6 +117,7 @@ class InputGetter():
         self.rawtext = initialtext[1]
         self.clicked = False
         self.blink = 0
+        self.last_input = ["getready"] ##
 
     def update(self, screen):
         if self.clicked == False:
@@ -135,11 +136,13 @@ class InputGetter():
                 InputGetter.handleThisString(self)
 
     def handleThisString(self):
-        last_input = InputGetter.last_input
+        last_input = self.last_input
         inputvar = keyboard()
         self.rawtext = self.currenttext[1]
         alphabet_check = "abcdefghijklmnopqrstuvwxyz"
 
+        if inputvar and last_input == ["getready"]:
+            self.rawtext = ""
         if inputvar != last_input:
             if "back" in inputvar or "delete" in inputvar:
                 self.rawtext = self.rawtext[:-1]
@@ -147,14 +150,18 @@ class InputGetter():
                 self.rawtext += inputvar[0]
             
         self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
-        InputGetter.last_input = inputvar
-
+        if last_input != ["getready"]: 
+            self.last_input = inputvar 
+        elif inputvar: 
+            self.last_input = inputvar 
 
     def handleThisInt(self):
-        last_input = InputGetter.last_input
+        last_input = self.last_input 
         inputvar = keyboard()
         self.rawtext = self.currenttext[1]
 
+        if inputvar and last_input == ["getready"]:
+            self.rawtext = "" 
         if inputvar != last_input:
             if "back" in inputvar or "delete" in inputvar:
                 self.rawtext = self.rawtext[:-1]
@@ -162,15 +169,17 @@ class InputGetter():
                 self.rawtext += inputvar[0]
             
         self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
-        InputGetter.last_input = inputvar
-
+        if last_input != ["getready"]:
+            self.last_input = inputvar
+        elif inputvar:
+            self.last_input = inputvar
+            
     def timerhelper(self):
         if self.blink < InputGetter.BLINKSPEED:
             self.blink += 1
         if self.blink == InputGetter.BLINKSPEED:
             self.blink = 0
         
-
     def getText(self):
         return self.rawtext
 
@@ -316,6 +325,8 @@ class Texthelper():
 
     def textlength(text_input):
         text = text_input[1]
+        if text and text[-1] == "|":
+            text = text[:-1]
         scale = text_input[2] * Texthelper.scalar
         x_range = 0
         for i in range(len(text)):
