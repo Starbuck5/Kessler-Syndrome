@@ -3,7 +3,7 @@ from pgx import *
 def garageinitUI(screen, ShipLv, inventory):
     waitTime = 300
     pygame.mouse.set_visible(True)
-    if ShipLv[3] == 1:
+    if ShipLv[2] != 0:
         Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]) + "     cartridges:" + str(inventory[2]),3])
     else:
         Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "     gas:" + str(inventory[1]),3])
@@ -30,15 +30,14 @@ def garageinitUI(screen, ShipLv, inventory):
     
     pygame.time.wait(waitTime)
     Texthelper.write(screen, [(470, 540+55), "torpedoes:", 3])
-    if ShipLv[3] == 1:
-        Texthelper.write(screen, [(810, 540+55), "lv " + str(ShipLv[2]), 3])
+    Texthelper.write(screen, [(810, 540+55), "lv " + str(ShipLv[2]), 3])
+    if ShipLv[2] != 0:
         if inventory[2] >= ShipLv[2]*3:
             Texthelper.write(screen, [(1000, 540+55), "Upgrade", 3])
         else:
             Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
         Texthelper.write(screen, [(1300, 540+55), "cost:" + str(ShipLv[2]*3)+ " containers", 3])
     else:
-        Texthelper.write(screen, [(800, 540+55), "lv 0", 3])
         Texthelper.write(screen, [(1000, 540+55), "locked", 3])
     pygame.display.flip()
         
@@ -128,5 +127,6 @@ def mapscreenUI(screen):
     status = "mapscreen"
     if Texthelper.writeButton(screen, [(180, 520), "[Commence Flying]", 2.5]):
         status = "game"
+        pygame.mouse.set_visible(False)
     return status
    
