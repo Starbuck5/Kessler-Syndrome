@@ -108,8 +108,8 @@ for pathID in fontLocation:
 
 
 class InputGetter():
-    ##last_input = []
     BLINKSPEED = 45
+    ALPHABETCHECK = "abcdefghijklmnopqrstuvwxyz"
     def __init__ (self, initialtext, inputtype):
         self.initialtext = initialtext
         self.inputtype = inputtype
@@ -117,8 +117,8 @@ class InputGetter():
         self.rawtext = initialtext[1]
         self.clicked = False
         self.blink = 0
-        self.last_input = ["getready"] ##
-
+        self.last_input = ["getready"]
+        
     def update(self, screen):
         if self.clicked == False:
             if Texthelper.writeButton(screen, self.currenttext) == True:
@@ -130,44 +130,28 @@ class InputGetter():
                 specialtext[1] += "|"
             if Texthelper.writeNullButton(screen, specialtext) == False:
                 self.clicked = False
-            if self.inputtype == "int":
-                InputGetter.handleThisInt(self)
-            if self.inputtype == "str":
-                InputGetter.handleThisString(self)
+            InputGetter.handleThisShit(self, self.inputtype)
 
-    def handleThisString(self):
+    def handleThisShit(self, inputtype):
         last_input = self.last_input
         inputvar = keyboard()
         self.rawtext = self.currenttext[1]
-        alphabet_check = "abcdefghijklmnopqrstuvwxyz"
-
-        if inputvar and last_input == ["getready"]:
-            self.rawtext = ""
-        if inputvar != last_input:
-            if "back" in inputvar or "delete" in inputvar:
-                self.rawtext = self.rawtext[:-1]
-            elif len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0] in alphabet_check:
-                self.rawtext += inputvar[0]
-            
-        self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
-        if last_input != ["getready"]: 
-            self.last_input = inputvar 
-        elif inputvar: 
-            self.last_input = inputvar 
-
-    def handleThisInt(self):
-        last_input = self.last_input 
-        inputvar = keyboard()
-        self.rawtext = self.currenttext[1]
-
+        
         if inputvar and last_input == ["getready"]:
             self.rawtext = "" 
         if inputvar != last_input:
             if "back" in inputvar or "delete" in inputvar:
                 self.rawtext = self.rawtext[:-1]
-            elif len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0].isdigit() == True:
-                self.rawtext += inputvar[0]
-            
+            if inputtype == "int":
+                if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0].isdigit() == True:
+                    self.rawtext += inputvar[0]
+            if inputtype == "str":
+                if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0] in InputGetter.ALPHABETCHECK:
+                    self.rawtext += inputvar[0]
+            else: #maybe inputtype of 'all' for everyting; or maybe 'str' should mean all
+                if len(inputvar) == 1 and len(inputvar[0]) == 1:
+                    self.rawtext += inputvar[0]
+        
         self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
         if last_input != ["getready"]:
             self.last_input = inputvar
