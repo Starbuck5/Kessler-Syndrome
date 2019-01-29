@@ -191,6 +191,7 @@ class AnnouncementBox():
     width = 1
     height = 1
     upcoming = []
+    #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
         self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
         self.sound = sound
@@ -199,11 +200,13 @@ class AnnouncementBox():
         self.besttext = [self.text.split()[0]]
         self.time = 0
         self.runningtotal = 0 #used for line break stuff
+        self.ended = False
         AnnouncementBox.upcoming.append(self)
 
     def play(screen):
         if AnnouncementBox.upcoming != []:
             AnnouncementBox.upcoming[0].draw(screen)
+        if AnnouncementBox.upcoming != []: ##entire entry can be deleted from draw, so this text actually is necessary
             if AnnouncementBox.upcoming[0].time == 0:
                 AnnouncementBox.upcoming[0].sound.play()
             AnnouncementBox.upcoming[0].timehelper()
@@ -212,9 +215,13 @@ class AnnouncementBox():
         screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.width*0.4),
                                                  round(AnnouncementBox.height*0.1)), 4)
-        #Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)), self.currenttext, 2])
         for i in range(len(self.besttext)):
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*i)), self.besttext[i], 2])    
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*i)), self.besttext[i], 2])
+        if self.ended:
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.21)), "Press Enter to Continue", 1.5])
+            inputvar = keyboard()
+            if "enter" in inputvar:
+                del AnnouncementBox.upcoming[0]
 
     def timehelper(self):
         BREAKPOS = 32
@@ -229,6 +236,8 @@ class AnnouncementBox():
                 self.besttext[position] = self.besttext[position][:linebreak]
                 self.runningtotal += len(self.besttext[position])
                 self.besttext.append(linestuff)
+        if len(self.currenttext) >= len(self.text):
+            self.ended = True
                 
 
 
