@@ -368,8 +368,8 @@ class Screenhelper():
     greyout = 1
     def __init__(self,width, height):
         Screenhelper.greyout = pygame.Surface((width,height))
-        Screenhelper.greyout.fill((125,125,125))
-        Screenhelper.greyout.set_alpha(125)
+        Screenhelper.greyout.fill((80,80,80))
+        Screenhelper.greyout.set_alpha(70)
         
     #puts a transparent gray pane over the screen
     def greyOut(screen):
