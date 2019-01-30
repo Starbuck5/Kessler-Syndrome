@@ -91,22 +91,38 @@ pygame.draw.rect(missingTexture, (0,0,0), (4,8,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (2,10,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 
-# font setup
-fontLocation = ["number0", "number1", "number2", "number3", "number4", "number5", "number6", "number7", "number8", "number9", "lettera", "letterb",
-                "letterc", "letterd", "lettere", "letterf", "letterg", "letterh", "letteri", "letterj", "letterk", "letterl", "letterm", "lettern",
-                "lettero", "letterp", "letterq", "letterr", "letters", "lettert", "letteru", "letterv", "letterw", "letterx",
-                "lettery", "letterz", "colon", "minus", "plus", "question", "leftbracket", "rightbracket", "comma", "percent", "or"]
 
-char_list = []
-for pathID in fontLocation:
-    try:
-        holdervar = loadImage("Assets\\font\\" + pathID + ".tif")
-    except:
-        print("error loading " + pathID + ".tif")
-        holdervar = missingTexture
-    char_list.append(holdervar)
+class Font():
+    char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+                  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]", "?", "+", "%", "|", "-"]
+    fontsheet = 1 #1 is placeholder for image
+    char_list = [] #holder for all the surfaces that are the letters
+    DEFAULT = (255,255,255) #default color for the font
+    def getReady(): #'poor mans __init__'
+        Font.fontsheet = loadImage("Assets\\font.gif")
+        fontsheet = Font.fontsheet
+        Font.splitSheet(fontsheet)
 
+    def splitSheet(fontsheet): #moves the stuff from one file into all of their separate surfaces
+        rows = 5 #number of character rows in font.gif
+        length_definitions = [10, 10, 10, 6, 9] #length of each row in font.gif
+        Font.char_list = []
+        for i in range(rows):
+            for j in range(length_definitions[i]):
+                Font.char_list.append(fontsheet.subsurface((2+10*j, 2+14*i, 8, 13)))
 
+    def changeColor(color):
+        fontsheet = Font.fontsheet
+        palette = list(fontsheet.get_palette())
+        palette[1] = color
+        fontsheet.set_palette(palette)
+        Font.splitSheet(fontsheet)
+        
+    def getChar(index):
+        return Font.char_list[index]
+
+Font.getReady() #initializes the font
+       
 class InputGetter():
     BLINKSPEED = 45
     ALPHABETCHECK = "abcdefghijklmnopqrstuvwxyz"
@@ -223,10 +239,6 @@ class AnnouncementBox():
         if len(self.currenttext) >= len(self.text):
             self.ended = True
                 
-
-
-char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-              "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", "-", "+", "?", "[", "]", ",", "%", "|"] 
    
 class Texthelper():
     scalar = 1
@@ -234,7 +246,7 @@ class Texthelper():
     height = 1
     last_click = ()
     missingTexture = missingTexture
-    char_index = char_index[:]
+    char_index = Font.char_index[:]
     scrambleTimeLeft = -1
 
     def interpretcoords(text_input):
@@ -270,7 +282,7 @@ class Texthelper():
         for i in range(len(text)):
             if text[i] != " ":
                 if text[i] in Texthelper.char_index:
-                    text3 = scaleImage(char_list[Texthelper.char_index.index(text[i])], scale)
+                    text3 = scaleImage(Font.getChar(Texthelper.char_index.index(text[i])), scale)
                 else:
                     text3 = scaleImage(Texthelper.missingTexture, scale)
                 screen.blit(text3, (horizontal_pos, text_location[1]))
@@ -337,7 +349,7 @@ class Texthelper():
             random.shuffle(Texthelper.char_index)
             Texthelper.scrambleTimeLeft = duration
         else:
-            Texthelper.char_index = char_index[:]
+            Texthelper.char_index = Font.char_index[:]
             Texthelper.scrambleTimeLeft = -1
 
     def timerhelper():

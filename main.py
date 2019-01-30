@@ -530,8 +530,14 @@ def main():
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
-                    DEVMODE = not DEVMODE
-                    previous_tick2 = ticks                                             
+                    DEVMODE = not DEVMODE #switches booleans
+                    previous_tick2 = ticks
+                if "shift" in inputvar and "f" in inputvar and (ticks - previous_tick2) > 360:
+                    colorA = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+                    while colorA[0] + colorA[1] + colorA[2] > 150:
+                        colorA = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+                    Font.changeColor(colorA)
+                    previous_tick2 = ticks
             # input handling
 
             # collision detection                         
