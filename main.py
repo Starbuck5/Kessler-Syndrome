@@ -153,6 +153,9 @@ def getObjects(sectornum, width, height):
                 object_list[i] = round(object_list[i]*width)     
             if i % 8 == 1:
                 object_list[i] = round(object_list[i]*height)
+    for i in range(int(len(object_list)/8)):
+        if object_list[4+i*8] == 2 or object_list[4+i*8] == 8:
+            object_list[6+i*8] = -10 #gets rid of shots and alien shots when entering a sector
     return object_list
 
 def drawSector(location, number, currentsector):
@@ -453,6 +456,8 @@ def main():
 
             #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
                             #"This is a test of the emergency broadcasting system, thank you very much")
+            #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
+                            #"This is a test of the emergency podcasting system, hell yeaaah")
             
             status = "game"
 
