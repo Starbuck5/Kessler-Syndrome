@@ -70,6 +70,13 @@ def handlePath(path):
                 newpath += path[i]
     return newpath
 
+def InGameTextBox(screen, xPos, yPos, width, height, String, scalar):
+    pygame.draw.rect(screen, (0,100,200), (xPos, yPos, width, height), 4)
+    length = Texthelper.textlength([(xPos, yPos), String, scalar])
+    xCenter = int(xPos+((width-length)/2))
+    yCenter = int(yPos+((height-12*scalar)/2))
+    Texthelper.write(screen, [(xCenter, yCenter), String, scalar])
+
 def loadImage(path):
     path = handlePath(path)
     image = pygame.image.load(path)
@@ -90,7 +97,6 @@ pygame.draw.rect(missingTexture, (0,0,0), (0,8,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (4,8,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (2,10,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
-
 
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
@@ -238,7 +244,7 @@ class AnnouncementBox():
                 self.besttext.append(linestuff)
         if len(self.currenttext) >= len(self.text):
             self.ended = True
-                
+    
    
 class Texthelper():
     scalar = 1
