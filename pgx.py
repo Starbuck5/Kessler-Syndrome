@@ -104,6 +104,9 @@ class Font():
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
+    COLOR = DEFAULT
+    SCRAMBLED = False
+    scrambleTimeLeft = -1
     def getReady(): #'poor mans __init__'
         Font.fontsheet = loadImage("Assets\\font.gif")
         fontsheet = Font.fontsheet
@@ -118,14 +121,43 @@ class Font():
                 Font.char_list.append(fontsheet.subsurface((2+10*j, 2+14*i, 8, 13)))
 
     def changeColor(color):
+        Font.COLOR = color
         fontsheet = Font.fontsheet
         palette = list(fontsheet.get_palette())
         palette[1] = color
         fontsheet.set_palette(palette)
         Font.splitSheet(fontsheet)
         
-    def getChar(index):
-        return Font.char_list[index]
+    def getChar(char, scale, mode):
+        if mode:
+            if Font.COLOR != (128,128,128):
+                Font.changeColor((128,128,128))
+        elif Font.COLOR != Font.DEFAULT:
+            Font.changeColor(Font.DEFAULT)
+            
+        if Font.SCRAMBLED:
+            charImage = scaleImage(Font.char_list[random.randint(0,len(Font.char_list)-1)], scale)
+        elif char in Font.char_index:
+            charImage = scaleImage(Font.char_list[Font.char_index.index(char)], scale)
+        else:
+            charImage = scaleImage(missingTexture, scale)
+        return charImage
+
+    def scramble(duration): #unscrambles with an input of -1
+        if duration != -1:
+            Font.scrambleTimeLeft = duration
+            Font.SCRAMBLED = True
+        else:
+            Font.scrambleTimeLeft = -1
+            Font.SCRAMBLED = False
+
+    def timerhelper():
+        if Font.scrambleTimeLeft >= 0:
+            Font.scrambleTimeLeft -= 1
+        if Font.scrambleTimeLeft == 0:
+            Font.scramble(-1)
+        else:
+            pass
 
 Font.getReady() #initializes the font
        
@@ -251,9 +283,6 @@ class Texthelper():
     width = 1
     height = 1
     last_click = ()
-    missingTexture = missingTexture
-    char_index = Font.char_index[:]
-    scrambleTimeLeft = -1
 
     def interpretcoords(text_input):
         text_location = text_input[0]
@@ -276,8 +305,7 @@ class Texthelper():
 
     # text_input = [(x, y), "text", text_scale]
     # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
-    def write(screen, text_input):
-        Texthelper.timerhelper()
+    def write(screen, text_input, *args):
         text_location = Texthelper.interpretcoords(text_input)[0]
         text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
@@ -287,10 +315,7 @@ class Texthelper():
         horizontal_pos = text_location[0]
         for i in range(len(text)):
             if text[i] != " ":
-                if text[i] in Texthelper.char_index:
-                    text3 = scaleImage(Font.getChar(Texthelper.char_index.index(text[i])), scale)
-                else:
-                    text3 = scaleImage(Texthelper.missingTexture, scale)
+                text3 = Font.getChar(text[i], scale, "pressed" in args)                
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
             if text[i] == " " and text[i-1] != " " and i != 0:
@@ -300,15 +325,19 @@ class Texthelper():
 
 
     def writeButton(screen, text_input):
-        Texthelper.write(screen, text_input)
+        click = mouse()
+
         text_location = Texthelper.interpretcoords(text_input)[0]
         text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
-
         x_range = Texthelper.textlength(text_input)
         y_range = 12 * scale
 
-        click = mouse()
+        if text_location[0] < pygame.mouse.get_pos()[0] < (text_location[0]+x_range) and text_location[1]<pygame.mouse.get_pos()[1]<(text_location[1]+y_range):
+            Texthelper.write(screen, text_input, "pressed")
+        else:
+            Texthelper.write(screen, text_input)
+
         #print(text_input[1] + ", click: " + str(click) + " last click: " + str(Texthelper.last_click))
         if click != Texthelper.last_click:
             if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
@@ -350,21 +379,6 @@ class Texthelper():
         x_range -= 3 * scale
         return x_range
 
-    def scramble(duration): #unscrambles with an input of -1
-        if duration != -1:
-            random.shuffle(Texthelper.char_index)
-            Texthelper.scrambleTimeLeft = duration
-        else:
-            Texthelper.char_index = Font.char_index[:]
-            Texthelper.scrambleTimeLeft = -1
-
-    def timerhelper():
-        if Texthelper.scrambleTimeLeft >= 0:
-            Texthelper.scrambleTimeLeft -= 1
-        if Texthelper.scrambleTimeLeft == 0:
-            Texthelper.scramble(-1)
-        else:
-            pass
 
 class Screenhelper():
     greyout = 1
