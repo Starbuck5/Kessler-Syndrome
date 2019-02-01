@@ -368,13 +368,33 @@ def main():
             pygame.quit()
             raise SystemExit
 
+        if status == "homeinit":
+            screen.fill(color)
+            homeinitUI(screen, ShipLv, homeInventory)
+            status = "home"
+
+        if status == "home":
+            homeHelp = homeUI(screen, shipInventory, homeInventory)
+            status = homeHelp[0]
+            shipInventory = homeHelp[1]
+
+        if status == "shopinit":
+            screen.fill(color)
+            repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, ShipLv, homeInventory)
+            status = "shop"
+
+        if status == "shop":
+            shopHelp = repairShopUI(screen, ShipLv, homeInventory)
+            status = shopHelp[0]
+            if shopHelp[1] == "fuel":
+                currentfuel = totalfuel
+            elif shopHelp[1] == "armor":
+                currentarmor = totalarmor
+            elif shopHelp[1] == "ammunition":
+                ammunition = totalammunition
+
         if status == "garageinit":
             #ship lv [armor, fuel]
-            homeInventory[0] = homeInventory[0] + shipInventory[0]
-            homeInventory[1] = homeInventory[1] + shipInventory[1]
-            homeInventory[2] = homeInventory[2] + shipInventory[2]
-            homeInventory[3] = homeInventory[3] + shipInventory[3]
-            filehelper.set(homeInventory, 2)
             screen.fill(color)
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
@@ -390,20 +410,10 @@ def main():
             homeInventory = garageHelp[2]
             filehelper.set(ShipLv,3)
             filehelper.set(homeInventory,2)
-            if status == "game":
-                shipInventory = [0,0,0,0]
-                object_list[2] = 0
-                object_list[3] = 0
-                object_list[4] = 5
-                object_list[6] = 500
-                object_list[7] = True
+            if status == "homeinit":
                 totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
-                currentfuel = totalfuel
                 totalarmor = 10 + ShipLv[0]
-                currentarmor = totalarmor
                 totalammunition = ShipLv[2]*3
-                ammunition = totalammunition
-                pygame.mouse.set_visible(False)
 
         if status == "gameinit":       
             # changing variable setup
@@ -554,7 +564,9 @@ def main():
                             else:
                                 shipInventory[random.randint(0,2)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
-                            status = "garageinit"
+                            InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
+                            if "enter" in inputvar:
+                                status = "homeinit"
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
@@ -577,10 +589,10 @@ def main():
             # collision detection
 
             #inventory
-            if ShipLv[2] == 0:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]),3])
+            if ShipLv[2] != 0:
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   containers:" + str(shipInventory[2]) + "    caps:" + str(shipInventory[3]),3])
             else:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "     containers:" + str(shipInventory[2]),3])
+                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "    caps:" + str(shipInventory[3]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
