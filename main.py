@@ -373,16 +373,19 @@ def main():
         if status == "homeinit":
             screen.fill(color)
             homeinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "home"
 
         if status == "home":
             homeHelp = homeUI(screen, shipInventory, homeInventory)
             status = homeHelp[0]
             shipInventory = homeHelp[1]
+            pygame.display.flip()
 
         if status == "shopinit":
             screen.fill(color)
             repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "shop"
 
         if status == "shop":
@@ -394,6 +397,7 @@ def main():
                 currentarmor = totalarmor
             elif shopHelp[1] == "ammunition":
                 ammunition = totalammunition
+            pygame.display.flip()
 
         if status == "garageinit":
             #ship lv [armor, fuel]
@@ -401,6 +405,7 @@ def main():
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "garage"
 
         if status == "garage":
@@ -416,6 +421,7 @@ def main():
                 totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
                 totalarmor = 10 + ShipLv[0]
                 totalammunition = ShipLv[2]*3
+            pygame.display.flip()
 
         if status == "gameinit":       
             # changing variable setup
