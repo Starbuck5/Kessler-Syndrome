@@ -100,7 +100,7 @@ pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-                  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]", "?", "+", "%", "|", "-"]
+                  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]", "?", "+", "%", "|", "-", "&"]
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
@@ -114,7 +114,7 @@ class Font():
 
     def splitSheet(fontsheet): #moves the stuff from one file into all of their separate surfaces
         rows = 5 #number of character rows in font.gif
-        length_definitions = [10, 10, 10, 6, 9] #length of each row in font.gif
+        length_definitions = [10, 10, 10, 6, 10] #length of each row in font.gif
         Font.char_list = []
         for i in range(rows):
             for j in range(length_definitions[i]):
