@@ -490,17 +490,18 @@ def main():
                 filehelper.set(file_settings, 0)
                 file_settings = filehelper.get(0)
 
-
-            #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
-                            #"This is a test of the emergency broadcasting system, thank you very much")
-            #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
-                            #"This is a test of the emergency podcasting system, hell yeaaah")
+            if file_settings[3] == 1:
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"), pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Hey you, still alive out there? Then go pick up some space debris like a good prisoner")
+                file_settings[3] = 2
+                filehelper.set(file_settings, 0)
             
             status = "game"
 
         if status == "game":
             screen.fill(color)
-            #AnnouncementBox.play(screen)
+            AnnouncementBox.play(screen)
+            Font.timerhelper() #once a game loop update to a scramble timer
 
             # sound
             if menu_music_fadeout >= 0:
@@ -591,7 +592,8 @@ def main():
                             else:
                                 shipInventory[random.randint(0,2)] += 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
-                            InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
+                            #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
+                            Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
