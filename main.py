@@ -300,7 +300,6 @@ def main():
 
         if status == "paused":
             status = pauseUI(screen)
-            pygame.display.flip()
 
         if status == "gameoverinit":            
             pygame.mouse.set_visible(True)
@@ -363,33 +362,39 @@ def main():
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen)
-            pygame.display.flip()
+            status = mapscreenUI(screen) 
 
         if status == "exiting":
             pygame.quit()
             raise SystemExit
 
         if status == "homeinit":
+            fuelHelp = upgrades.get(ShipLv[1]+20)
+            totalfuel = fuelHelp[4]
+            armorHelp = upgrades.get(ShipLv[0])
+            totalarmor = armorHelp[4]
+            totalammunition = 0
+            if ShipLv[2] == 0:
+                totalammunition = 0
+            else:
+                ammunitionHelp = upgrades.get(ShipLv[2]+40)
+                totalammunition = ammunitionHelp[4]
             screen.fill(color)
-            homeinitUI(screen, ShipLv, homeInventory)
-            pygame.display.flip()
+            homeinitUI(screen, homeInventory)
             status = "home"
 
         if status == "home":
             homeHelp = homeUI(screen, shipInventory, homeInventory)
             status = homeHelp[0]
             shipInventory = homeHelp[1]
-            pygame.display.flip()
 
         if status == "shopinit":
             screen.fill(color)
-            repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, ShipLv, homeInventory)
-            pygame.display.flip()
+            repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
             status = "shop"
 
         if status == "shop":
-            shopHelp = repairShopUI(screen, ShipLv, homeInventory)
+            shopHelp = repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
             status = shopHelp[0]
             if shopHelp[1] == "fuel":
                 currentfuel = totalfuel
@@ -397,7 +402,6 @@ def main():
                 currentarmor = totalarmor
             elif shopHelp[1] == "ammunition":
                 ammunition = totalammunition
-            pygame.display.flip()
 
         if status == "garageinit":
             #ship lv [armor, fuel]
@@ -405,23 +409,34 @@ def main():
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
-            pygame.display.flip()
             status = "garage"
 
         if status == "garage":
-            ShipLv = filehelper.get(3)
-            homeInventory = filehelper.get(2)
-            garageHelp = GarageUI(screen, ShipLv, homeInventory)
-            status = garageHelp[0]
-            ShipLv = garageHelp[1]
-            homeInventory = garageHelp[2]
-            filehelper.set(ShipLv,3)
-            filehelper.set(homeInventory,2)
-            if status == "homeinit":
-                totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
-                totalarmor = 10 + ShipLv[0]
-                totalammunition = ShipLv[2]*3
-            pygame.display.flip()
+            status = GarageUI(screen)
+                
+        if status == "armorUpgradeinit":
+            screen.fill(color)
+            armorUpgradeinitUI(screen, ShipLv, homeInventory)
+            status = "armorUpgrade"
+
+        if status == "armorUpgrade":
+            status = armorUpgradeUI(screen, ShipLv, homeInventory)
+
+        if status == "fuelUpgradeinit":
+            screen.fill(color)
+            fuelUpgradeinitUI(screen, ShipLv, homeInventory)
+            status = "fuelUpgrade"
+
+        if status == "fuelUpgrade":
+            status = fuelUpgradeUI(screen, ShipLv, homeInventory)
+
+        if status == "ammoUpgradeinit":
+            screen.fill(color)
+            ammoUpgradeinitUI(screen, ShipLv, homeInventory)
+            status = "ammoUpgrade"
+
+        if status == "ammoUpgrade":
+            status = ammoUpgradeUI(screen, ShipLv, homeInventory)
 
         if status == "gameinit":       
             # changing variable setup
@@ -450,19 +465,23 @@ def main():
             
             #inventory
             homeInventory = filehelper.get(2)
-            shipInventory = [0,0,0,0]
+            shipInventory = [0,0,0,0,0]
 
             #fuel and armor and ammunition
+            upgrades = Filehelper("assets\\upgrades.txt")
             ShipLv = filehelper.get(3)
-            totalfuel = 1000 + ((ShipLv[1] - 1) * 50)
+            fuelHelp = upgrades.get(ShipLv[1]+20)
+            totalfuel = fuelHelp[4]
             currentfuel = totalfuel
-            totalarmor = 10 + ShipLv[0]
+            armorHelp = upgrades.get(ShipLv[0])
+            totalarmor = armorHelp[4]
             currentarmor = totalarmor
             totalammunition = 0
             if ShipLv[2] == 0:
                 totalammunition = 0
             else:
-                totalammunition = ShipLv[2]*3
+                ammunitionHelp = upgrades.get(ShipLv[2]+40)
+                totalammunition = ammunitionHelp[4]
             ammunition = totalammunition
 
             if file_settings[3] == 0:
@@ -482,7 +501,6 @@ def main():
         if status == "game":
             screen.fill(color)
             #AnnouncementBox.play(screen)
-            Font.timerhelper() #once a game loop update to a scramble timer
 
             # sound
             if menu_music_fadeout >= 0:
@@ -583,7 +601,7 @@ def main():
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
-                            Font.scramble(100) #scrambles all game text for 100 ticks
+                            Texthelper.scramble(150) #scrambles all game text for 150 ticks
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+6] = -1
@@ -598,10 +616,7 @@ def main():
             # collision detection
 
             #inventory
-            if ShipLv[2] != 0:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   containers:" + str(shipInventory[2]) + "    caps:" + str(shipInventory[3]),3])
-            else:
-                Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "     gas:" + str(shipInventory[1]) + "    caps:" + str(shipInventory[3]),3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]) + "    torpedoes:" + str(shipInventory[4]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
