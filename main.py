@@ -471,15 +471,17 @@ def main():
                 filehelper.set(file_settings, 0)
                 file_settings = filehelper.get(0)
 
-
-            #AnnouncementBox(loadImage("Assets\\announcements\\question3.tif"), pygame.mixer.Sound(file="Assets\\announcements\\testaudio.wav"),
-                            #"This is a test of the emergency broadcasting system, thank you very much")
+            if file_settings[3] == 1:
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"), pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Hey you, still alive out there? Then go pick up some space debris like a good prisoner")
+                file_settings[3] = 2
+                filehelper.set(file_settings, 0)
             
             status = "game"
 
         if status == "game":
             screen.fill(color)
-            #AnnouncementBox.play(screen)
+            AnnouncementBox.play(screen)
             Font.timerhelper() #once a game loop update to a scramble timer
 
             # sound
