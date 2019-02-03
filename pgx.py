@@ -70,13 +70,6 @@ def handlePath(path):
                 newpath += path[i]
     return newpath
 
-def InGameTextBox(screen, xPos, yPos, width, height, String, scalar):
-    pygame.draw.rect(screen, (0,100,200), (xPos, yPos, width, height), 4)
-    length = Texthelper.textlength([(xPos, yPos), String, scalar])
-    xCenter = int(xPos+((width-length)/2))
-    yCenter = int(yPos+((height-12*scalar)/2))
-    Texthelper.write(screen, [(xCenter, yCenter), String, scalar])
-
 def loadImage(path):
     path = handlePath(path)
     image = pygame.image.load(path)
@@ -323,6 +316,17 @@ class Texthelper():
             if text[i] == " " and text[i-1] == " " and i != 0:
                 horizontal_pos += 11 * scale
 
+    def writeBox(screen, text_input, **kwargs):
+        padding = 18 * Texthelper.scalar
+        color = (255,255,255)
+        if 'color' in kwargs:
+            color = kwargs['color']
+        if 'padding' in kwargs:
+            padding = kwargs['padding']
+        Texthelper.write(screen, text_input)
+        x, y = text_input[0]
+        pygame.draw.rect(screen, color, [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar+padding],
+                         int(2*Texthelper.scalar))
 
     def writeButton(screen, text_input):
         click = mouse()
@@ -402,27 +406,12 @@ class Filehelper():
         file.close()
 
         parse_line = contents[line]
-        parse_line = parse_line[1:]
-        whitespace = len(parse_line) - parse_line.rindex("]")
-        parse_line = parse_line[:-whitespace]
-        parse_line = parse_line.split(", ")
-        end = 0
-        start = 0
-        for i in range(len(parse_line)):
-            if not isinstance(parse_line[i], list):
-                if parse_line[i].rfind("[") != -1:
-                    start = i
-                    parse_line[i] = parse_line[i][1:]
-                if parse_line[i].rfind("]") != -1:
-                    end = i + 1
-                    parse_line[i] = parse_line[i][:-1]
-        if end != 0:
-            parse_line_sub = []
-            for i in range(end-start):
-                parse_line_sub.append(parse_line[i+start])
-            parse_line = parse_line[:start] + [parse_line_sub] + parse_line[end:]
+        parse_line = parse_line[1:] #gets rid of leading bracket
+        parse_line = parse_line.rstrip() #gets rid of any trailing whitespace
+        parse_line = parse_line[:-1] #gets rid of ending bracket
+        parse_line = parse_line.split(", ") #turns it into a list of string elements
        
-        for i in range(len(parse_line)):
+        for i in range(len(parse_line)): #goes through the list guessing the types of the elements
             if parse_line[i].isdigit():
                     parse_line[i] = int(parse_line[i])
             elif "." in parse_line[i]:
