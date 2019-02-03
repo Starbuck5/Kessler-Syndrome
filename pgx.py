@@ -2,6 +2,7 @@
 import pygame
 import random
 OS = "windows" #other option = "mac"
+SELCOLOR = (112,128,144) #color for moused over buttons
 
 def keyboard():
     inputvar = []
@@ -123,8 +124,8 @@ class Font():
         
     def getChar(char, scale, mode):
         if mode:
-            if Font.COLOR != (128,128,128):
-                Font.changeColor((128,128,128))
+            if Font.COLOR != SELCOLOR:
+                Font.changeColor(SELCOLOR)
         elif Font.COLOR != Font.DEFAULT:
             Font.changeColor(Font.DEFAULT)
             
@@ -366,7 +367,7 @@ class Texthelper():
         click = mouse()
         x, y = text_input[0]
         if x-padding < pygame.mouse.get_pos()[0] < x+Texthelper.textlength(text_input)+padding*2 and (y-padding/2 < pygame.mouse.get_pos()[1] < y+12*Texthelper.scalar*text_input[2]+padding):
-           Texthelper.writeBox(screen, text_input, color=(128,128,128), padding=padding, pressed=True)
+           Texthelper.writeBox(screen, text_input, color=SELCOLOR, padding=padding, pressed=True)
         else:
             Texthelper.writeBox(screen, text_input, color=color, padding=padding)
 
