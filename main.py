@@ -295,19 +295,23 @@ def main():
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             pauseinitUI(screen)
+            pygame.display()
             saveGame(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
             status = pauseUI(screen)
+            pygame.display()
 
         if status == "gameoverinit":            
             pygame.mouse.set_visible(True)
             gameoverinitUI(screen)
+            pygame.display()
             status = "gameover"
 
         if status == "gameover":
             status = gameoverUI(screen)
+            pygame.display()
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
@@ -362,7 +366,8 @@ def main():
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen) 
+            status = mapscreenUI(screen)
+            pygame.display.flip()
 
         if status == "exiting":
             pygame.quit()
@@ -381,20 +386,24 @@ def main():
                 totalammunition = ammunitionHelp[4]
             screen.fill(color)
             homeinitUI(screen, homeInventory)
+            pygame.display.flip()
             status = "home"
 
         if status == "home":
             homeHelp = homeUI(screen, shipInventory, homeInventory)
+            pygame.display.flip()
             status = homeHelp[0]
             shipInventory = homeHelp[1]
 
         if status == "shopinit":
             screen.fill(color)
             repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
+            pygame.display.flip()
             status = "shop"
 
         if status == "shop":
             shopHelp = repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
+            pygame.display.flip()
             status = shopHelp[0]
             if shopHelp[1] == "fuel":
                 currentfuel = totalfuel
@@ -409,34 +418,42 @@ def main():
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "garage"
 
         if status == "garage":
             status = GarageUI(screen)
+            pygame.display.flip()
                 
         if status == "armorUpgradeinit":
             screen.fill(color)
             armorUpgradeinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "armorUpgrade"
 
         if status == "armorUpgrade":
             status = armorUpgradeUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
 
         if status == "fuelUpgradeinit":
             screen.fill(color)
             fuelUpgradeinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "fuelUpgrade"
 
         if status == "fuelUpgrade":
             status = fuelUpgradeUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
 
         if status == "ammoUpgradeinit":
             screen.fill(color)
             ammoUpgradeinitUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
             status = "ammoUpgrade"
 
         if status == "ammoUpgrade":
             status = ammoUpgradeUI(screen, ShipLv, homeInventory)
+            pygame.display.flip()
 
         if status == "gameinit":       
             # changing variable setup
