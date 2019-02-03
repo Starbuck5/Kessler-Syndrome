@@ -275,7 +275,7 @@ class Texthelper():
     scalar = 1
     width = 1
     height = 1
-    last_click = ()
+    last_click = () 
 
     def interpretcoords(text_input):
         text_location = text_input[0]
@@ -323,9 +323,14 @@ class Texthelper():
             color = kwargs['color']
         if 'padding' in kwargs:
             padding = kwargs['padding']
-        Texthelper.write(screen, text_input)
+
+        if 'pressed' in kwargs:
+            Texthelper.write(screen, text_input, "pressed")
+        else:
+            Texthelper.write(screen, text_input)
+        
         x, y = text_input[0]
-        pygame.draw.rect(screen, color, [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar+padding],
+        pygame.draw.rect(screen, color, [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding],
                          int(2*Texthelper.scalar))
 
     def writeButton(screen, text_input):
@@ -350,6 +355,28 @@ class Texthelper():
             else:
                 return False
 
+    def writeButtonBox(screen, text_input, **kwargs):
+        padding = 18 * Texthelper.scalar
+        color = (255,255,255)
+        if 'color' in kwargs:
+            color = kwargs['color']
+        if 'padding' in kwargs:
+            padding = kwargs['padding']
+            
+        click = mouse()
+        x, y = text_input[0]
+        if x-padding < pygame.mouse.get_pos()[0] < x+Texthelper.textlength(text_input)+padding*2 and (y-padding/2 < pygame.mouse.get_pos()[1] < y+12*Texthelper.scalar*text_input[2]+padding):
+           Texthelper.writeBox(screen, text_input, color=(128,128,128), padding=padding, pressed=True)
+        else:
+            Texthelper.writeBox(screen, text_input, color=color, padding=padding)
+
+        if click != Texthelper.last_click:            
+            if x-padding < click[1] < x+Texthelper.textlength(text_input)+padding*2 and y-padding/2 < click[2] < y+12*Texthelper.scalar*text_input[2]+padding:
+                Texthelper.last_click = click
+                return True
+            else:
+                return False
+        
     def writeNullButton(screen, text_input):
         Texthelper.write(screen, text_input)
         text_location = Texthelper.interpretcoords(text_input)[0]
