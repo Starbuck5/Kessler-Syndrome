@@ -1,7 +1,7 @@
 from pgx import *
+waitTime = 300
 
 def homeinitUI(screen, inventory):
-    waitTime = 300
     pygame.mouse.set_visible(True)
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
@@ -40,15 +40,15 @@ def homeUI(screen, shipInventory, homeInventory):
         homeInventory[1] = homeInventory[1] + shipInventory[1]
         homeInventory[2] = homeInventory[2] + shipInventory[2]
         homeInventory[3] = homeInventory[3] + shipInventory[3]
+        homeInventory[4] = homeInventory[4] + shipInventory[4]
         filehelper.set(homeInventory, 2)
-        shipInventory = [0,0,0,0]
+        shipInventory = [0,0,0,0,0]
         status = "homeinit"
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
     return [status, shipInventory]
 
 def repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, inventory):
-    waitTime = 300
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
@@ -97,25 +97,36 @@ def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarm
     upgrades = Filehelper("assets\\upgrades.txt")
     repairRefill = "none"
     status = "shop"
-    if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]) and currentarmor != totalarmor:
-        homeInventory[0] -= int((totalarmor - currentarmor)/5)
-        repairRefill = "armor"
-        status = "shopinit"
-    if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]) and currentfuel != totalfuel:
-        homeInventory[1] -= int((totalfuel-currentfuel)/250)
-        repairRefill = "fuel"
-        status = "shopinit"
-    if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]) and ammunition != totalammunition:
-        homeInventory[4] -= int((ammunition - totalammunition))
-        repairRefill = "ammunition"
-        status = "shopinit"
+    if currentarmor != totalarmor:
+        if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
+            homeInventory[0] -= int((totalarmor - currentarmor)/5)
+            repairRefill = "armor"
+            status = "shopinit"
+    else:
+        Texthelper.write(screen, [(1000, 540-55), "full", 3])
+
+    if currentfuel != totalfuel:
+        if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
+            homeInventory[1] -= int((totalfuel-currentfuel)/250)
+            repairRefill = "fuel"
+            status = "shopinit"
+    else:
+        Texthelper.write(screen, [(1000, 540), "full", 3])
+
+    if ammunition != totalammunition: 
+        if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
+            homeInventory[4] -= int((ammunition - totalammunition))
+            repairRefill = "ammunition"
+            status = "shopinit"
+    else:
+        Texthelper.write(screen, [("center", 540+110), "back", 3])
+    
     if  Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
     filehelper.set(homeInventory,2)
     return [status, repairRefill]
 
 def garageinitUI(screen, ShipLv, inventory):
-    waitTime = 300
     pygame.mouse.set_visible(True)
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
@@ -164,7 +175,6 @@ def armorUpgradeinitUI(screen, ShipLv, inventory):
     cost = upgrades.get(ShipLv[0]+1)
     upgradeStat = cost[4]
     addedStat = upgradeStat - currentStat
-    waitTime = 300
     pygame.mouse.set_visible(True)
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-235), "armor upgrade", 6])
@@ -203,16 +213,19 @@ def armorUpgradeUI(screen, ShipLv, inventory):
     upgrades = Filehelper("assets\\upgrades.txt")
     status = "armorUpgrade"
     cost = upgrades.get(ShipLv[0]+1)
-    if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]) and inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        inventory[0] -= cost[0]
-        inventory[1] -= cost[1]
-        inventory[2] -= cost[2]
-        inventory[3] -= cost[3]
-        ShipLv[0] += 1
-        status = "garageinit"
-        filehelper.set(inventory, 2)
-        filehelper.set(ShipLv, 3)
-    elif Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
+    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
+        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+            inventory[0] -= cost[0]
+            inventory[1] -= cost[1]
+            inventory[2] -= cost[2]
+            inventory[3] -= cost[3]
+            ShipLv[0] += 1
+            status = "garageinit"
+            filehelper.set(inventory, 2)
+            filehelper.set(ShipLv, 3)
+    else:
+        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "garageinit"
     return status
 
@@ -262,16 +275,19 @@ def fuelUpgradeUI(screen, ShipLv, inventory):
     upgrades = Filehelper("assets\\upgrades.txt")
     status = "fuelUpgrade"
     cost = upgrades.get(ShipLv[0]+21)
-    if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]) and inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        inventory[0] -= cost[0]
-        inventory[1] -= cost[1]
-        inventory[2] -= cost[2]
-        inventory[3] -= cost[3]
-        ShipLv[0] += 1
-        status = "garageinit"
-        filehelper.set(inventory, 2)
-        filehelper.set(ShipLv, 3)
-    elif Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
+    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
+        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+            inventory[0] -= cost[0]
+            inventory[1] -= cost[1]
+            inventory[2] -= cost[2]
+            inventory[3] -= cost[3]
+            ShipLv[0] += 1
+            status = "garageinit"
+            filehelper.set(inventory, 2)
+            filehelper.set(ShipLv, 3)
+    else:
+        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "garageinit"
     return status
 
@@ -321,16 +337,19 @@ def ammoUpgradeUI(screen, ShipLv, inventory):
     upgrades = Filehelper("assets\\upgrades.txt")
     status = "ammoUpgrade"
     cost = upgrades.get(ShipLv[0]+41)
-    if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]) and inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        inventory[0] -= cost[0]
-        inventory[1] -= cost[1]
-        inventory[2] -= cost[2]
-        inventory[3] -= cost[3]
-        ShipLv[0] += 1
-        status = "garageinit"
-        filehelper.set(inventory, 2)
-        filehelper.set(ShipLv, 3)
-    elif Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
+    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
+        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+            inventory[0] -= cost[0]
+            inventory[1] -= cost[1]
+            inventory[2] -= cost[2]
+            inventory[3] -= cost[3]
+            ShipLv[0] += 1
+            status = "garageinit"
+            filehelper.set(inventory, 2)
+            filehelper.set(ShipLv, 3)
+    else:
+        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "garageinit"
     return status
     
