@@ -1,5 +1,86 @@
 from pgx import *
 waitTime = 300
+upgrades = Filehelper("assets\\upgrades.txt")
+
+def timedFlip():
+    pygame.display.flip()
+    pygame.time.wait(waitTime)
+
+class UpgradeScreenStorage():
+    currentStat = -1
+    addedStat = -1
+    cost = -1
+    editingIndex = -1
+    
+
+def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = true/false init, name = fuel/armor/etc.   
+    if mode: #whether it should be init-ing or not
+        driveHead = 0
+        if name == "armor":
+            driveHead = 0
+            editingIndex = 0
+        if name == "fuel":
+            driveHead = 20
+            editingIndex = 1
+        if name == "torpedoe":
+            driveHead = 40
+            editingIndex = 2
+        UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[0]+driveHead)[4] 
+        UpgradeScreenStorage.cost = upgrades.get(ShipLv[0]+driveHead+1)
+        UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
+        UpgradeScreenStorage.editingIndex = editingIndex
+
+    currentStat = UpgradeScreenStorage.currentStat
+    cost = UpgradeScreenStorage.cost
+    addedStat = UpgradeScreenStorage.addedStat
+    editingIndex = UpgradeScreenStorage.editingIndex
+    
+    pygame.mouse.set_visible(True) #necessary?
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
+    Texthelper.write(screen, [("center", 540-235), name + " upgrade", 6])
+
+    if mode:
+        timedFlip()       
+    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " hp", 3])
+    
+    if mode:
+        timedFlip()        
+    Texthelper.write(screen, [("center", 540), "cost:", 3])
+    
+    if mode:
+        timedFlip()
+    Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
+    Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
+
+    if mode:
+        timedFlip()       
+    Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
+    Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
+
+    if mode:
+        timedFlip()        
+    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
+        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+            inventory[0] -= cost[0]
+            inventory[1] -= cost[1]
+            inventory[2] -= cost[2]
+            inventory[3] -= cost[3]
+            ShipLv[editingIndex] += 1
+            status = "garageinit"
+            filehelper.set(inventory, 2)
+            filehelper.set(ShipLv, 3)
+    else:
+        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+
+    if mode:
+        timedFlip()        
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
+        status = "garageinit"
+    
+    if mode:
+        pygame.display.flip()
+
+    return status
 
 def homeinitUI(screen, inventory):
     pygame.mouse.set_visible(True)
@@ -34,7 +115,8 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540), "repair & refill shop", 3]):
         status = "shopinit"
     if Texthelper.writeButton(screen, [("center", 540+55), "market", 3]):
-        status = "marketinit"
+        #status = "marketinit"
+        pass
     if  Texthelper.writeButton(screen, [("center", 540+110), "empty ship inventory", 3]):
         homeInventory[0] = homeInventory[0] + shipInventory[0]
         homeInventory[1] = homeInventory[1] + shipInventory[1]
@@ -169,189 +251,22 @@ def GarageUI(screen):
     return status
 
 def armorUpgradeinitUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    current = upgrades.get(ShipLv[0])
-    currentStat = current[4]
-    cost = upgrades.get(ShipLv[0]+1)
-    upgradeStat = cost[4]
-    addedStat = upgradeStat - currentStat
-    pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
-    Texthelper.write(screen, [("center", 540-235), "armor upgrade", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " hp", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540), "cost:", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
-    Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
-    Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        Texthelper.write(screen, [("center", 540+220), "Upgrade", 3])
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    pygame.display.flip()
-        
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+275), "back", 3])
-    pygame.display.flip()
+    drawUpgradeScreen(screen, ShipLv, inventory, True, "armor", "N/A")
 
 def armorUpgradeUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    status = "armorUpgrade"
-    cost = upgrades.get(ShipLv[0]+1)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
-            inventory[0] -= cost[0]
-            inventory[1] -= cost[1]
-            inventory[2] -= cost[2]
-            inventory[3] -= cost[3]
-            ShipLv[0] += 1
-            status = "garageinit"
-            filehelper.set(inventory, 2)
-            filehelper.set(ShipLv, 3)
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
-        status = "garageinit"
-    return status
+    return drawUpgradeScreen(screen, ShipLv, inventory, False, "armor", "armorUpgrade") #returns status
 
 def fuelUpgradeinitUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    current = upgrades.get(ShipLv[0]+20)
-    currentStat = current[4]
-    cost = upgrades.get(ShipLv[0]+21)
-    upgradeStat = cost[4]
-    addedStat = upgradeStat - currentStat
-    waitTime = 300
-    pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
-    Texthelper.write(screen, [("center", 540-235), "fuel upgrade", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " fp", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540), "cost:", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
-    Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
-    Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        Texthelper.write(screen, [("center", 540+220), "Upgrade", 3])
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    pygame.display.flip()
-        
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+275), "back", 3])
-    pygame.display.flip()
+    drawUpgradeScreen(screen, ShipLv, inventory, True, "fuel", "N/A")
 
 def fuelUpgradeUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    status = "fuelUpgrade"
-    cost = upgrades.get(ShipLv[0]+21)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
-            inventory[0] -= cost[0]
-            inventory[1] -= cost[1]
-            inventory[2] -= cost[2]
-            inventory[3] -= cost[3]
-            ShipLv[0] += 1
-            status = "garageinit"
-            filehelper.set(inventory, 2)
-            filehelper.set(ShipLv, 3)
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
-        status = "garageinit"
-    return status
+    return drawUpgradeScreen(screen, ShipLv, inventory, False, "fuel", "fuelUpgrade") #returns status
 
 def ammoUpgradeinitUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    current = upgrades.get(ShipLv[0]+40)
-    currentStat = current[4]
-    cost = upgrades.get(ShipLv[0]+41)
-    upgradeStat = cost[4]
-    addedStat = upgradeStat - currentStat
-    waitTime = 300
-    pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
-    Texthelper.write(screen, [("center", 540-235), "torpedoe upgrade", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " shots", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540), "cost:", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
-    Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
-    Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        Texthelper.write(screen, [("center", 540+220), "Upgrade", 3])
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    pygame.display.flip()
-        
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+275), "back", 3])
-    pygame.display.flip()
+    drawUpgradeScreen(screen, ShipLv, inventory, True, "torpedoe", "N/A")
 
 def ammoUpgradeUI(screen, ShipLv, inventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    status = "ammoUpgrade"
-    cost = upgrades.get(ShipLv[0]+41)
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
-        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
-            inventory[0] -= cost[0]
-            inventory[1] -= cost[1]
-            inventory[2] -= cost[2]
-            inventory[3] -= cost[3]
-            ShipLv[0] += 1
-            status = "garageinit"
-            filehelper.set(inventory, 2)
-            filehelper.set(ShipLv, 3)
-    else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
-        status = "garageinit"
-    return status
+    return drawUpgradeScreen(screen, ShipLv, inventory, False, "torpedoe", "ammoUpgrade")
     
 def pauseinitUI(screen):
     Texthelper.write(screen, [("center", 540-136), "Paused", 6])
