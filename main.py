@@ -649,7 +649,7 @@ def main():
                 object_list = getObjects(sectornum, width, height)
                 currentfuel = totalfuel
                 currentarmor = totalarmor
-                shipInventory = [0,0,0,0]
+                shipInventory = [0,0,0,0,0]
                 lasttransit = 0
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2

@@ -11,8 +11,8 @@ class UpgradeScreenStorage():
     addedStat = -1
     cost = -1
     editingIndex = -1
+    pointName = -1
     
-
 def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = true/false init, name = fuel/armor/etc.   
     if mode: #whether it should be init-ing or not
         driveHead = 0
@@ -32,11 +32,13 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
         UpgradeScreenStorage.cost = upgrades.get(ShipLv[0]+driveHead+1)
         UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
         UpgradeScreenStorage.editingIndex = editingIndex
+        UpgradeScreenStorage.pointName = pointName
 
     currentStat = UpgradeScreenStorage.currentStat
     cost = UpgradeScreenStorage.cost
     addedStat = UpgradeScreenStorage.addedStat
     editingIndex = UpgradeScreenStorage.editingIndex
+    pointName = UpgradeScreenStorage.pointName
     
     pygame.mouse.set_visible(True) #necessary?
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
@@ -44,7 +46,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
 
     if mode:
         timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + pointName, 3])
+    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " " + pointName, 3])
     
     if mode:
         timedFlip()        
