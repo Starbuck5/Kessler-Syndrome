@@ -295,23 +295,23 @@ def main():
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             pauseinitUI(screen)
-            pygame.display()
+            pygame.display.flip()
             saveGame(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
             status = pauseUI(screen)
-            pygame.display()
+            pygame.display.flip()
 
         if status == "gameoverinit":            
             pygame.mouse.set_visible(True)
             gameoverinitUI(screen)
-            pygame.display()
+            pygame.display.flip()
             status = "gameover"
 
         if status == "gameover":
             status = gameoverUI(screen)
-            pygame.display()
+            pygame.display.flip()
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
