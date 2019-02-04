@@ -19,12 +19,15 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
         if name == "armor":
             driveHead = 0
             editingIndex = 0
+            pointName = "hp"
         if name == "fuel":
             driveHead = 20
             editingIndex = 1
+            pointName = "fp"
         if name == "torpedoe":
             driveHead = 40
             editingIndex = 2
+            pointName = "ammo"
         UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[0]+driveHead)[4] 
         UpgradeScreenStorage.cost = upgrades.get(ShipLv[0]+driveHead+1)
         UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
@@ -41,7 +44,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
 
     if mode:
         timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " hp", 3])
+    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + pointName, 3])
     
     if mode:
         timedFlip()        
