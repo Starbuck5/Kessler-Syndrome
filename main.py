@@ -374,6 +374,7 @@ def main():
             raise SystemExit
 
         if status == "homeinit":
+            filehelper.set([currentarmor, currentfuel, ammunition], 4)
             fuelHelp = upgrades.get(ShipLv[1]+20)
             totalfuel = fuelHelp[4]
             armorHelp = upgrades.get(ShipLv[0])
@@ -616,7 +617,7 @@ def main():
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+6] = -1
                             currentarmor = currentarmor - force
-                            Texthelper.scramble(150) #scrambles all game text for 150 ticks
+                            #Texthelper.scramble(150) #scrambles all game text for 150 ticks
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+6] = -1
