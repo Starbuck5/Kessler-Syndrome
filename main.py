@@ -397,20 +397,16 @@ def main():
 
         if status == "shopinit":
             screen.fill(color)
+            currentarmor = filehelper.get(4)[0]
+            currentfuel = filehelper.get(4)[1]
+            ammunition = filehelper.get(4)[2]
             repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
             pygame.display.flip()
             status = "shop"
 
         if status == "shop":
-            shopHelp = repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
+            status = repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
             pygame.display.flip()
-            status = shopHelp[0]
-            if shopHelp[1] == "fuel":
-                currentfuel = totalfuel
-            elif shopHelp[1] == "armor":
-                currentarmor = totalarmor
-            elif shopHelp[1] == "ammunition":
-                ammunition = totalammunition
 
         if status == "garageinit":
             #ship lv [armor, fuel]
@@ -489,17 +485,17 @@ def main():
             ShipLv = filehelper.get(3)
             fuelHelp = upgrades.get(ShipLv[1]+20)
             totalfuel = fuelHelp[4]
-            currentfuel = totalfuel
+            currentfuel = filehelper.get(4)[1]
             armorHelp = upgrades.get(ShipLv[0])
             totalarmor = armorHelp[4]
-            currentarmor = totalarmor
+            currentarmor = filehelper.get(4)[0]
             totalammunition = 0
             if ShipLv[2] == 0:
                 totalammunition = 0
             else:
                 ammunitionHelp = upgrades.get(ShipLv[2]+40)
                 totalammunition = ammunitionHelp[4]
-            ammunition = totalammunition
+            ammunition = filehelper.get(4)[2]
 
             if file_settings[3] == 0:
                 level1(screen, width, height)
