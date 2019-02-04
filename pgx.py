@@ -247,6 +247,8 @@ class AnnouncementBox():
         screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.width*0.4),
                                                  round(AnnouncementBox.height*0.1)), 4)
+        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1),
+                                                 round(AnnouncementBox.height*0.1)), 4)
         for i in range(len(self.besttext)):
             Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*i)), self.besttext[i], 2])
         if self.ended:
