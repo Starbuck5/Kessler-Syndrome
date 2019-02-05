@@ -230,7 +230,7 @@ def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarm
     elif homeInventory[4] == 0:
         Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
     else:
-        Texthelper.write(screen, [("center", 540+55), "full", 3])
+        Texthelper.write(screen, [(1000, 540+55), "full", 3])
     
     if  Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
