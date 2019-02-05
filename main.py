@@ -292,6 +292,7 @@ def main():
             pygame.display.flip()
             
         if status == "pauseinit":
+            filehelper.set([currentarmor, currentfuel, ammunition], 4)
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             pauseinitUI(screen)
