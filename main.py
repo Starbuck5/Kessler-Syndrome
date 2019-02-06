@@ -399,15 +399,14 @@ def main():
 
         if status == "shopinit":
             screen.fill(color)
-            currentarmor = filehelper.get(4)[0]
-            currentfuel = filehelper.get(4)[1]
-            ammunition = filehelper.get(4)[2]
-            repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
-            pygame.display.flip()
+            currentStats = filehelper.get(4)
+            totalStats = (totalarmor, totalfuel, totalammunition)
+            drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True)
             status = "shop"
 
         if status == "shop":
-            status = repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory)
+            status = drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False)
+            currentarmor, currentfuel, ammunition = filehelper.get(4) #not very elegant to do this every tick
             pygame.display.flip()
 
         if status == "garageinit":

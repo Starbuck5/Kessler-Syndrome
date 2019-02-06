@@ -135,61 +135,29 @@ def homeUI(screen, shipInventory, homeInventory):
         status = "game"
     return [status, shipInventory]
 
-def repairShopinitUI(screen, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, inventory):
-    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\armor.tif")
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
+
+class repairScreenStorage():
+    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)  #these really should be loaded only once
+    armorpic = loadImage("Assets\\armor.tif")                       #they're already loaded in main
+    
+
+def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
+    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) +
+                              "  currency:" + str(homeInventory[3]) + "  torpedoes:" + str(homeInventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
-    #fuel
-    screen.blit(fuelpic, (1600, 1000))
-    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+    status = "shop"                         
+    fuelpic = repairScreenStorage.fuelpic
+    armorpic = repairScreenStorage.armorpic
+    currentarmor, currentfuel, ammunition = currentStats
+    totalarmor, totalfuel, totalammunition = totalStats
+    if mode:
+        timedFlip()
+        
     #armor
     screen.blit(armorpic, (1600, 930))
     pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
     pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-    #ammunition
-    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540-55), "Armor:", 3])
-    if currentarmor == totalarmor:
-        Texthelper.write(screen, [(1000, 540-55), "full", 3])
-    elif inventory[0] == 0:
-        Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
-    else:
-        Texthelper.write(screen, [(1000, 540-55), "repair", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540), "Fuel:", 3])
-    if currentfuel == totalfuel:
-        Texthelper.write(screen, [(1000, 540), "full", 3])
-    elif inventory[1] == 0:
-        Texthelper.write(screen, [(1000, 540), "sorry", 3])
-    else:
-         Texthelper.write(screen, [(1000, 540), "refill", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3])
-    if ammunition == totalammunition:
-        Texthelper.write(screen, [(1000, 540+55), "full", 3])
-    elif inventory[4] == 0:
-        Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
-    else:
-        Texthelper.write(screen, [(1000, 540+55), "refill", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+110), "back", 3])
-    pygame.display.flip()
-
-def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarmor, totalfuel, totalammunition, homeInventory):
-    upgrades = Filehelper("assets\\upgrades.txt")
-    repairRefill = "none"
-    status = "shop"
+    Texthelper.write(screen, [(600, 540-55), "Armor:", 3])   
     if currentarmor != totalarmor and homeInventory[0] != 0:
         if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
             if homeInventory[0] < int((totalarmor-currentarmor)/5):
@@ -203,7 +171,14 @@ def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarm
         Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
     else:
         Texthelper.write(screen, [(1000, 540-55), "full", 3])
+    if mode:
+        timedFlip()
 
+    #fuel
+    screen.blit(fuelpic, (1600, 1000))
+    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
+    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])        
+    Texthelper.write(screen, [(600, 540), "Fuel:", 3])   
     if currentfuel != totalfuel and homeInventory[1] != 0:
         if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
             if homeInventory[1] < int((totalfuel-currentfuel)/250):
@@ -217,7 +192,12 @@ def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarm
         Texthelper.write(screen, [(1000, 540), "sorry", 3])
     else:
         Texthelper.write(screen, [(1000, 540), "full", 3])
+    if mode:
+        timedFlip()
 
+    #ammunition
+    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
+    Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3]) 
     if ammunition != totalammunition and homeInventory[4] != 0: 
         if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
             if homeInventory[4] < int(totalammunition - ammunition):
@@ -231,12 +211,18 @@ def repairShopUI(screen, ShipLv, currentarmor, currentfuel, ammunition, totalarm
         Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
     else:
         Texthelper.write(screen, [(1000, 540+55), "full", 3])
-    
-    if  Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
+    if mode:
+        timedFlip()
+        
+    if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
-    filehelper.set([currentarmor, currentfuel, ammunition],4)
-    filehelper.set(homeInventory,2)
+    if not mode:
+        filehelper.set([currentarmor, currentfuel, ammunition],4)
+        filehelper.set(homeInventory,2)
+    if mode:
+        pygame.display.flip()
     return status
+
 
 def garageinitUI(screen, ShipLv, inventory):
     pygame.mouse.set_visible(True)
