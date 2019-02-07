@@ -505,7 +505,7 @@ def main():
                 file_settings = filehelper.get(0)
 
             if file_settings[3] == 1:
-                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"), pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"), pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
                                 "Hey you, still alive out there? Then go pick up some space debris like a good prisoner")
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
