@@ -133,6 +133,7 @@ def homeUI(screen, shipInventory, homeInventory):
         status = "homeinit"
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
+        pygame.mouse.set_visible(False)
     return [status, shipInventory]
 
 
