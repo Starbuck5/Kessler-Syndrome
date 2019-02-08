@@ -438,7 +438,7 @@ class Filehelper():
         parse_line = contents[line]
         parse_line = parse_line[1:] #gets rid of leading bracket
         parse_line = parse_line.rstrip() #gets rid of any trailing whitespace
-        parse_line = parse_line[:-1] #gets rid of ending bracket
+        parse_line = parse_line[:parse_line.rfind("]")] #gets rid of ending bracket
         parse_line = parse_line.split(", ") #turns it into a list of string elements
        
         for i in range(len(parse_line)): #goes through the list guessing the types of the elements
