@@ -236,8 +236,6 @@ def main():
     d_sats = [10, 11, 12, 13, 71, 72, 73, 80, 81, 82, 91]
     d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
-    lower_rotation_constant = math.degrees(math.asin(10 / 325 ** 0.5))
-    flame_rotation_constant = math.degrees(math.atan(6 / 5))
     flame = False
     menu_music_fadeout_OG = 1200
     menu_music_fadeout = menu_music_fadeout_OG

@@ -69,6 +69,9 @@ def handlePath(path):
                 newpath += "\\"
             else:
                 newpath += path[i]
+    if not "Kessler-Syndrome" in newpath:
+        newpath = "Kessler-Syndrome\\" + newpath
+        newpath = handlePath(newpath) #lazy strategy to fix compatibility; might even work
     return newpath
 
 def loadImage(path):
@@ -283,7 +286,6 @@ class Texthelper():
     def interpretcoords(text_input):
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
-        scale = text_input[2] * Texthelper.scalar
         text_input2 = text_input[0:] #very important line
         if str(location_list[0]).isdigit() == False:
             if location_list[0] == "center":
@@ -340,7 +342,6 @@ class Texthelper():
         click = mouse()
 
         text_location = Texthelper.interpretcoords(text_input)[0]
-        text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
         x_range = Texthelper.textlength(text_input)
         y_range = 12 * scale
@@ -383,7 +384,6 @@ class Texthelper():
     def writeNullButton(screen, text_input):
         Texthelper.write(screen, text_input)
         text_location = Texthelper.interpretcoords(text_input)[0]
-        text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
 
         x_range = Texthelper.textlength(text_input)
