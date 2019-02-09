@@ -69,9 +69,6 @@ def handlePath(path):
                 newpath += "\\"
             else:
                 newpath += path[i]
-    if not "Kessler-Syndrome" in newpath:
-        newpath = "Kessler-Syndrome\\" + newpath
-        newpath = handlePath(newpath) #lazy strategy to fix compatibility; might even work
     return newpath
 
 def loadImage(path):
