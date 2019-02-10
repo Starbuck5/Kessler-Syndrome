@@ -226,7 +226,7 @@ def main():
         screen_sizes = screen_sizes[0]
         width = screen_sizes[0]
         height = screen_sizes[1]
-    if file_settings[2] == "true":
+    if file_settings[2]:
         screen = pygame.display.set_mode([width, height], pygame.NOFRAME | pygame.FULLSCREEN)
     else:
         screen = pygame.display.set_mode([width, height])

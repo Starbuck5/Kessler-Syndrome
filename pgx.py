@@ -193,7 +193,7 @@ class InputGetter():
             if inputtype == "int":
                 if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0].isdigit() == True:
                     self.rawtext += inputvar[0]
-            if inputtype == "str":
+            elif inputtype == "str":
                 if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0] in InputGetter.ALPHABETCHECK:
                     self.rawtext += inputvar[0]
             else: #maybe inputtype of 'all' for everyting; or maybe 'str' should mean all
