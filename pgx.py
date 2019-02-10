@@ -172,15 +172,15 @@ class InputGetter():
             if Texthelper.writeButton(screen, self.currenttext) == True:
                 self.clicked = True
         if self.clicked == True:
-            InputGetter.timerhelper(self)
+            InputGetter._timerhelper(self)
             specialtext = self.currenttext[:]
             if self.blink < InputGetter.BLINKSPEED/2:
                 specialtext[1] += "|"
             if Texthelper.writeNullButton(screen, specialtext) == False:
                 self.clicked = False
-            InputGetter.handleThisShit(self, self.inputtype)
+            InputGetter._handleThisShit(self, self.inputtype)
 
-    def handleThisShit(self, inputtype):
+    def _handleThisShit(self, inputtype):
         last_input = self.last_input
         inputvar = keyboard()
         self.rawtext = self.currenttext[1]
@@ -206,7 +206,7 @@ class InputGetter():
         elif inputvar:
             self.last_input = inputvar
             
-    def timerhelper(self):
+    def _timerhelper(self):
         if self.blink < InputGetter.BLINKSPEED:
             self.blink += 1
         if self.blink == InputGetter.BLINKSPEED:
@@ -237,13 +237,13 @@ class AnnouncementBox():
 
     def play(screen):
         if AnnouncementBox.upcoming != []:
-            AnnouncementBox.upcoming[0].draw(screen)
+            AnnouncementBox.upcoming[0]._draw(screen)
         if AnnouncementBox.upcoming != []: ##entire entry can be deleted from draw, so this text actually is necessary
             if AnnouncementBox.upcoming[0].time == 0:
                 AnnouncementBox.upcoming[0].sound.play()
-            AnnouncementBox.upcoming[0].timehelper()
+            AnnouncementBox.upcoming[0]._timehelper()
 
-    def draw(self, screen):
+    def _draw(self, screen):
         screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.width*0.4),
                                                  round(AnnouncementBox.height*0.1)), 4)
@@ -257,7 +257,7 @@ class AnnouncementBox():
             if "enter" in inputvar:
                 del AnnouncementBox.upcoming[0]
 
-    def timehelper(self):
+    def _timehelper(self):
         BREAKPOS = 32
         self.time += 1
         if self.time % 20 == 0 and len(self.currenttext) < len(self.text):
@@ -280,7 +280,7 @@ class Texthelper():
     height = 1
     last_click = () 
 
-    def interpretcoords(text_input):
+    def _interpretcoords(text_input):
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
         text_input2 = text_input[0:] #very important line
@@ -301,7 +301,7 @@ class Texthelper():
     # text_input = [(x, y), "text", text_scale]
     # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
     def write(screen, text_input, *args):
-        text_location = Texthelper.interpretcoords(text_input)[0]
+        text_location = Texthelper._interpretcoords(text_input)[0]
         text = text_input[1]
         scale = text_input[2] * Texthelper.scalar
         text = text.lower()
@@ -338,7 +338,7 @@ class Texthelper():
     def writeButton(screen, text_input):
         click = mouse()
 
-        text_location = Texthelper.interpretcoords(text_input)[0]
+        text_location = Texthelper._interpretcoords(text_input)[0]
         scale = text_input[2] * Texthelper.scalar
         x_range = Texthelper.textlength(text_input)
         y_range = 12 * scale
@@ -380,7 +380,7 @@ class Texthelper():
         
     def writeNullButton(screen, text_input):
         Texthelper.write(screen, text_input)
-        text_location = Texthelper.interpretcoords(text_input)[0]
+        text_location = Texthelper._interpretcoords(text_input)[0]
         scale = text_input[2] * Texthelper.scalar
 
         x_range = Texthelper.textlength(text_input)
