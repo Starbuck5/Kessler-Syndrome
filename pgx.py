@@ -76,6 +76,12 @@ def loadImage(path):
     image = pygame.image.load(path)
     return image
 
+def rotatePixelArt(image, degrees):
+    image = scaleImage(image, 4)
+    image = pygame.transform.rotate(image, degrees)
+    image = scaleImage(image, 0.25)
+    return image
+
 # missing texture surface setup
 missingTexture = pygame.Surface((8,12))
 missingTexture.fill((255, 0, 220))
