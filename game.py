@@ -10,15 +10,15 @@ def particlemaker(xpos, ypos, xmom, ymom):
     max_deviation = 2
     printerlist_add = []
     for i in range(random.randint(max_particles - max_deviation, max_particles)):
-        printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom + ((random.randint(-20, 20))/random_factor), 4, "N/A", particle_lifespan, True]      
+        printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom + ((random.randint(-20, 20))/random_factor), 4, "NA", "NA", particle_lifespan]      
     return printerlist_add
 
 #physics handling
 def doPhysics(object_list, width, height, max_speed, drag, step_drag):
     for i in range(int(len(object_list)/8)):
         #decaying objects
-        if object_list[7 + (i * 8)]:
-            object_list[6 + (i * 8)] -= 1
+        if object_list[4 + (i * 8)] in [2, 8, 5, 4]: #stuff in list should have a decrement to their life force
+            object_list[7 + (i * 8)] -= 1
             
         # edges section
         if object_list[0 + (i * 8)] > width:
@@ -69,6 +69,14 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
             if object_list[3 + (i*8)] < -1 * max_speed:
                 object_list[3 + (i*8)] = -1 * max_speed
 
+        #rotation
+        if not isinstance(object_list[5+(i*8)], str):
+            object_list[5+(i*8)] += object_list[6+(i*8)]/7 #the divided by moderates the speed of rotation
+            if object_list[5+(i*8)] >= 360:
+                object_list[5+(i*8)] -= 360
+            if object_list[5+(i*8)] <= -360:
+                object_list[5+(i*8)] += 360                
+
     return object_list
 
 #helps out by setting entities to reasonable speeds
@@ -88,12 +96,12 @@ def asteroidspeedmaker(max_asteroid_spd):
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan):
     object_list = object_list[:8]
     for i in range(20):
-        object_list += [random.randint(0,100)/100*width, random.randint(0,100)/100*height, 0, 0, 100, "NA", 1, False]
+        object_list += [random.randint(0,100)/100*width, random.randint(0,100)/100*height, 0, 0, 100, "NA", "NA", 1]
     countervar = 0
     while countervar < random.randint(max_asteroids - 2, max_asteroids):
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
         object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0], asteroid_speedset[1]]
-        object_list_add += [d_sats[random.randint(0, len(d_sats)-1)], 3, 1, False] 
+        object_list_add += [d_sats[random.randint(0, len(d_sats)-1)], random.randint(0,360), random.randint(-10,10), 1] 
         xdiff = object_list[0] - object_list_add[0]
         ydiff = object_list[1] - object_list_add[1]
         distance = ((xdiff ** 2) + (ydiff ** 2)) ** 0.5
@@ -101,9 +109,7 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         object_list += object_list_add
     if object_list[4] == 1 or object_list[4] == 3:
         object_list[4] = 5
-        object_list[5] = 3
-        object_list[6] = shield_lifespan
-        object_list[7] = True
+        object_list[7] = shield_lifespan
     return object_list
 
 
@@ -111,10 +117,9 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
 def deaderizer(object_list):
     indexadj = 0
     while indexadj < len(object_list): 
-        if object_list[6 + indexadj] <= 0:
+        if object_list[7 + indexadj] <= 0:
             if object_list[4+indexadj] == 5:
-                object_list[7+indexadj] = False
-                object_list[6+indexadj] = 1
+                object_list[7+indexadj] = 1
                 object_list[4+indexadj] = 1
             else:
                 object_list = object_list[:indexadj] + object_list[8 + indexadj:]

@@ -459,15 +459,29 @@ class Filehelper():
         return parse_line
 
     #allows the program to set lines to whatever they want, within what I think they will           
-    def set(self, content, line): #line is line # in file being written to
-        content = str(content)
-        content = content.split("'")
-        content = "".join(content)
-        content += "\n"
-
+    def set(self, content, line, **kwargs): #line is line # in file being written to
         file = open(self.info_file, "r")
         contents = file.readlines()
         file.close()
+
+        if 'override' in kwargs: #tests for optional argument that ditches any and all comments
+            override = kwargs['override']
+        else:
+            override = False
+        comment = ""
+        if not override:
+            if "#" in contents[line]:
+                if "]" in contents[line]:
+                    if contents[line].index("]") < contents[line].index("#"):
+                        comment = contents[line][contents[line].index("#"):]
+                        comment = comment.rstrip() #removes trailing \n
+
+        content = str(content)
+        content = content.split("'")
+        content = "".join(content)
+        content += comment
+        content += "\n"
+
         contents[line] = content
 
         file = open(self.info_file, "w")

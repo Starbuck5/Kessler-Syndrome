@@ -15,6 +15,7 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
         xpos = object_list[(i * 8)]        
         ypos = object_list[1 + (i * 8)]
         object_number = object_list[4 + (i * 8)]
+        rotation = object_list[5+(i*8)]
         
         if object_number == 100:
             screen.blit(specialpics[0], (xpos, ypos))
@@ -43,7 +44,7 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
             screen.blit(graphlist[object_number-10], (xpos, ypos))
         if 69 < object_number < 100:
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
-            newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotationPosition)
+            newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
             
 
@@ -455,7 +456,6 @@ def main():
             object_list = getObjects(sectornum, width, height)
             rotationPosition = 0
             rotation = 90
-            serialnumber = 2
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
@@ -549,9 +549,8 @@ def main():
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
                         front_pointlist = RotatePoint(object_list[0], object_list[1], [object_list[0], object_list[1]-30*scalar3], rotation-90)
-                        object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, serialnumber, missile_lifespan, True]
+                        object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, "NA", "NA", missile_lifespan]
                         object_list += object_list_addition
-                        serialnumber += 1
                         previous_tick = ticks
                         missilesound.stop()
                         missilesound.play()
@@ -598,7 +597,7 @@ def main():
                         printerlist_add = []
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
-                            object_list[(i2*8)+6] = -1
+                            object_list[(i2*8)+7] = -1
                             if ShipLv[2] == 0:
                                 shipInventory[random.randint(0,1)] += 1
                             else:
@@ -613,17 +612,17 @@ def main():
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = xForce + yForce
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
-                            object_list[(i2*8)+6] = -1
+                            object_list[(i2*8)+7] = -1
                             currentarmor = currentarmor - force
                             Font.scramble(100) #scrambles text for 100 ticks
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
-                            object_list[(i2*8)+6] = -1
-                            object_list[(i*8)+6] = -1
+                            object_list[(i2*8)+7] = -1
+                            object_list[(i*8)+7] = -1
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_only_sats: #missile v satellite collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
-                            object_list[(i2*8)+6] = -1
-                            object_list[(i*8)+6] = -1
+                            object_list[(i2*8)+7] = -1
+                            object_list[(i*8)+7] = -1
                         object_list += printerlist_add
                     i2 += 1
                         
