@@ -10,11 +10,11 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics, rotationPosition):
+def printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
     for i in range(int(len(object_list)/8)):
         xpos = object_list[(i * 8)]        
         ypos = object_list[1 + (i * 8)]
-        object_number = object_list[4 + (i * 8)]
+        object_number = object_list[4 + (i * 8)] #object type
         rotation = object_list[5+(i*8)]
         
         if object_number == 100:
@@ -23,17 +23,24 @@ def printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, sc
             screen.blit(specialpics[1], (xpos, ypos))
                 
         if object_number == 1: #draws main ship
+            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
         if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
-        if object_number == 3: #draws reserve ships
-            res_ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-            pygame.gfxdraw.aapolygon(screen, res_ship_pointlist, (255,255,255))
-            pygame.gfxdraw.filled_polygon(screen, res_ship_pointlist, (255,255,255))
+
+        #reserve ships no longer a thing
+        #if object_number == 3: #draws reserve ships
+        #    res_ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        #    pygame.gfxdraw.aapolygon(screen, res_ship_pointlist, (255,255,255))
+        #    pygame.gfxdraw.filled_polygon(screen, res_ship_pointlist, (255,255,255))
+
         if object_number == 4: #draws explosion effects
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
         if object_number == 5: #draws shielded ship
+            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
         if object_number == 6: #draws alien
@@ -454,8 +461,6 @@ def main():
         if status == "gameinit":       
             # changing variable setup
             object_list = getObjects(sectornum, width, height)
-            rotationPosition = 0
-            rotation = 90
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
@@ -532,7 +537,7 @@ def main():
             
             # input handling
             inputvar = keyboard()
-            thrust_vector = (math.cos(math.radians(rotation-180)), math.sin(math.radians(rotation)))
+            thrust_vector = (math.cos(math.radians(object_list[5]-90)), math.sin(math.radians(object_list[5]+90)))
             ticks = pygame.time.get_ticks()
             if inputvar:
                 if object_list[4] == 1 or object_list[4] == 5:
@@ -541,14 +546,14 @@ def main():
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        rotation += step_r
+                        object_list[5] += step_r
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        rotation -= step_r
+                        object_list[5] -= step_r
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
-                        front_pointlist = RotatePoint(object_list[0], object_list[1], [object_list[0], object_list[1]-30*scalar3], rotation-90)
+                        front_pointlist = RotatePoint(object_list[0], object_list[1], [object_list[0], object_list[1]-30*scalar3], object_list[5])
                         object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, "NA", "NA", missile_lifespan]
                         object_list += object_list_addition
                         previous_tick = ticks
@@ -657,20 +662,12 @@ def main():
             object_list = doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer and flame and score            
-            if object_list[4] == 1 or object_list[4] == 5:
-                #ship_pointlist = [[50, 50 - 30], [50 + 15, 50 + 10], [50, 50], [50 - 15, 50 + 10]]
-                ship_pointlist = [[object_list[0], object_list[1]-30*scalar3], [object_list[0]+15*scalar3, object_list[1]+10*scalar3], [object_list[0], object_list[1]],
-                                  [object_list[0]-15*scalar3, object_list[1]+10*scalar3]]
-                ship_pointlist = Rotate(object_list[0], object_list[1], ship_pointlist, rotation-90)
-            else:
-                ship_pointlist = [[0,0],[0,0]]
-            rotationPosition += 0.2
-            printer2(ship_pointlist, object_list, color, scalar1, scalar3, graphlist, scalarscalar, specialpics, rotationPosition)
+            printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
                 flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
                                    [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
-                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, rotation-90)
+                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
                 pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
                 pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
             if flame == True and timer1 == 0:
