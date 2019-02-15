@@ -47,9 +47,10 @@ def printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics
             alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
                             [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
             pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
-        if 9 < object_number < 40:
-            screen.blit(graphlist[object_number-10], (xpos, ypos))
-        if 69 < object_number < 100:
+        if 9 < object_number < 40: #draws satellites
+            image = rotatePixelArt(graphlist[object_number-10], rotation)
+            screen.blit(image, (xpos, ypos))
+        if 69 < object_number < 100: #draws asteroids
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
             newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
@@ -78,8 +79,9 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
     elif objectID == 0: #zvezda
         hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
     elif 9 < objectID < 40: #pixel things
-        hitBox = [xpos, ypos, graphlist[objectID-10].get_size()[0], 
-                   graphlist[objectID-10].get_size()[1]]
+        image = rotatePixelArt(graphlist[objectID-10], object_list[object_location*8+5])
+        hitBox = [xpos, ypos, image.get_size()[0], 
+                   image.get_size()[1]]
     elif 69 < objectID < 100: #asteroids
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
