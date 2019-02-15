@@ -1,6 +1,7 @@
 #just a file to de-clutter the main script
 import pygame
 import random
+from textwrap import wrap
 OS = "windows" #other option = "mac"
 SELCOLOR = (112,128,144) #color for moused over buttons
 
@@ -224,20 +225,23 @@ class InputGetter():
     def getData(self):
         return self.currenttext
 
-
+ 
 class AnnouncementBox():
     width = 1
     height = 1
     upcoming = []
+    BREAKPOS = 32 #amount of chars before a linebreak
     #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
         self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
         self.sound = sound
         self.text = text
-        self.currenttext = self.text.split()[0]
-        self.besttext = [self.text.split()[0]]
+        self.linedtext = wrap(text, AnnouncementBox.BREAKPOS)
+        lineelements = []
+        for i in range(len(self.linedtext)):
+            lineelements.append(len(self.linedtext[i].split()))
+        self.lineelements = lineelements
         self.time = 0
-        self.runningtotal = 0 #used for line break stuff
         self.ended = False
         AnnouncementBox.upcoming.append(self)
 
@@ -255,8 +259,24 @@ class AnnouncementBox():
                                                  round(AnnouncementBox.height*0.1)), 4)
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1),
                                                  round(AnnouncementBox.height*0.1)), 4)
-        for i in range(len(self.besttext)):
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*i)), self.besttext[i], 2])
+        words = int(self.time/20)
+        if words >= sum(self.lineelements):
+            self.ended = True
+            words = sum(self.lineelements)
+        line = 0
+        while words > 0:
+            if words >= self.lineelements[line]:
+                Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)), self.linedtext[line], 2])
+                words -= self.lineelements[line]
+                line += 1
+            if words > 0:
+                if words < self.lineelements[line]:
+                    text = self.linedtext[line].split()
+                    text = text[:words]
+                    text = " ".join(text)
+                    Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)), text, 2])
+                    words = 0
+                    line += 1                                
         if self.ended:
             Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.21)), "Press Enter to Continue", 1.5])
             inputvar = keyboard()
@@ -264,21 +284,8 @@ class AnnouncementBox():
                 del AnnouncementBox.upcoming[0]
 
     def _timehelper(self):
-        BREAKPOS = 32
         self.time += 1
-        if self.time % 20 == 0 and len(self.currenttext) < len(self.text):
-            self.currenttext += " " + self.text[len(self.currenttext):].split()[0]
-            position = len(self.besttext)-1
-            self.besttext[position] += " " + self.text[len(self.besttext[position])+self.runningtotal:].split()[0]
-            if len(self.besttext[position]) > BREAKPOS:
-                linebreak = self.besttext[position].rindex(" ")
-                linestuff = self.besttext[position][linebreak:]
-                self.besttext[position] = self.besttext[position][:linebreak]
-                self.runningtotal += len(self.besttext[position])
-                self.besttext.append(linestuff)
-        if len(self.currenttext) >= len(self.text):
-            self.ended = True
-    
+
    
 class Texthelper():
     scalar = 1
