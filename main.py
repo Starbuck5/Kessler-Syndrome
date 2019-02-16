@@ -303,13 +303,16 @@ def main():
             filehelper.set([currentarmor, currentfuel, ammunition], 4)
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
+            Font.set_scramble_paused(True) #pauses any scrambling going on
             pauseinitUI(screen)
             pygame.display.flip()
-            saveGame(sectornum, object_list[:], width, height)
+            saveGame(sectornum, object_list[:], width, height)            
             status = "paused"
 
         if status == "paused":
             status = pauseUI(screen)
+            if status != "paused":
+                Font.set_scramble_paused(False) #resumes any scrambling going on
             pygame.display.flip()
 
         if status == "gameoverinit":            
