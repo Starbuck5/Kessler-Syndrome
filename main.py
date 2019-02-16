@@ -435,32 +435,32 @@ def main():
                 
         if status == "armorUpgradeinit":
             screen.fill(color)
-            armorUpgradeinitUI(screen, ShipLv, homeInventory)
+            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "armor", "N/A")
             pygame.display.flip()
             status = "armorUpgrade"
 
         if status == "armorUpgrade":
-            status = armorUpgradeUI(screen, ShipLv, homeInventory)
+            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "armor", "armorUpgrade")
             pygame.display.flip()
 
         if status == "fuelUpgradeinit":
             screen.fill(color)
-            fuelUpgradeinitUI(screen, ShipLv, homeInventory)
+            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "fuel", "N/A")
             pygame.display.flip()
             status = "fuelUpgrade"
 
         if status == "fuelUpgrade":
-            status = fuelUpgradeUI(screen, ShipLv, homeInventory)
+            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "fuel", "fuelUpgrade")
             pygame.display.flip()
 
         if status == "ammoUpgradeinit":
             screen.fill(color)
-            ammoUpgradeinitUI(screen, ShipLv, homeInventory)
+            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "torpedoe", "N/A")
             pygame.display.flip()
             status = "ammoUpgrade"
 
         if status == "ammoUpgrade":
-            status = ammoUpgradeUI(screen, ShipLv, homeInventory)
+            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "torpedoe", "ammoUpgrade")
             pygame.display.flip()
 
         if status == "gameinit":       

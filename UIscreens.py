@@ -266,24 +266,6 @@ def GarageUI(screen):
     elif Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
     return status
-
-def armorUpgradeinitUI(screen, ShipLv, inventory):
-    drawUpgradeScreen(screen, ShipLv, inventory, True, "armor", "N/A")
-
-def armorUpgradeUI(screen, ShipLv, inventory):
-    return drawUpgradeScreen(screen, ShipLv, inventory, False, "armor", "armorUpgrade") #returns status
-
-def fuelUpgradeinitUI(screen, ShipLv, inventory):
-    drawUpgradeScreen(screen, ShipLv, inventory, True, "fuel", "N/A")
-
-def fuelUpgradeUI(screen, ShipLv, inventory):
-    return drawUpgradeScreen(screen, ShipLv, inventory, False, "fuel", "fuelUpgrade") #returns status
-
-def ammoUpgradeinitUI(screen, ShipLv, inventory):
-    drawUpgradeScreen(screen, ShipLv, inventory, True, "torpedoe", "N/A")
-
-def ammoUpgradeUI(screen, ShipLv, inventory):
-    return drawUpgradeScreen(screen, ShipLv, inventory, False, "torpedoe", "ammoUpgrade")
     
 def pauseinitUI(screen):
     Texthelper.write(screen, [("center", 540-136), "Paused", 6])
