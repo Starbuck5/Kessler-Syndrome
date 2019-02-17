@@ -10,15 +10,17 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-def printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
-    for i in range(int(len(object_list)/8)):
-        xpos = object_list[(i * 8)]        
-        ypos = object_list[1 + (i * 8)]
-        object_number = object_list[4 + (i * 8)] #object type
-        rotation = object_list[5+(i*8)]
+#prints everything
+def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+    for i in range(0, len(object_list), 8):
+        xpos = object_list[i]        
+        ypos = object_list[i+1]
+        object_number = object_list[i+4] #object type
+        rotation = object_list[i+5] #rotation position
         
         if object_number == 100:
             screen.blit(specialpics[0], (xpos, ypos))
+            
         if object_number == 0:
             screen.blit(specialpics[1], (xpos, ypos))
                 
@@ -27,36 +29,34 @@ def printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics
             ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
+            
         if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
-
-        #reserve ships no longer a thing
-        #if object_number == 3: #draws reserve ships
-        #    res_ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-        #    pygame.gfxdraw.aapolygon(screen, res_ship_pointlist, (255,255,255))
-        #    pygame.gfxdraw.filled_polygon(screen, res_ship_pointlist, (255,255,255))
-
+            
         if object_number == 4: #draws explosion effects
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
+            
         if object_number == 5: #draws shielded ship
             ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
             ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
+            
         if object_number == 6: #draws alien
             alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
                             [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
             pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
+            
         if 9 < object_number < 40: #draws satellites
             image = rotatePixelArt(graphlist[object_number-10], rotation)
             screen.blit(image, (xpos, ypos))
+            
         if 69 < object_number < 100: #draws asteroids
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
             newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
-            
 
-
+#collision detection for the portals            
 def portalcollision(object_list, portalcoords):
     if (portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] and portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3]
         and (object_list[4] == 1 or object_list[4]==5)):
@@ -64,6 +64,7 @@ def portalcollision(object_list, portalcoords):
     else:
         return False
 
+#backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
     xpos = object_list[object_location*8]
     ypos = object_list[1+object_location*8]
@@ -86,6 +87,7 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
 
+#returns true if there is a collision between two objects, returns false otherwise
 def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
@@ -117,12 +119,14 @@ def explosion_sounds():
     if explosion_picker == 1:
         explosion2.play()
 
+#wrapper for saveObjects that determines how to save a level
 def saveGame(sectornum, object_list, width, height):
     if sectorGeneration(sectornum):
         saveObjects(sectornum, [-1], width, height)
     else:
         saveObjects(sectornum, object_list[:], width, height)
 
+#saves objectlist to file by breaking it into a maximum of 5 lines
 def saveObjects(sectornum, save_list, width, height):
     for i in range(len(save_list)):
         if isinstance(save_list[i], float):
@@ -149,6 +153,7 @@ def saveObjects(sectornum, save_list, width, height):
     for i in range(5):
         filehelper.set(savelist[i], sectornum*5+i)
 
+#extracts the list saveObjects saved to file
 def getObjects(sectornum, width, height):
     object_list = []
     for i in range(5):
@@ -168,6 +173,7 @@ def getObjects(sectornum, width, height):
             object_list[6+i*8] = -10 #gets rid of shots and alien shots when entering a sector
     return object_list
 
+#used by the map to actually draw out the sectors
 def drawSector(location, number, currentsector):
     secsize = 80 #side length of the cubes
     if number != currentsector:
@@ -179,14 +185,7 @@ def drawSector(location, number, currentsector):
         Texthelper.write(screen, [(location[0]-10, location[1]-15), str(number), 2])
     else:
         Texthelper.write(screen, [(location[0]-20, location[1]-15), str(number), 2])
-        
-#just for generating backgrounds for manually built levels
-def generateStars(width, height):
-    object_list = []
-    for i in range(20):
-        object_list += [random.randint(0,100)/100*width, random.randint(0,100)/100*height, 0, 0, 100, "NA", 1, False]
-    print(object_list)
-    
+           
 def main():
     global screen
     file_settings = filehelper.get(0) #grabs settings from file
@@ -426,7 +425,7 @@ def main():
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
-            pygame.display.flip()
+            #pygame.display.flip()
             status = "garage"
 
         if status == "garage":
@@ -664,10 +663,10 @@ def main():
                 object_list[3] = 0
 
             #physics!
-            object_list = doPhysics(object_list, width, height, max_speed, drag, step_drag)
+            doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer and flame and score            
-            printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
                 flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],

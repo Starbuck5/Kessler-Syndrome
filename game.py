@@ -15,69 +15,67 @@ def particlemaker(xpos, ypos, xmom, ymom):
 
 #physics handling
 def doPhysics(object_list, width, height, max_speed, drag, step_drag):
-    for i in range(int(len(object_list)/8)):
+    for i in range(0, len(object_list), 8):
         #decaying objects
-        if object_list[4 + (i * 8)] in [2, 8, 5, 4]: #stuff in list should have a decrement to their life force
-            object_list[7 + (i * 8)] -= 1
+        if object_list[4 + i] in [2, 8, 5, 4]: #stuff in list should have a decrement to their life force
+            object_list[7 + i] -= 1
             
         # edges section
-        if object_list[0 + (i * 8)] > width:
-            object_list[0 + (i * 8)] -= width
-        if  object_list[0 + (i * 8)] < 0:
-            object_list[0 + (i * 8)] += width
-        if object_list[1 + (i * 8)] > height:
-            object_list[1 + (i * 8)] -= height
-        if object_list[1 + (i * 8)] < 0:
-            object_list[1 + (i * 8)] += height
+        if object_list[i] > width:
+            object_list[i] -= width
+        if  object_list[i] < 0:
+            object_list[i] += width
+        if object_list[1 + i] > height:
+            object_list[1 + i] -= height
+        if object_list[1 + i] < 0:
+            object_list[1 + i] += height
 
         # positioner
-        object_list[0 + (i * 8)] += object_list[2 + (i * 8)]
-        object_list[1 + (i * 8)] -= object_list[3 + (i * 8)]
+        object_list[i] += object_list[2 + i]
+        object_list[1 + i] -= object_list[3 + i]
 
         #drag
-        if object_list[4 +(i*8)] in drag:
-            stepper = abs(object_list[2 +(i*8)]) + abs(object_list[3 +(i*8)])
+        if object_list[4 +i] in drag:
+            stepper = abs(object_list[2 +i]) + abs(object_list[3 +i])
             if stepper == 0:
                 stepper = 1
-            step_drag_x = abs(object_list[2 +(i*8)]) / stepper * step_drag
-            step_drag_y = abs(object_list[3 +(i*8)]) / stepper * step_drag   
-            if object_list[2 +(i*8)] > 0 and object_list[2 +(i*8)] > step_drag_x:
-                object_list[2 +(i*8)] -= step_drag_x
-            elif step_drag_x > object_list[2 +(i*8)] > 0:
-                object_list[2 +(i*8)] = 0
-            if object_list[2 +(i*8)] < 0 and object_list[2 +(i*8)] < step_drag_x:
-                object_list[2 +(i*8)] += step_drag_x
-            elif step_drag_x < object_list[2 +(i*8)] < 0:
-                object_list[2 +(i*8)] = 0     
-            if object_list[3 +(i*8)] > 0 and object_list[3 +(i*8)] > step_drag_y:
-                object_list[3 +(i*8)] -= step_drag_y
-            elif step_drag_y > object_list[3 +(i*8)] > 0:
-                object_list[3 +(i*8)] = 0   
-            if object_list[3 +(i*8)] < 0 and object_list[3 +(i*8)] < step_drag_y:
-                object_list[3 +(i*8)] += step_drag_y
-            elif step_drag_y < object_list[3 +(i*8)] < 0:
-                object_list[3 +(i*8)] = 0
+            step_drag_x = abs(object_list[2 +i]) / stepper * step_drag
+            step_drag_y = abs(object_list[3 +i]) / stepper * step_drag   
+            if object_list[2 +i] > 0 and object_list[2 +i] > step_drag_x:
+                object_list[2 +i] -= step_drag_x
+            elif step_drag_x > object_list[2 +i] > 0:
+                object_list[2 +i] = 0
+            if object_list[2 +i] < 0 and object_list[2 +i] < step_drag_x:
+                object_list[2 +i] += step_drag_x
+            elif step_drag_x < object_list[2 +i] < 0:
+                object_list[2 +i] = 0     
+            if object_list[3 +i] > 0 and object_list[3 +i] > step_drag_y:
+                object_list[3 +i] -= step_drag_y
+            elif step_drag_y > object_list[3 +i] > 0:
+                object_list[3 +i] = 0   
+            if object_list[3 +i] < 0 and object_list[3 +i] < step_drag_y:
+                object_list[3 +i] += step_drag_y
+            elif step_drag_y < object_list[3 +i] < 0:
+                object_list[3 +i] = 0
 
         #speed limit for ship
-        if object_list[4+(i*8)] == 1 or object_list[4+(i*8)] == 5:
-            if object_list[2 + (i*8)] > max_speed:
-                object_list[2 + (i*8)] = max_speed
-            if object_list[2 + (i*8)] < -1 * max_speed:
-                object_list[2 + (i*8)] =  -1 * max_speed
-            if object_list[3 + (i*8)] > max_speed:
-                object_list[3 + (i*8)] = max_speed
-            if object_list[3 + (i*8)] < -1 * max_speed:
-                object_list[3 + (i*8)] = -1 * max_speed
+        if object_list[4+i] == 1 or object_list[4+i] == 5:
+            if object_list[2 + i] > max_speed:
+                object_list[2 + i] = max_speed
+            if object_list[2 + i] < -1 * max_speed:
+                object_list[2 + i] =  -1 * max_speed
+            if object_list[3 + i] > max_speed:
+                object_list[3 + i] = max_speed
+            if object_list[3 + i] < -1 * max_speed:
+                object_list[3 + i] = -1 * max_speed
 
         #rotation
-        if not isinstance(object_list[5+(i*8)], str):
-            object_list[5+(i*8)] += object_list[6+(i*8)]/7 #the divided by moderates the speed of rotation
-            if object_list[5+(i*8)] >= 360:
-                object_list[5+(i*8)] -= 360
-            if object_list[5+(i*8)] <= -360:
-                object_list[5+(i*8)] += 360                
-
-    return object_list
+        if not isinstance(object_list[5+i], str):
+            object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
+            if object_list[5+i] >= 360:
+                object_list[5+i] -= 360
+            if object_list[5+i] <= -360:
+                object_list[5+i] += 360                
 
 #helps out by setting entities to reasonable speeds
 def asteroidspeedmaker(max_asteroid_spd):
@@ -92,11 +90,17 @@ def asteroidspeedmaker(max_asteroid_spd):
         asteroid_speedset.append(random.randint(-1*max_asteroid_spd, int(-1*max_asteroid_spd/2))/100)
     return asteroid_speedset
 
+#generates the stars for backgrounds
+def generateStars(width, height):
+    stars_list = []
+    for i in range(20):
+        stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, 100, "NA", "NA", 1]
+    return stars_list
+
 #leveler
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan):
     object_list = object_list[:8]
-    for i in range(20):
-        object_list += [random.randint(0,100)/100*width, random.randint(0,100)/100*height, 0, 0, 100, "NA", "NA", 1]
+    object_list += generateStars(width, height)
     countervar = 0
     while countervar < random.randint(max_asteroids - 2, max_asteroids):
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
@@ -112,7 +116,6 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         object_list[7] = shield_lifespan
     return object_list
 
-
 #deaderizer -- perhaps amalgamated into doPhysics in the future, just outside its main for loop
 def deaderizer(object_list):
     indexadj = 0
@@ -122,7 +125,7 @@ def deaderizer(object_list):
                 object_list[7+indexadj] = 1
                 object_list[4+indexadj] = 1
             else:
-                object_list = object_list[:indexadj] + object_list[8 + indexadj:]
+                del object_list[indexadj:8+indexadj]
         indexadj += 8
     return object_list
 
@@ -248,7 +251,7 @@ def RotatePoint(xpos, ypos, point, rotation):
 def Rotate(xpos, ypos, points, rotationPosition):
     revisedPoints = []
     currentPosition = 0
-    for i in range(int(len(points))):
+    for i in range(len(points)):
         revisedPoints += RotatePoint(xpos, ypos, points[i], rotationPosition)
     return revisedPoints
       
