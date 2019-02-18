@@ -420,6 +420,106 @@ def main():
             currentarmor, currentfuel, ammunition = filehelper.get(4) #not very elegant to do this every tick
             pygame.display.flip()
 
+        if status == "armorRepairinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A")
+            pygame.display.flip()
+            status = "armorRepair"
+
+        if status == "armorRepair":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "armor", status)
+            pygame.display.flip()
+
+        if status == "fuelRefillinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A")
+            pygame.display.flip()
+            status = "fuelRefill"
+
+        if status == "fuelRefill":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "fuel", status)
+            pygame.display.flip()
+
+        if status == "ammoRefillinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A")
+            pygame.display.flip()
+            status = "ammoRefill"
+
+        if status == "ammoRefill":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "torpedoes", status)
+            pygame.display.flip()
+
+        if status == "marketinit":
+            homeInventory = filehelper.get(2)
+            screen.fill(color)
+            marketinitUI(screen, homeInventory)
+            status = "market"
+
+        if status == "market":
+            status = marketUI(screen, homeInventory)
+            pygame.display.flip()
+
+        if status == "buyMetalinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A")
+            pygame.display.flip()
+            status = "buyMetal"
+
+        if status == "buyMetal":
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            pygame.display.flip()
+
+        if status == "buyGasinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A")
+            pygame.display.flip()
+            status = "buyGas"
+
+        if status == "buyGas":
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            pygame.display.flip()
+
+        if status == "buyCircuitsinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A")
+            pygame.display.flip()
+            status = "buyCircuits"
+
+        if status == "buyCircuits":
+            status = drawMarketScreen(screen, homeInventory, False, "buyCircuits", status)
+            pygame.display.flip()
+
+        if status == "sellMetalinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A")
+            pygame.display.flip()
+            status = "sellMetal"
+
+        if status == "sellMetal":
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            pygame.display.flip()
+
+        if status == "sellGasinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A")
+            pygame.display.flip()
+            status = "sellGas"
+
+        if status == "sellGas":
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            pygame.display.flip()
+
+        if status == "sellCircuitsinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A")
+            pygame.display.flip()
+            status = "sellCircuits"
+
+        if status == "sellCircuits":
+            status = drawMarketScreen(screen, homeInventory, False, "sellCircuits", status)
+            pygame.display.flip()
+
         if status == "garageinit":
             #ship lv [armor, fuel]
             screen.fill(color)
@@ -608,10 +708,38 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            if ShipLv[2] == 0:
-                                shipInventory[random.randint(0,1)] += 1
-                            else:
-                                shipInventory[random.randint(0,2)] += 1
+                            if random.randint(1,100) <= 80:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[0] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[0] += 2
+                                else:
+                                    shipInventory[0] += 3
+                            if random.randint(1,100) <= 40:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[1] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[1] += 2
+                                else:
+                                    shipInventory[1] += 3
+                            if random.randint(1,100) <= 20:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[2] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[2] += 2
+                                else:
+                                    shipInventory[2] += 3
+                            if random.randint(1,100) <= 70:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[3] += 5
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[3] += 10
+                                else:
+                                    shipInventory[3] += 20
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
@@ -639,7 +767,7 @@ def main():
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]) + "    torpedoes:" + str(shipInventory[4]),3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
