@@ -66,12 +66,11 @@ class FlashyBox:
         self.displaying = False
 
     def update(self, current):
-        if current < self.threshold and self.timer == -1:
-            self.timer = 0
-        elif current < self.threshold:
+        if current < self.threshold:
             self.timer += 1
-        elif current > self.threshold and self.timer != -1:
+        elif current > self.threshold:
             self.timer = -1
+            self.displaying = False
 
         if self.timer != -1: #flips displaying when timer reaches 50
             if self.timer == 50:
