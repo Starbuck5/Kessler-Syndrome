@@ -41,7 +41,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
     pointName = UpgradeScreenStorage.pointName
     
     pygame.mouse.set_visible(True) #necessary?
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-235), name + " upgrade", 6])
 
     if mode:
@@ -89,7 +89,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
 
 def homeinitUI(screen, inventory):
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
     pygame.display.flip()
     
@@ -120,7 +120,8 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540), "repair & refill shop", 3]):
         status = "shopinit"
     if Texthelper.writeButton(screen, [("center", 540+55), "market", 3]):
-        status = "marketinit"
+        #status = "marketinit"
+        pass
     if  Texthelper.writeButton(screen, [("center", 540+110), "empty ship inventory", 3]):
         homeInventory[0] = homeInventory[0] + shipInventory[0]
         homeInventory[1] = homeInventory[1] + shipInventory[1]
@@ -143,7 +144,7 @@ class repairScreenStorage():
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
     Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) +
-                              "  currency:" + str(homeInventory[3]),3])
+                              "  currency:" + str(homeInventory[3]) + "  torpedoes:" + str(homeInventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
     status = "shop"                         
     fuelpic = repairScreenStorage.fuelpic
@@ -158,8 +159,19 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
     pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
     Texthelper.write(screen, [(600, 540-55), "Armor:", 3])   
-    if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
-        status = "armorRepairinit"
+    if currentarmor != totalarmor and homeInventory[0] != 0:
+        if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
+            if homeInventory[0] < int((totalarmor-currentarmor)/5):
+                currentarmor += homeInventory[0] * 5
+                homeInventory[0] = 0
+            else:
+                homeInventory[0] -= int((totalarmor-currentarmor)/5)
+                currentarmor = totalarmor
+            status = "shopinit"
+    elif homeInventory[0] == 0:
+        Texthelper.write(screen, [(1000, 540-55), "sorry", 3])
+    else:
+        Texthelper.write(screen, [(1000, 540-55), "full", 3])
     if mode:
         timedFlip()
 
@@ -168,272 +180,54 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
     pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])        
     Texthelper.write(screen, [(600, 540), "Fuel:", 3])   
-    if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
-        status = "fuelRefillinit"
+    if currentfuel != totalfuel and homeInventory[1] != 0:
+        if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
+            if homeInventory[1] < int((totalfuel-currentfuel)/250):
+                currentfuel += homeInventory[1] * 250
+                homeInventory[1] = 0
+            else:
+                homeInventory[1] -= int((totalfuel-currentfuel)/250)
+                currentfuel = totalfuel
+            status = "shopinit"
+    elif homeInventory[1] == 0:
+        Texthelper.write(screen, [(1000, 540), "sorry", 3])
+    else:
+        Texthelper.write(screen, [(1000, 540), "full", 3])
     if mode:
         timedFlip()
 
     #ammunition
     Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-    Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3])  
-    if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
-        status = "ammoRefillinit"
+    Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3]) 
+    if ammunition != totalammunition and homeInventory[4] != 0: 
+        if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
+            if homeInventory[4] < int(totalammunition - ammunition):
+                ammunition += homeInventory[4] 
+                homeInventory[4] = 0
+            else:
+                homeInventory[4] -= int(totalammunition-ammunition)
+                ammunition = totalammunition
+            status = "shopinit"
+    elif homeInventory[4] == 0:
+        Texthelper.write(screen, [(1000, 540+55), "sorry", 3])
+    else:
+        Texthelper.write(screen, [(1000, 540+55), "full", 3])
     if mode:
         timedFlip()
         
     if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
-    if mode:
-        pygame.display.flip()
-    return status
-
-class allRepairScreenStorage():
-    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)  #these really should be loaded only once
-    armorpic = loadImage("Assets\\armor.tif")                       #they're already loaded in main
-    editingIndex = -1
-    repairRefill = -1
-    pointName = -1
-    missingStat = -1
-    gasCost = -1
-    metalCost = -1
-
-def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode, name, status):
-    currentarmor = currentStats[0]
-    currentfuel = currentStats[1]
-    ammunition = currentStats[2]
-    totalarmor = totalStats[0]
-    totalfuel = totalStats[1]
-    if mode: #whether it should be init-ing or not\
-        if name == "armor":
-            editingIndex = 0
-            pointName = "hp"
-            costRatio = 1/3
-            repairRefill = "repair"
-        if name == "fuel":
-            editingIndex = 1
-            pointName = "fp"
-            costRatio = 1/250
-            repairRefill = "refill"
-        if name == "torpedoes":
-            editingIndex = 2
-            pointName = "ammo"
-            costRatio = 1/5
-            repairRefill = "refill"
-        allRepairScreenStorage.editingIndex = editingIndex
-        allRepairScreenStorage.repairRefill = repairRefill
-        allRepairScreenStorage.pointName = pointName
-        missingStat = totalStats[editingIndex] - currentStats[editingIndex]
-        allRepairScreenStorage.missingStat = missingStat
-        cost = int(costRatio * missingStat)
-        if editingIndex == 0:
-            allRepairScreenStorage.metalCost = cost
-            allRepairScreenStorage.gasCost = 0
-        elif editingIndex == 1:
-            allRepairScreenStorage.metalCost = 0
-            allRepairScreenStorage.gasCost = cost
-        else:
-            allRepairScreenStorage.metalCost = cost
-            allRepairScreenStorage.gasCost = cost
-
-    editingIndex = allRepairScreenStorage.editingIndex
-    repairRefill = allRepairScreenStorage.repairRefill
-    pointName = allRepairScreenStorage.pointName
-    missingStat = allRepairScreenStorage.missingStat 
-    metalCost = allRepairScreenStorage.metalCost
-    gasCost = allRepairScreenStorage.gasCost
-    fuelpic = allRepairScreenStorage.fuelpic
-    armorpic = allRepairScreenStorage.armorpic
-
-    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) +
-                              "  currency:" + str(homeInventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), repairRefill + " " + name, 6])
-
-    if mode:
-        timedFlip()       
-    Texthelper.write(screen, [("center", 540-110),  "missing: " + str(missingStat) + " " + pointName, 3])
-
-    if mode:
-        timedFlip()
-    Texthelper.write(screen, [("center", 540),  "cost:", 3])
-    pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-    pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-
-    if mode:
-        timedFlip()
-    Texthelper.write(screen, [(700, 540+55),  str(metalCost) + " metal" , 3])
-    Texthelper.write(screen, [(1100, 540+55),  str(gasCost) + " gas" , 3])
-    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])        
-
-    if mode:
-        timedFlip()
-    if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0:
-        if Texthelper.writeButton(screen, [("center", 540+165), repairRefill, 3]):
-            currentStats[editingIndex] = totalStats[editingIndex]
-            homeInventory[0] -= metalCost
-            homeInventory[1] -= gasCost
-            status = "shopinit"
-    elif missingStat == 0:
-        Texthelper.write(screen, [("center", 540+165), "full", 3])
-    else:
-        Texthelper.write(screen, [("center", 540+165), "sorry", 3])
-    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-
-    if mode:
-        timedFlip()
-    if Texthelper.writeButton(screen, [("center", 540+220), "back", 3]):
-        status = "shopinit"
-
-    if mode:
-        pygame.display.flip()
-
     if not mode:
+        filehelper.set([currentarmor, currentfuel, ammunition],4)
         filehelper.set(homeInventory,2)
-        filehelper.set(currentStats,4)
-
-    return status
-    
-def marketinitUI(screen, inventory):
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), "market", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540-110), "metal:", 3])
-    Texthelper.write(screen, [(900, 540-110), "buy", 3])
-    Texthelper.write(screen, [(1100, 540-110), "sell", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540-55), "gas:", 3])
-    Texthelper.write(screen, [(900, 540-55), "buy", 3])
-    Texthelper.write(screen, [(1100, 540-55), "sell", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540), "circuits:", 3])
-    Texthelper.write(screen, [(900, 540), "buy", 3])
-    Texthelper.write(screen, [(1100, 540), "sell", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [("center", 540+110), "back", 3])
-    pygame.display.flip()
-
-def marketUI(screen, inventory):
-    status = "market"
-    if Texthelper.writeButton(screen, [(900, 540-110), "buy", 3]):
-        status = "buyMetalinit"
-    elif Texthelper.writeButton(screen, [(1100, 540-110), "sell", 3]):
-        status = "sellMetalinit"
-    elif Texthelper.writeButton(screen, [(900, 540-55), "buy", 3]):
-        status = "buyGasinit"
-    elif Texthelper.writeButton(screen, [(1100, 540-55), "sell", 3]):
-        status = "sellGasinit"
-    elif Texthelper.writeButton(screen, [(900, 540), "buy", 3]):
-        status = "buyCircuitsinit"
-    elif Texthelper.writeButton(screen, [(1100, 540), "sell", 3]):
-        status = "sellCircuitsinit"
-    elif Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
-        status = "homeinit"
+    if mode:
+        pygame.display.flip()
     return status
 
-class marketScreenStorage():
-    cost = -1
-    editingIndex = -1
-    pointName = -1
-    buySell = -1
-    
-def drawMarketScreen(screen, inventory, mode, name, status):
-    if mode: #whether it should be init-ing or not
-        if name == "buyMetal":
-            editingIndex = 0
-            pointName = "metal"
-            cost = 10
-            buySell = "buy"
-        if name == "buyGas":
-            editingIndex = 1
-            pointName = "gas"
-            cost = 40
-            buySell = "buy"
-        if name == "buyCircuits":
-            editingIndex = 2
-            pointName = "circuits"
-            cost = 120
-            buySell = "buy"
-        if name == "sellMetal":
-            editingIndex = 0
-            pointName = "metal"
-            cost = 5
-            buySell = "sell"
-        if name == "sellGas":
-            editingIndex = 1
-            pointName = "gas"
-            cost = 20
-            buySell = "sell"
-        if name == "sellCircuits":
-            editingIndex = 2
-            pointName = "circuits"
-            cost = 60
-            buySell = "sell"
-        marketScreenStorage.cost = cost
-        marketScreenStorage.editingIndex = editingIndex
-        marketScreenStorage.pointName = pointName
-        marketScreenStorage.buySell = buySell
-        
-    cost = marketScreenStorage.cost
-    editingIndex = marketScreenStorage.editingIndex
-    pointName = marketScreenStorage.pointName
-    buySell = marketScreenStorage.buySell
-
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), buySell + " " + pointName, 6])
-
-    if mode:
-        timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), pointName + " +1", 3])
-    
-    if mode:
-        timedFlip()
-    if buySell == "buy":
-        Texthelper.write(screen, [("center", 540),"cost: " + str(cost) + " currency", 3])
-    else:
-        Texthelper.write(screen, [("center", 540),"value: " + str(cost) + " currency", 3])
-        
-    if mode:
-        timedFlip()
-    if buySell == "buy":
-        if inventory[3] >= cost:
-            if Texthelper.writeButton(screen, [("center", 540+110), "buy", 3]):
-                inventory[3] -= cost
-                inventory[editingIndex] += 1
-                status = "marketinit"
-        else:
-            Texthelper.write(screen, [("center", 540+110), "sorry", 3])
-    else:
-        if inventory[editingIndex] != 0:
-            if Texthelper.writeButton(screen, [("center", 540+110), "sell", 3]):
-                inventory[3] += cost
-                inventory[editingIndex] -= 1
-                status = "marketinit"
-        else:
-            Texthelper.write(screen, [("center", 540+110), "sorry", 3])
-
-    if mode:
-        timedFlip()
-    if Texthelper.writeButton(screen, [("center", 540+220), "back", 3]):
-        status = "marketinit"
-
-    if mode:
-        timedFlip()
-    if not mode:
-        filehelper.set(inventory,2)
-        
-    return status
 
 def garageinitUI(screen, ShipLv, inventory):
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]) + "  torpedoes:" + str(inventory[4]),3])
     Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
     pygame.display.flip()
     
