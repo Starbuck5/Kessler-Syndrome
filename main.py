@@ -56,6 +56,31 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
 
+#flashing alerts for low fuel and armor
+class FlashyBox:
+    def __init__(self, rect, threshold, color):
+        self.rect = rect
+        self.threshold = threshold
+        self.color = color
+        self.timer = -1
+        self.displaying = False
+
+    def update(self, current):
+        if current < self.threshold and self.timer == -1:
+            self.timer = 0
+        elif current < self.threshold:
+            self.timer += 1
+        elif current > self.threshold and self.timer != -1:
+            self.timer = -1
+
+        if self.timer != -1: #flips displaying when timer reaches 50
+            if self.timer == 50:
+                self.displaying = not self.displaying
+                self.timer = 0
+
+        if self.displaying: #draws the rectangle
+            pygame.draw.rect(screen, self.color, self.rect, 0)
+            
 #collision detection for the portals            
 def portalcollision(object_list, portalcoords):
     if (portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] and portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3]
@@ -605,6 +630,10 @@ def main():
                 totalammunition = ammunitionHelp[4]
             ammunition = filehelper.get(4)[2]
 
+            fuelalert = FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0))
+            armoralert = FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0))
+            
+            #game progression
             if file_settings[3] == 0:
                 level1(screen, width, height)
                 file_settings[3] = 1
@@ -813,10 +842,12 @@ def main():
                 enginesound.fadeout(10)
             flame = False
             #fuel
+            fuelalert.update(currentfuel/totalfuel)
             screen.blit(fuelpic, (1600, 1000))
             pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
             pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
             #armor
+            armoralert.update(currentarmor/totalarmor)
             screen.blit(armorpic, (1600, 930))
             pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
             pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
