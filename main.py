@@ -10,17 +10,15 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-#prints everything
-def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
-    for i in range(0, len(object_list), 8):
-        xpos = object_list[i]        
-        ypos = object_list[i+1]
-        object_number = object_list[i+4] #object type
-        rotation = object_list[i+5] #rotation position
+def printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+    for i in range(int(len(object_list)/8)):
+        xpos = object_list[(i * 8)]        
+        ypos = object_list[1 + (i * 8)]
+        object_number = object_list[4 + (i * 8)] #object type
+        rotation = object_list[5+(i*8)]
         
         if object_number == 100:
             screen.blit(specialpics[0], (xpos, ypos))
-            
         if object_number == 0:
             screen.blit(specialpics[1], (xpos, ypos))
                 
@@ -29,34 +27,36 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
-            
         if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
-            
+
+        #reserve ships no longer a thing
+        #if object_number == 3: #draws reserve ships
+        #    res_ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        #    pygame.gfxdraw.aapolygon(screen, res_ship_pointlist, (255,255,255))
+        #    pygame.gfxdraw.filled_polygon(screen, res_ship_pointlist, (255,255,255))
+
         if object_number == 4: #draws explosion effects
             pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
-            
         if object_number == 5: #draws shielded ship
             ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
             ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
             pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
-            
         if object_number == 6: #draws alien
             alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
                             [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
             pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
-            
         if 9 < object_number < 40: #draws satellites
             image = rotatePixelArt(graphlist[object_number-10], rotation)
             screen.blit(image, (xpos, ypos))
-            
         if 69 < object_number < 100: #draws asteroids
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
             newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
             pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
+            
 
-#collision detection for the portals            
+
 def portalcollision(object_list, portalcoords):
     if (portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] and portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3]
         and (object_list[4] == 1 or object_list[4]==5)):
@@ -64,7 +64,6 @@ def portalcollision(object_list, portalcoords):
     else:
         return False
 
-#backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
     xpos = object_list[object_location*8]
     ypos = object_list[1+object_location*8]
@@ -87,7 +86,6 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
 
-#returns true if there is a collision between two objects, returns false otherwise
 def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
@@ -119,14 +117,12 @@ def explosion_sounds():
     if explosion_picker == 1:
         explosion2.play()
 
-#wrapper for saveObjects that determines how to save a level
 def saveGame(sectornum, object_list, width, height):
     if sectorGeneration(sectornum):
         saveObjects(sectornum, [-1], width, height)
     else:
         saveObjects(sectornum, object_list[:], width, height)
 
-#saves objectlist to file by breaking it into a maximum of 5 lines
 def saveObjects(sectornum, save_list, width, height):
     for i in range(len(save_list)):
         if isinstance(save_list[i], float):
@@ -153,7 +149,6 @@ def saveObjects(sectornum, save_list, width, height):
     for i in range(5):
         filehelper.set(savelist[i], sectornum*5+i)
 
-#extracts the list saveObjects saved to file
 def getObjects(sectornum, width, height):
     object_list = []
     for i in range(5):
@@ -173,7 +168,6 @@ def getObjects(sectornum, width, height):
             object_list[6+i*8] = -10 #gets rid of shots and alien shots when entering a sector
     return object_list
 
-#used by the map to actually draw out the sectors
 def drawSector(location, number, currentsector):
     secsize = 80 #side length of the cubes
     if number != currentsector:
@@ -185,7 +179,14 @@ def drawSector(location, number, currentsector):
         Texthelper.write(screen, [(location[0]-10, location[1]-15), str(number), 2])
     else:
         Texthelper.write(screen, [(location[0]-20, location[1]-15), str(number), 2])
-           
+        
+#just for generating backgrounds for manually built levels
+def generateStars(width, height):
+    object_list = []
+    for i in range(20):
+        object_list += [random.randint(0,100)/100*width, random.randint(0,100)/100*height, 0, 0, 100, "NA", 1, False]
+    print(object_list)
+    
 def main():
     global screen
     file_settings = filehelper.get(0) #grabs settings from file
@@ -419,13 +420,113 @@ def main():
             currentarmor, currentfuel, ammunition = filehelper.get(4) #not very elegant to do this every tick
             pygame.display.flip()
 
+        if status == "armorRepairinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A")
+            pygame.display.flip()
+            status = "armorRepair"
+
+        if status == "armorRepair":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "armor", status)
+            pygame.display.flip()
+
+        if status == "fuelRefillinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A")
+            pygame.display.flip()
+            status = "fuelRefill"
+
+        if status == "fuelRefill":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "fuel", status)
+            pygame.display.flip()
+
+        if status == "ammoRefillinit":
+            screen.fill(color)
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A")
+            pygame.display.flip()
+            status = "ammoRefill"
+
+        if status == "ammoRefill":
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "torpedoes", status)
+            pygame.display.flip()
+
+        if status == "marketinit":
+            homeInventory = filehelper.get(2)
+            screen.fill(color)
+            marketinitUI(screen, homeInventory)
+            status = "market"
+
+        if status == "market":
+            status = marketUI(screen, homeInventory)
+            pygame.display.flip()
+
+        if status == "buyMetalinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A")
+            pygame.display.flip()
+            status = "buyMetal"
+
+        if status == "buyMetal":
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            pygame.display.flip()
+
+        if status == "buyGasinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A")
+            pygame.display.flip()
+            status = "buyGas"
+
+        if status == "buyGas":
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            pygame.display.flip()
+
+        if status == "buyCircuitsinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A")
+            pygame.display.flip()
+            status = "buyCircuits"
+
+        if status == "buyCircuits":
+            status = drawMarketScreen(screen, homeInventory, False, "buyCircuits", status)
+            pygame.display.flip()
+
+        if status == "sellMetalinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A")
+            pygame.display.flip()
+            status = "sellMetal"
+
+        if status == "sellMetal":
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            pygame.display.flip()
+
+        if status == "sellGasinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A")
+            pygame.display.flip()
+            status = "sellGas"
+
+        if status == "sellGas":
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            pygame.display.flip()
+
+        if status == "sellCircuitsinit":
+            screen.fill(color)
+            drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A")
+            pygame.display.flip()
+            status = "sellCircuits"
+
+        if status == "sellCircuits":
+            status = drawMarketScreen(screen, homeInventory, False, "sellCircuits", status)
+            pygame.display.flip()
+
         if status == "garageinit":
             #ship lv [armor, fuel]
             screen.fill(color)
             ShipLv = filehelper.get(3)
             homeInventory = filehelper.get(2)
             garageinitUI(screen, ShipLv, homeInventory)
-            #pygame.display.flip()
+            pygame.display.flip()
             status = "garage"
 
         if status == "garage":
@@ -607,10 +708,38 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            if ShipLv[2] == 0:
-                                shipInventory[random.randint(0,1)] += 1
-                            else:
-                                shipInventory[random.randint(0,2)] += 1
+                            if random.randint(1,100) <= 80:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[0] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[0] += 2
+                                else:
+                                    shipInventory[0] += 3
+                            if random.randint(1,100) <= 40:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[1] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[1] += 2
+                                else:
+                                    shipInventory[1] += 3
+                            if random.randint(1,100) <= 20:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[2] += 1
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[2] += 2
+                                else:
+                                    shipInventory[2] += 3
+                            if random.randint(1,100) <= 70:
+                                percentHelper = random.randint(1,100)
+                                if percentHelper <= 60:
+                                    shipInventory[3] += 5
+                                elif 61 <= percentHelper <= 90:
+                                    shipInventory[3] += 10
+                                else:
+                                    shipInventory[3] += 20
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
@@ -638,7 +767,7 @@ def main():
             # collision detection
 
             #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]) + "    torpedoes:" + str(shipInventory[4]),3])
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]),3])
 
             # deaderizer
             object_list = deaderizer(object_list)
@@ -663,10 +792,10 @@ def main():
                 object_list[3] = 0
 
             #physics!
-            doPhysics(object_list, width, height, max_speed, drag, step_drag)
+            object_list = doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer and flame and score            
-            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+            printer2(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
                 flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
