@@ -735,38 +735,9 @@ def main():
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            if random.randint(1,100) <= 80:
-                                percentHelper = random.randint(1,100)
-                                if percentHelper <= 60:
-                                    shipInventory[0] += 1
-                                elif 61 <= percentHelper <= 90:
-                                    shipInventory[0] += 2
-                                else:
-                                    shipInventory[0] += 3
-                            if random.randint(1,100) <= 40:
-                                percentHelper = random.randint(1,100)
-                                if percentHelper <= 60:
-                                    shipInventory[1] += 1
-                                elif 61 <= percentHelper <= 90:
-                                    shipInventory[1] += 2
-                                else:
-                                    shipInventory[1] += 3
-                            if random.randint(1,100) <= 20:
-                                percentHelper = random.randint(1,100)
-                                if percentHelper <= 60:
-                                    shipInventory[2] += 1
-                                elif 61 <= percentHelper <= 90:
-                                    shipInventory[2] += 2
-                                else:
-                                    shipInventory[2] += 3
-                            if random.randint(1,100) <= 70:
-                                percentHelper = random.randint(1,100)
-                                if percentHelper <= 60:
-                                    shipInventory[3] += 5
-                                elif 61 <= percentHelper <= 90:
-                                    shipInventory[3] += 10
-                                else:
-                                    shipInventory[3] += 20
+                            drops = satelliteDrops()
+                            #this fancy line of code from stack overflow merges the two lists by adding their like elements together
+                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
@@ -811,7 +782,7 @@ def main():
                 object_list = getObjects(sectornum, width, height)
                 currentfuel = totalfuel
                 currentarmor = totalarmor
-                shipInventory = [0,0,0,0,0]
+                shipInventory = [0,0,0,0]
                 lasttransit = 0
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2

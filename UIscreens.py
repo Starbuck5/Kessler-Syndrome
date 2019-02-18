@@ -126,7 +126,6 @@ def homeUI(screen, shipInventory, homeInventory):
         homeInventory[1] = homeInventory[1] + shipInventory[1]
         homeInventory[2] = homeInventory[2] + shipInventory[2]
         homeInventory[3] = homeInventory[3] + shipInventory[3]
-        homeInventory[4] = homeInventory[4] + shipInventory[4]
         filehelper.set(homeInventory, 2)
         shipInventory = [0,0,0,0,0]
         status = "homeinit"

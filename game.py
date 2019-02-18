@@ -181,6 +181,42 @@ def sectorGeneration(sectornum):
         output = True
     return output
 
+def satelliteDrops():
+    drops = [0, 0, 0, 0]
+    if random.randint(1,100) <= 80:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[0] += 1
+        elif 61 <= percentHelper <= 90:
+            drops[0] += 2
+        else:
+            drops[0] += 3
+    if random.randint(1,100) <= 40:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[1] += 1
+        elif 61 <= percentHelper <= 90:
+            drops[1] += 2
+        else:
+            drops[1] += 3
+    if random.randint(1,100) <= 20:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[2] += 1
+        elif 61 <= percentHelper <= 90:
+            drops[2] += 2
+        else:
+            drops[2] += 3
+    if random.randint(1,100) <= 70:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[3] += 5
+        elif 61 <= percentHelper <= 90:
+            drops[3] += 10
+        else:
+            drops[3] += 20
+    return drops
+
 def makeAsteroidList(scalar2): #generates a list of offsets for all of the separate asteroid designs
     asteroidlist = [[[17*scalar2, 1*scalar2], [12*scalar2, 8*scalar2], [-2*scalar2, 17*scalar2],
                      [-8*scalar2, 11*scalar2], [-16*scalar2, 3*scalar2], [-14*scalar2, -7*scalar2],
