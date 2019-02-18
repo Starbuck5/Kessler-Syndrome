@@ -350,8 +350,9 @@ class Texthelper():
             Texthelper.write(screen, text_input, "pressed")
         else:
             Texthelper.write(screen, text_input)
-        
-        x, y = text_input[0]
+
+        text_location = Texthelper._interpretcoords(text_input)[0] 
+        x, y = text_location
         pygame.draw.rect(screen, color, [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding],
                          int(2*Texthelper.scalar))
 
@@ -385,7 +386,8 @@ class Texthelper():
             padding = kwargs['padding']
             
         click = mouse()
-        x, y = text_input[0]
+        text_location = Texthelper._interpretcoords(text_input)[0] 
+        x, y = text_location
         if x-padding < pygame.mouse.get_pos()[0] < x+Texthelper.textlength(text_input)+padding*2 and (y-padding/2 < pygame.mouse.get_pos()[1] < y+12*Texthelper.scalar*text_input[2]+padding):
            Texthelper.writeBox(screen, text_input, color=SELCOLOR, padding=padding, pressed=True)
         else:
