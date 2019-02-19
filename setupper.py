@@ -4,9 +4,10 @@ from pgx import *
 pygame.init()
 pygame.display.set_caption("Kessler First Time Setup")
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode([400, 300])
-Texthelper.width = 400
-Texthelper.height = 300
+screen = pygame.display.set_mode([600, 450])
+Texthelper.width = 600
+Texthelper.height = 450
+Texthelper.scalar = 1.5
 
 suggestedRes = pygame.display.list_modes()[0]
 widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
