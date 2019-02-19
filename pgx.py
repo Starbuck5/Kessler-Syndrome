@@ -3,7 +3,6 @@ import pygame
 import random
 from textwrap import wrap
 OS = "windows" #other option = "mac"
-SELCOLOR = (112,128,144) #color for moused over buttons
 
 def keyboard():
     inputvar = []
@@ -105,6 +104,7 @@ class Font():
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
+    SELCOLOR = (112,128,144) #color for moused over buttons
     COLOR = DEFAULT
     SCRAMBLED = False
     scrambleTimeLeft = -1
@@ -122,20 +122,15 @@ class Font():
                 Font.char_list.append(fontsheet.subsurface((2+10*j, 2+14*i, 8, 13)))
 
     def changeColor(color):
-        Font.COLOR = color
-        fontsheet = Font.fontsheet
-        palette = list(fontsheet.get_palette())
-        palette[1] = color
-        fontsheet.set_palette(palette)
-        Font.splitSheet(fontsheet)
+        if color != Font.COLOR:
+            Font.COLOR = color
+            fontsheet = Font.fontsheet
+            palette = list(fontsheet.get_palette())
+            palette[1] = color
+            fontsheet.set_palette(palette)
+            Font.splitSheet(fontsheet)
         
-    def getChar(char, scale, mode):
-        if mode:
-            if Font.COLOR != SELCOLOR:
-                Font.changeColor(SELCOLOR)
-        elif Font.COLOR != Font.DEFAULT:
-            Font.changeColor(Font.DEFAULT)
-            
+    def getChar(char, scale):           
         if Font.SCRAMBLED:
             charImage = scaleImage(Font.char_list[random.randint(0,len(Font.char_list)-1)], scale)
         elif char in Font.char_index:
@@ -300,6 +295,7 @@ class Texthelper():
     height = 1
     last_click = () 
 
+    #part of the input sanitizing process: figures out how to center text mainly
     def _interpretcoords(text_input):
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
@@ -318,19 +314,13 @@ class Texthelper():
         text_input2[0] = (location_list[0], location_list[1])
         return text_input2
 
-    # text_input = [(x, y), "text", text_scale]
-    # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
-    def write(screen, text_input, *args):
-        text_location = Texthelper._interpretcoords(text_input)[0]
-        text = text_input[1]
-        scale = text_input[2] * Texthelper.scalar
-        text = text.lower()
-
-        #displayer
+    #called internally after input has been sanitized for scale and interpreted coords
+    def _drawtext(screen, text_input):
+        text_location, text, scale = text_input
         horizontal_pos = text_location[0]
         for i in range(len(text)):
             if text[i] != " ":
-                text3 = Font.getChar(text[i], scale, "pressed" in args)                
+                text3 = Font.getChar(text[i], scale)                
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
             if text[i] == " " and text[i-1] != " " and i != 0:
@@ -338,38 +328,64 @@ class Texthelper():
             if text[i] == " " and text[i-1] == " " and i != 0:
                 horizontal_pos += 11 * scale
 
-    def writeBox(screen, text_input, **kwargs):
-        padding = 18 * Texthelper.scalar
-        color = (255,255,255)
+    #takes in whatever shit we tell it too and makes it standardized
+    def _sanitizeinput(text_input):
+        text_input = Texthelper._interpretcoords(text_input)
+        text_input[2] = text_input[2] * Texthelper.scalar
+        text_input[1] = text_input[1].lower()
+        return text_input
+
+    #petitions the font to have the right color
+    def _handlecolor(**kwargs):
+        #order of precedence low to high:
+        # -- default color -- manually selected color -- mouse over color
+        #takes a rect as optional keyword
+        #takes color as optional keyword
+        color = Font.DEFAULT
         if 'color' in kwargs:
             color = kwargs['color']
+        if 'colliderect' in kwargs:
+            rect = kwargs['colliderect']
+            x, y = pygame.mouse.get_pos()
+            if rect[0] < x < rect[0] + rect[2] and rect[1] < y < rect[1] + rect[3]:
+                color = Font.SELCOLOR
+        Font.changeColor(color)
+        return color
+
+    #backend for writebox and writebuttonbox
+    def _drawbox(screen, rect, color):
+        pygame.draw.rect(screen, color, rect, int(2*Texthelper.scalar))        
+
+    # text_input = [(x, y), "text", text_scale]
+    # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
+    def write(screen, text_input, **kwargs):
+        Texthelper._handlecolor(**kwargs)
+        text_input = Texthelper._sanitizeinput(text_input)
+        Texthelper._drawtext(screen, text_input)
+
+    def writeBox(screen, text_input, **kwargs):
+        padding = 18 /1920 * Texthelper.height * Texthelper.scalar #default value
+        color = Texthelper._handlecolor(**kwargs)
         if 'padding' in kwargs:
-            padding = kwargs['padding']
+            padding = kwargs['padding'] * Texthelper.scalar
 
-        if 'pressed' in kwargs:
-            Texthelper.write(screen, text_input, "pressed")
-        else:
-            Texthelper.write(screen, text_input)
+        text_input = Texthelper._sanitizeinput(text_input)        
+        Texthelper._drawtext(screen, text_input)
+        x, y = text_input[0]
+        boxrect = [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding]
+        Texthelper._drawbox(screen, boxrect, color)
 
-        text_location = Texthelper._interpretcoords(text_input)[0] 
-        x, y = text_location
-        pygame.draw.rect(screen, color, [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding],
-                         int(2*Texthelper.scalar))
-
-    def writeButton(screen, text_input):
-        click = mouse()
-
-        text_location = Texthelper._interpretcoords(text_input)[0]
-        scale = text_input[2] * Texthelper.scalar
+    def writeButton(screen, text_input, **kwargs):        
+        text_input = Texthelper._sanitizeinput(text_input)
         x_range = Texthelper.textlength(text_input)
-        y_range = 12 * scale
+        y_range = 12 * text_input[2]
+        text_location = text_input[0]
 
-        if text_location[0] < pygame.mouse.get_pos()[0] < (text_location[0]+x_range) and text_location[1]<pygame.mouse.get_pos()[1]<(text_location[1]+y_range):
-            Texthelper.write(screen, text_input, "pressed")
-        else:
-            Texthelper.write(screen, text_input)
-
-        #print(text_input[1] + ", click: " + str(click) + " last click: " + str(Texthelper.last_click))
+        mouseoverrect = [text_location[0], text_location[1], x_range, y_range]        
+        Texthelper._handlecolor(colliderect = mouseoverrect, **kwargs)
+        Texthelper._drawtext(screen, text_input)
+        
+        click = mouse()
         if click != Texthelper.last_click:
             if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
                 Texthelper.last_click = click
@@ -378,21 +394,18 @@ class Texthelper():
                 return False
 
     def writeButtonBox(screen, text_input, **kwargs):
-        padding = 18 * Texthelper.scalar
-        color = (255,255,255)
-        if 'color' in kwargs:
-            color = kwargs['color']
+        padding = 18 /1920 * Texthelper.height * Texthelper.scalar #default value      
         if 'padding' in kwargs:
-            padding = kwargs['padding']
+            padding = kwargs['padding'] * Texthelper.scalar
             
-        click = mouse()
-        text_location = Texthelper._interpretcoords(text_input)[0] 
-        x, y = text_location
-        if x-padding < pygame.mouse.get_pos()[0] < x+Texthelper.textlength(text_input)+padding*2 and (y-padding/2 < pygame.mouse.get_pos()[1] < y+12*Texthelper.scalar*text_input[2]+padding):
-           Texthelper.writeBox(screen, text_input, color=SELCOLOR, padding=padding, pressed=True)
-        else:
-            Texthelper.writeBox(screen, text_input, color=color, padding=padding)
-
+        text_input = Texthelper._sanitizeinput(text_input)
+        x, y = text_input[0]
+        mouseoverrect = [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding]
+        color = Texthelper._handlecolor(colliderect = mouseoverrect, **kwargs)          
+        Texthelper._drawtext(screen, text_input)
+        Texthelper._drawbox(screen, mouseoverrect, color)
+        
+        click = mouse()    
         if click != Texthelper.last_click:            
             if x-padding < click[1] < x+Texthelper.textlength(text_input)+padding*2 and y-padding/2 < click[2] < y+12*Texthelper.scalar*text_input[2]+padding:
                 Texthelper.last_click = click
@@ -401,12 +414,12 @@ class Texthelper():
                 return False
         
     def writeNullButton(screen, text_input):
-        Texthelper.write(screen, text_input)
-        text_location = Texthelper._interpretcoords(text_input)[0]
-        scale = text_input[2] * Texthelper.scalar
-
+        Font.changeColor(Font.DEFAULT)
+        text_input = Texthelper._sanitizeinput(text_input)
+        Texthelper._drawtext(screen, text_input)
+        text_location = text_input[0]
         x_range = Texthelper.textlength(text_input)
-        y_range = 12 * scale
+        y_range = 12 * text_input[2]
         
         click = mouse()
         if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
