@@ -739,6 +739,12 @@ def main():
             if flame == True:
                 currentfuel -= 1
 
+            #HACKZ
+            if DEVMODE:
+                    currentfuel = totalfuel
+                    currentarmor = totalarmor
+                    ammunition = totalammunition
+
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
                 saveGame(sectornum, object_list, width, height)
