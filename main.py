@@ -270,8 +270,6 @@ def main():
     d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
     flame = False
-    menu_music_fadeout_OG = 1200
-    menu_music_fadeout = menu_music_fadeout_OG
     clock = pygame.time.Clock()
     sectornum = 1
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
@@ -296,10 +294,6 @@ def main():
         if status == "menuinit":
             # sound
             pygame.mixer.init()
-            menu_music = pygame.mixer.Sound(handlePath("Assets\\AsteroidsTitle.wav"))
-            menu_music.play(-1)
-            menu_music.set_volume(0.4)
-            menu_music_fadeout = menu_music_fadeout_OG
 
             pygame.mouse.set_visible(True)
             screen.fill(color)
@@ -314,7 +308,6 @@ def main():
             text_input = [(410, 540-50), "[Play]", 3]
             if Texthelper.writeButton(screen, text_input):
                 status = "gameinit"
-                menu_music.fadeout(menu_music_fadeout)
             text_input = [(410, 550), "[Quit to desktop]", 3]
             if Texthelper.writeButton(screen, text_input): #if "quit to desktop" is clicked           
                 pygame.quit() #stop the program
@@ -592,20 +585,6 @@ def main():
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
-
-            # sound
-            beat_timer = 250
-            max_beat_timer = beat_timer
-            beat1 = pygame.mixer.Sound(handlePath("Assets\\Beat1loud.wav"))
-            beat1.set_volume(0.9)
-            beat2 = pygame.mixer.Sound(handlePath("Assets\\Beat2loud.wav"))
-            beat2.set_volume(0.9)
-            missilesound = pygame.mixer.Sound(handlePath("Assets\\missilesound.wav"))
-            missilesound.set_volume(0.35)
-            enginesound = pygame.mixer.Sound(handlePath("Assets\\enginesoundloud.wav"))
-            enginesound.set_volume(0.2)
-            timer1 = 0
-
             pygame.mouse.set_visible(False)
             
             #inventory
@@ -651,21 +630,6 @@ def main():
             screen.fill(color)
             AnnouncementBox.play(screen)
             Font.timerhelper() #once a game loop update to a scramble timer
-
-            # sound
-            if menu_music_fadeout >= 0:
-                menu_music_fadeout -= 10
-            if menu_music_fadeout < 0:
-                if beat_timer == max_beat_timer:
-                    beat2.stop()
-                    beat1.play()
-                beat_timer -= 1
-                if beat_timer == int(max_beat_timer/2):
-                    beat1.stop()
-                    beat2.play()
-                if beat_timer <= 0:
-                    beat_timer = max_beat_timer    
-            # sound
             
             # input handling
             inputvar = keyboard()
@@ -689,8 +653,6 @@ def main():
                         object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, "NA", "NA", missile_lifespan]
                         object_list += object_list_addition
                         previous_tick = ticks
-                        missilesound.stop()
-                        missilesound.play()
                 if "shift" in inputvar and "c" in inputvar and (ticks - previous_tick2) > 360:
                     color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     while color[0] + color[1] + color[2] > 150:
@@ -751,14 +713,17 @@ def main():
                             object_list[(i2*8)+7] = -1
                             currentarmor = currentarmor - int(force)
                             Font.scramble(100) #scrambles text for 100 ticks
+                            explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
+                            explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_only_sats: #missile v satellite collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
+                            explosion_sounds()
                         object_list += printerlist_add
                     i2 += 1
                         
@@ -801,15 +766,6 @@ def main():
                 flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
                 pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
                 pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
-            if flame == True and timer1 == 0:
-                enginesound.stop()
-                enginesound.play()
-            if flame == True and timer1 < 21:
-                timer1 += 1
-            if flame == True and timer1 == 21:
-                timer1 = 0
-            if flame == False:
-                enginesound.fadeout(10)
             flame = False
             #fuel
             fuelalert.update(currentfuel/totalfuel)
