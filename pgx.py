@@ -302,9 +302,9 @@ class Texthelper():
         text_input2 = text_input[0:] #very important line
         if str(location_list[0]).isdigit() == False:
             if location_list[0] == "center":
-                location_list[0] = Texthelper.width / 2 - Texthelper.textlength(text_input) / 2
+                location_list[0] = Texthelper.width / 2 - Texthelper._textlength(text_input) / 2
             elif location_list[0] == "right":
-                location_list[0] = Texthelper.width - Texthelper.textlength(text_input)
+                location_list[0] = Texthelper.width - Texthelper._textlength(text_input)
             else:
                 location_list[0] = 0
             location_list[1] *= Texthelper.scalar
@@ -329,9 +329,10 @@ class Texthelper():
                 horizontal_pos += 11 * scale
 
     #takes in whatever shit we tell it too and makes it standardized
-    def _sanitizeinput(text_input):
-        text_input = Texthelper._interpretcoords(text_input)
+    def _sanitizeinput(proto_input):
+        text_input = proto_input[:] #avoids mangling variables passed by reference
         text_input[2] = text_input[2] * Texthelper.scalar
+        text_input = Texthelper._interpretcoords(text_input)        
         text_input[1] = text_input[1].lower()
         return text_input
 
@@ -354,7 +355,24 @@ class Texthelper():
 
     #backend for writebox and writebuttonbox
     def _drawbox(screen, rect, color):
-        pygame.draw.rect(screen, color, rect, int(2*Texthelper.scalar))        
+        pygame.draw.rect(screen, color, rect, int(2*Texthelper.scalar))
+
+    #takes a sanitized text_input
+    def _textlength(text_input):
+        text = text_input[1]
+        if text and text[-1] == "|":
+            text = text[:-1]
+        scale = text_input[2]
+        x_range = 0
+        for i in range(len(text)):
+            if text[i] != " ":
+                x_range += 11 * scale
+            elif text[i-1] != " " and text[i] == " " and i != 0:
+                x_range += 3 * scale
+            elif text[i] == " " and text[i-1] == " " and i != 0:
+                x_range += 11 * scale
+        x_range -= 3 * scale
+        return x_range
 
     # text_input = [(x, y), "text", text_scale]
     # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
@@ -372,12 +390,12 @@ class Texthelper():
         text_input = Texthelper._sanitizeinput(text_input)        
         Texthelper._drawtext(screen, text_input)
         x, y = text_input[0]
-        boxrect = [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding]
+        boxrect = [x-padding, y-padding/2, Texthelper._textlength(text_input)+padding*2, 13*text_input[2]+padding]
         Texthelper._drawbox(screen, boxrect, color)
 
     def writeButton(screen, text_input, **kwargs):        
         text_input = Texthelper._sanitizeinput(text_input)
-        x_range = Texthelper.textlength(text_input)
+        x_range = Texthelper._textlength(text_input)
         y_range = 12 * text_input[2]
         text_location = text_input[0]
 
@@ -400,14 +418,14 @@ class Texthelper():
             
         text_input = Texthelper._sanitizeinput(text_input)
         x, y = text_input[0]
-        mouseoverrect = [x-padding, y-padding/2, Texthelper.textlength(text_input)+padding*2, 12*Texthelper.scalar*text_input[2]+padding]
+        mouseoverrect = [x-padding, y-padding/2, Texthelper._textlength(text_input)+padding*2, 13*text_input[2]+padding]
         color = Texthelper._handlecolor(colliderect = mouseoverrect, **kwargs)          
         Texthelper._drawtext(screen, text_input)
         Texthelper._drawbox(screen, mouseoverrect, color)
         
         click = mouse()    
         if click != Texthelper.last_click:            
-            if x-padding < click[1] < x+Texthelper.textlength(text_input)+padding*2 and y-padding/2 < click[2] < y+12*Texthelper.scalar*text_input[2]+padding:
+            if x-padding < click[1] < x+Texthelper._textlength(text_input)+padding*2 and y-padding/2 < click[2] < y+13*text_input[2]+padding:
                 Texthelper.last_click = click
                 return True
             else:
@@ -417,9 +435,9 @@ class Texthelper():
         Font.changeColor(Font.DEFAULT)
         text_input = Texthelper._sanitizeinput(text_input)
         Texthelper._drawtext(screen, text_input)
-        text_location = text_input[0]
-        x_range = Texthelper.textlength(text_input)
+        x_range = Texthelper._textlength(text_input)
         y_range = 12 * text_input[2]
+        text_location = text_input[0]
         
         click = mouse()
         if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
@@ -430,20 +448,8 @@ class Texthelper():
             return False        
 
     def textlength(text_input):
-        text = text_input[1]
-        if text and text[-1] == "|":
-            text = text[:-1]
-        scale = text_input[2] * Texthelper.scalar
-        x_range = 0
-        for i in range(len(text)):
-            if text[i] != " ":
-                x_range += 11 * scale
-            elif text[i-1] != " " and text[i] == " " and i != 0:
-                x_range += 3 * scale
-            elif text[i] == " " and text[i-1] == " " and i != 0:
-                x_range += 11 * scale
-        x_range -= 3 * scale
-        return x_range
+        text_input = Texthelper._sanitizeinput(text_input)
+        return Texthelper._textlength(text_input)
 
 
 class Screenhelper():
