@@ -193,10 +193,12 @@ class allRepairScreenStorage():
     repairRefill = -1
     pointName = -1
     missingStat = -1
-    gasCost = -1
-    metalCost = -1
+    costRatio = -1
+    amountBox = -1
 
-def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode, name, status):
+def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode, name, status, color):
+    screen.fill(color)
+    inputvar = keyboard()
     currentarmor = currentStats[0]
     currentfuel = currentStats[1]
     ammunition = currentStats[2]
@@ -221,25 +223,33 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
         allRepairScreenStorage.editingIndex = editingIndex
         allRepairScreenStorage.repairRefill = repairRefill
         allRepairScreenStorage.pointName = pointName
+        allRepairScreenStorage.costRatio = costRatio
         missingStat = totalStats[editingIndex] - currentStats[editingIndex]
         allRepairScreenStorage.missingStat = missingStat
-        cost = int(costRatio * missingStat)
-        if editingIndex == 0:
-            allRepairScreenStorage.metalCost = cost
-            allRepairScreenStorage.gasCost = 0
-        elif editingIndex == 1:
-            allRepairScreenStorage.metalCost = 0
-            allRepairScreenStorage.gasCost = cost
-        else:
-            allRepairScreenStorage.metalCost = cost
-            allRepairScreenStorage.gasCost = cost
+        amountBox = InputGetter([("center", 540+165), str(missingStat), 3], "int")
+        allRepairScreenStorage.amountBox = amountBox
 
     editingIndex = allRepairScreenStorage.editingIndex
     repairRefill = allRepairScreenStorage.repairRefill
     pointName = allRepairScreenStorage.pointName
-    missingStat = allRepairScreenStorage.missingStat 
-    metalCost = allRepairScreenStorage.metalCost
-    gasCost = allRepairScreenStorage.gasCost
+    missingStat = allRepairScreenStorage.missingStat
+    costRatio = allRepairScreenStorage.costRatio
+    amountBox = allRepairScreenStorage.amountBox
+    if amountBox.currenttext[1] != "":
+        cost = int(costRatio * int(amountBox.currenttext[1])) + 1
+        if cost - 1 == costRatio * int(amountBox.currenttext[1]):
+            cost -= 1
+    else:
+        cost = 0
+    if editingIndex == 0:
+        metalCost = cost
+        gasCost = 0
+    elif editingIndex == 1:
+        metalCost = 0
+        gasCost = cost
+    else:
+        metalCost = cost
+        gasCost = cost
     fuelpic = allRepairScreenStorage.fuelpic
     armorpic = allRepairScreenStorage.armorpic
 
@@ -254,6 +264,7 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
     if mode:
         timedFlip()
     Texthelper.write(screen, [("center", 540),  "cost:", 3])
+    screen.blit(armorpic, (1600, 930))
     pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
     pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
 
@@ -261,26 +272,47 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
         timedFlip()
     Texthelper.write(screen, [(700, 540+55),  str(metalCost) + " metal" , 3])
     Texthelper.write(screen, [(1100, 540+55),  str(gasCost) + " gas" , 3])
+    screen.blit(fuelpic, (1600, 1000))
     pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])        
+    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
 
     if mode:
         timedFlip()
-    if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0:
-        if Texthelper.writeButton(screen, [("center", 540+165), repairRefill, 3]):
-            currentStats[editingIndex] = totalStats[editingIndex]
-            homeInventory[0] -= metalCost
-            homeInventory[1] -= gasCost
-            status = "shopinit"
-    elif missingStat == 0:
-        Texthelper.write(screen, [("center", 540+165), "full", 3])
+    Texthelper.write(screen, [("center", 540+110),  "amount:" , 3])
+
+    if mode:
+        timedFlip()
+    amountBox.currenttext = [("center", 540+165), amountBox.getData()[1], amountBox.getData()[2]]
+    amountBox.update(screen)
+    allRepairScreenStorage.amountBox = amountBox
+
+    if mode:
+        timedFlip()
+    if amountBox.currenttext[1] != "":
+        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0 and int(amountBox.currenttext[1]) <= missingStat:
+            if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
+                currentStats[editingIndex] += int(amountBox.currenttext[1])
+                homeInventory[0] -= metalCost
+                homeInventory[1] -= gasCost
+                status = "shopinit"
+        elif missingStat == 0:
+            Texthelper.write(screen, [("center", 540+220), "full", 3])
+        elif int(amountBox.currenttext[1]) > missingStat:
+            Texthelper.write(screen, [("center", 540+220), "excess", 3])
+        else:
+            Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
     else:
-        Texthelper.write(screen, [("center", 540+165), "sorry", 3])
-    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
+        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0:
+            if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
+                status = "shopinit"
+        elif missingStat == 0:
+            Texthelper.write(screen, [("center", 540+220), "full", 3])
+        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
 
     if mode:
         timedFlip()
-    if Texthelper.writeButton(screen, [("center", 540+220), "back", 3]):
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "shopinit"
 
     if mode:
@@ -342,9 +374,13 @@ class marketScreenStorage():
     editingIndex = -1
     pointName = -1
     buySell = -1
+    amountBox = -1
     
-def drawMarketScreen(screen, inventory, mode, name, status):
+def drawMarketScreen(screen, inventory, mode, name, status, color):
+    screen.fill(color)
+    inputvar = keyboard()
     if mode: #whether it should be init-ing or not
+        amountBox = InputGetter([("center", 540+110), "1", 3], "int")
         if name == "buyMetal":
             editingIndex = 0
             pointName = "metal"
@@ -379,18 +415,23 @@ def drawMarketScreen(screen, inventory, mode, name, status):
         marketScreenStorage.editingIndex = editingIndex
         marketScreenStorage.pointName = pointName
         marketScreenStorage.buySell = buySell
+        marketScreenStorage.amountBox = amountBox
         
-    cost = marketScreenStorage.cost
     editingIndex = marketScreenStorage.editingIndex
     pointName = marketScreenStorage.pointName
     buySell = marketScreenStorage.buySell
+    amountBox = marketScreenStorage.amountBox
+    if amountBox.currenttext[1] != "":
+        cost = marketScreenStorage.cost * int(amountBox.currenttext[1])
+    else:
+        cost = 0
 
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
     Texthelper.write(screen, [("center", 540-235), buySell + " " + pointName, 6])
 
     if mode:
         timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), pointName + " +1", 3])
+    Texthelper.write(screen, [("center", 540-110), pointName + " +" + amountBox.currenttext[1], 3])
     
     if mode:
         timedFlip()
@@ -398,25 +439,38 @@ def drawMarketScreen(screen, inventory, mode, name, status):
         Texthelper.write(screen, [("center", 540),"cost: " + str(cost) + " currency", 3])
     else:
         Texthelper.write(screen, [("center", 540),"value: " + str(cost) + " currency", 3])
+
+    if mode:
+        timedFlip()
+    Texthelper.write(screen, [("center", 540+55),"amount:", 3])
+
+    if mode:
+        timedFlip()
+    amountBox.currenttext = [("center", 540+110), amountBox.getData()[1], amountBox.getData()[2]]
+    amountBox.update(screen)
+    marketScreenStorage.amountBox = amountBox
         
     if mode:
         timedFlip()
     if buySell == "buy":
         if inventory[3] >= cost:
-            if Texthelper.writeButton(screen, [("center", 540+110), "buy", 3]):
+            if Texthelper.writeButton(screen, [("center", 540+165), "buy", 3]):
                 inventory[3] -= cost
-                inventory[editingIndex] += 1
+                if amountBox.currenttext[1] != "":
+                    inventory[editingIndex] += int(amountBox.currenttext[1])
+                else:
+                    pass
                 status = "marketinit"
         else:
-            Texthelper.write(screen, [("center", 540+110), "sorry", 3])
+            Texthelper.write(screen, [("center", 540+165), "sorry", 3])
     else:
         if inventory[editingIndex] != 0:
-            if Texthelper.writeButton(screen, [("center", 540+110), "sell", 3]):
+            if Texthelper.writeButton(screen, [("center", 540+165), "sell", 3]):
                 inventory[3] += cost
                 inventory[editingIndex] -= 1
                 status = "marketinit"
         else:
-            Texthelper.write(screen, [("center", 540+110), "sorry", 3])
+            Texthelper.write(screen, [("center", 540+165), "sorry", 3])
 
     if mode:
         timedFlip()

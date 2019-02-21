@@ -438,32 +438,32 @@ def main():
 
         if status == "armorRepairinit":
             screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A")
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A", color)
             pygame.display.flip()
             status = "armorRepair"
 
         if status == "armorRepair":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "armor", status)
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "armor", status, color)
             pygame.display.flip()
 
         if status == "fuelRefillinit":
             screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A")
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A", color)
             pygame.display.flip()
             status = "fuelRefill"
 
         if status == "fuelRefill":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "fuel", status)
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "fuel", status, color)
             pygame.display.flip()
 
         if status == "ammoRefillinit":
             screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A")
+            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A", color)
             pygame.display.flip()
             status = "ammoRefill"
 
         if status == "ammoRefill":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "torpedoes", status)
+            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "torpedoes", status, color)
             pygame.display.flip()
 
         if status == "marketinit":
@@ -478,62 +478,62 @@ def main():
 
         if status == "buyMetalinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A", color)
             pygame.display.flip()
             status = "buyMetal"
 
         if status == "buyMetal":
-            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status, color)
             pygame.display.flip()
 
         if status == "buyGasinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A", color)
             pygame.display.flip()
             status = "buyGas"
 
         if status == "buyGas":
-            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status)
+            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status, color)
             pygame.display.flip()
 
         if status == "buyCircuitsinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A", color)
             pygame.display.flip()
             status = "buyCircuits"
 
         if status == "buyCircuits":
-            status = drawMarketScreen(screen, homeInventory, False, "buyCircuits", status)
+            status = drawMarketScreen(screen, homeInventory, False, "buyCircuits", status, color)
             pygame.display.flip()
 
         if status == "sellMetalinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A", color)
             pygame.display.flip()
             status = "sellMetal"
 
         if status == "sellMetal":
-            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status, color)
             pygame.display.flip()
 
         if status == "sellGasinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A", color)
             pygame.display.flip()
             status = "sellGas"
 
         if status == "sellGas":
-            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status)
+            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status, color)
             pygame.display.flip()
 
         if status == "sellCircuitsinit":
             screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A")
+            drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A", color)
             pygame.display.flip()
             status = "sellCircuits"
 
         if status == "sellCircuits":
-            status = drawMarketScreen(screen, homeInventory, False, "sellCircuits", status)
+            status = drawMarketScreen(screen, homeInventory, False, "sellCircuits", status, color)
             pygame.display.flip()
 
         if status == "garageinit":
