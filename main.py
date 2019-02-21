@@ -414,170 +414,24 @@ def main():
                 ammunitionHelp = upgrades.get(ShipLv[2]+40)
                 totalammunition = ammunitionHelp[4]
             screen.fill(color)
+            homeInventory = filehelper.get(2)
             homeinitUI(screen, homeInventory)
             pygame.display.flip()
-            status = "home"
-
-        if status == "home":
-            homeHelp = homeUI(screen, shipInventory, homeInventory)
-            pygame.display.flip()
-            status = homeHelp[0]
-            shipInventory = homeHelp[1]
-
-        if status == "shopinit":
-            screen.fill(color)
+            ShipLv = filehelper.get(3)
             currentStats = filehelper.get(4)
             totalStats = (totalarmor, totalfuel, totalammunition)
-            drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True)
-            status = "shop"
-
-        if status == "shop":
-            status = drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False)
-            currentarmor, currentfuel, ammunition = filehelper.get(4) #not very elegant to do this every tick
-            pygame.display.flip()
-
-        if status == "armorRepairinit":
-            screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A", color)
-            pygame.display.flip()
-            status = "armorRepair"
-
-        if status == "armorRepair":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "armor", status, color)
-            pygame.display.flip()
-
-        if status == "fuelRefillinit":
-            screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A", color)
-            pygame.display.flip()
-            status = "fuelRefill"
-
-        if status == "fuelRefill":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "fuel", status, color)
-            pygame.display.flip()
-
-        if status == "ammoRefillinit":
-            screen.fill(color)
-            drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A", color)
-            pygame.display.flip()
-            status = "ammoRefill"
-
-        if status == "ammoRefill":
-            status = drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, False, "torpedoes", status, color)
-            pygame.display.flip()
-
-        if status == "marketinit":
-            homeInventory = filehelper.get(2)
-            screen.fill(color)
-            marketinitUI(screen, homeInventory)
-            status = "market"
-
-        if status == "market":
-            status = marketUI(screen, homeInventory)
-            pygame.display.flip()
-
-        if status == "buyMetalinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A", color)
-            pygame.display.flip()
-            status = "buyMetal"
-
-        if status == "buyMetal":
-            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status, color)
-            pygame.display.flip()
-
-        if status == "buyGasinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A", color)
-            pygame.display.flip()
-            status = "buyGas"
-
-        if status == "buyGas":
-            status = drawMarketScreen(screen, homeInventory, False, "buyMetal", status, color)
-            pygame.display.flip()
-
-        if status == "buyCircuitsinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A", color)
-            pygame.display.flip()
-            status = "buyCircuits"
-
-        if status == "buyCircuits":
-            status = drawMarketScreen(screen, homeInventory, False, "buyCircuits", status, color)
-            pygame.display.flip()
-
-        if status == "sellMetalinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A", color)
-            pygame.display.flip()
-            status = "sellMetal"
-
-        if status == "sellMetal":
-            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status, color)
-            pygame.display.flip()
-
-        if status == "sellGasinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A", color)
-            pygame.display.flip()
-            status = "sellGas"
-
-        if status == "sellGas":
-            status = drawMarketScreen(screen, homeInventory, False, "sellMetal", status, color)
-            pygame.display.flip()
-
-        if status == "sellCircuitsinit":
-            screen.fill(color)
-            drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A", color)
-            pygame.display.flip()
-            status = "sellCircuits"
-
-        if status == "sellCircuits":
-            status = drawMarketScreen(screen, homeInventory, False, "sellCircuits", status, color)
-            pygame.display.flip()
-
-        if status == "garageinit":
-            #ship lv [armor, fuel]
-            screen.fill(color)
-            ShipLv = filehelper.get(3)
-            homeInventory = filehelper.get(2)
-            garageinitUI(screen, ShipLv, homeInventory)
-            #pygame.display.flip()
-            status = "garage"
-
-        if status == "garage":
-            status = GarageUI(screen)
-            pygame.display.flip()
-                
-        if status == "armorUpgradeinit":
-            screen.fill(color)
-            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "armor", "N/A")
-            pygame.display.flip()
-            status = "armorUpgrade"
-
-        if status == "armorUpgrade":
-            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "armor", "armorUpgrade")
-            pygame.display.flip()
-
-        if status == "fuelUpgradeinit":
-            screen.fill(color)
-            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "fuel", "N/A")
-            pygame.display.flip()
-            status = "fuelUpgrade"
-
-        if status == "fuelUpgrade":
-            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "fuel", "fuelUpgrade")
-            pygame.display.flip()
-
-        if status == "ammoUpgradeinit":
-            screen.fill(color)
-            drawUpgradeScreen(screen, ShipLv, homeInventory, True, "torpedoe", "N/A")
-            pygame.display.flip()
-            status = "ammoUpgrade"
-
-        if status == "ammoUpgrade":
-            status = drawUpgradeScreen(screen, ShipLv, homeInventory, False, "torpedoe", "ammoUpgrade")
-            pygame.display.flip()
+            setupShop(ShipLv, shipInventory, homeInventory, currentStats, totalStats, color)
+            status = "home"
+            
+        if status == "home":
+            status = home(screen)
+            if status != "home": #so when the code is exiting this part
+                pygame.mouse.set_visible(True)
+                totalarmor, totalfuel, totalammunition = shopStorage.totalStats
+                currentarmor, currentfuel, ammunition = shopStorage.currentStats
+                filehelper.set(shopStorage.currentStats, 4)
+                filehelper.set(ShipLv, 3)
+                filehelper.set(homeInventory, 2)
 
         if status == "gameinit":       
             # changing variable setup
@@ -588,8 +442,7 @@ def main():
             pygame.mouse.set_visible(False)
             
             #inventory
-            homeInventory = filehelper.get(2)
-            shipInventory = [0,0,0,0,0]
+            shipInventory = [0,0,0,0]
 
             #fuel and armor and ammunition
             upgrades = Filehelper("assets\\upgrades.txt")

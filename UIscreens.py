@@ -115,6 +115,9 @@ def homeinitUI(screen, inventory):
 
 def homeUI(screen, shipInventory, homeInventory):
     status = "home"
+    inventorystring = "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3])
+    Texthelper.write(screen, [(0, 0), inventorystring, 3])
+    Texthelper.write(screen, [("center", 540-180), "home base", 6])
     if Texthelper.writeButton(screen, [("center", 540-55), "upgrade shop", 3]):
         status = "garageinit"
     if Texthelper.writeButton(screen, [("center", 540), "repair & refill shop", 3]):
@@ -126,13 +129,12 @@ def homeUI(screen, shipInventory, homeInventory):
         homeInventory[1] = homeInventory[1] + shipInventory[1]
         homeInventory[2] = homeInventory[2] + shipInventory[2]
         homeInventory[3] = homeInventory[3] + shipInventory[3]
-        filehelper.set(homeInventory, 2)
-        shipInventory = [0,0,0,0,0]
+        shipInventory = [0,0,0,0]
         status = "homeinit"
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
-    return [status, shipInventory]
+    return [status, shipInventory, homeInventory]
 
 
 class repairScreenStorage():
@@ -324,49 +326,42 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
 
     return status
     
-def marketinitUI(screen, inventory):
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+def marketUI(screen, inventory, mode):
+    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
+    Texthelper.write(screen, [(0, 0), largestring, 3])
     Texthelper.write(screen, [("center", 540-235), "market", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540-110), "metal:", 3])
-    Texthelper.write(screen, [(900, 540-110), "buy", 3])
-    Texthelper.write(screen, [(1100, 540-110), "sell", 3])
-    pygame.display.flip()
+    if mode:
+        timedFlip()
 
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540-55), "gas:", 3])
-    Texthelper.write(screen, [(900, 540-55), "buy", 3])
-    Texthelper.write(screen, [(1100, 540-55), "sell", 3])
-    pygame.display.flip()
-
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(500, 540), "circuits:", 3])
-    Texthelper.write(screen, [(900, 540), "buy", 3])
-    Texthelper.write(screen, [(1100, 540), "sell", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [("center", 540+110), "back", 3])
-    pygame.display.flip()
-
-def marketUI(screen, inventory):
     status = "market"
+
+    Texthelper.write(screen, [(500, 540-110), "metal:", 3])
     if Texthelper.writeButton(screen, [(900, 540-110), "buy", 3]):
         status = "buyMetalinit"
     elif Texthelper.writeButton(screen, [(1100, 540-110), "sell", 3]):
         status = "sellMetalinit"
-    elif Texthelper.writeButton(screen, [(900, 540-55), "buy", 3]):
+    if mode:
+        timedFlip()
+
+    Texthelper.write(screen, [(500, 540-55), "gas:", 3])
+    if Texthelper.writeButton(screen, [(900, 540-55), "buy", 3]):
         status = "buyGasinit"
     elif Texthelper.writeButton(screen, [(1100, 540-55), "sell", 3]):
         status = "sellGasinit"
-    elif Texthelper.writeButton(screen, [(900, 540), "buy", 3]):
+    if mode:
+        timedFlip()
+        
+    Texthelper.write(screen, [(500, 540), "circuits:", 3])
+    if Texthelper.writeButton(screen, [(900, 540), "buy", 3]):
         status = "buyCircuitsinit"
     elif Texthelper.writeButton(screen, [(1100, 540), "sell", 3]):
         status = "sellCircuitsinit"
+    if mode:
+        timedFlip()
+    
     elif Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
+        
     return status
 
 class marketScreenStorage():
@@ -479,53 +474,202 @@ def drawMarketScreen(screen, inventory, mode, name, status, color):
 
     if mode:
         timedFlip()
-    if not mode:
-        filehelper.set(inventory,2)
         
-    return status
+    return status, inventory
 
-def garageinitUI(screen, ShipLv, inventory):
-    pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
-    Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)   
-    Texthelper.write(screen, [(600, 540-55), "Armor: lv " + str(ShipLv[0]), 3])
-    Texthelper.write(screen, [(1000, 540-55), "Upgrade", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(635, 540), "Fuel: lv " + str(ShipLv[1]), 3])
-    Texthelper.write(screen, [(1000, 540), "Upgrade", 3])
-    pygame.display.flip()
-    
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [(470, 540+55), "torpedoes:", 3])
-    Texthelper.write(screen, [(810, 540+55), "lv " + str(ShipLv[2]), 3])
-    if ShipLv[2] != 0:
-        Texthelper.write(screen, [(1000, 540+55), "Upgrade", 3])
-    else:
-        Texthelper.write(screen, [(1000, 540+55), "locked", 3])
-    pygame.display.flip()
-        
-    pygame.time.wait(waitTime)
-    Texthelper.write(screen, [("center", 540+110), "back", 3])
-    pygame.display.flip()
-
-
-def GarageUI(screen):
+def garageUI(screen, ShipLv, homeInventory, mode):
     status = "garage"
+    inventory = homeInventory
+    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
+    Texthelper.write(screen, [(0, 0), largestring, 3])
+    Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
+    if mode:
+        timedFlip()
+
+    Texthelper.write(screen, [(600, 540-55), "Armor: lv " + str(ShipLv[0]), 3])
     if Texthelper.writeButton(screen, [(1000, 540-55), "Upgrade", 3]):
         status = "armorUpgradeinit"
-    elif Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]):
+    if mode:
+        timedFlip()
+
+    Texthelper.write(screen, [(635, 540), "Fuel: lv " + str(ShipLv[1]), 3])
+    if Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]):
         status = "fuelUpgradeinit"
-    elif Texthelper.writeButton(screen, [(1000, 540+55), "Upgrade", 3]):
-        status = "ammoUpgradeinit"
-    elif Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
+    if mode:
+        timedFlip()
+
+    Texthelper.write(screen, [(470, 540+55), "torpedoes: lv " + str(ShipLv[2]), 3])
+    if ShipLv[2] != 0:
+        if Texthelper.writeButton(screen, [(1000, 540+55), "Upgrade", 3]):
+            status = "ammoUpgradeinit"    
+    else:
+        Texthelper.write(screen, [(1000, 540+55), "locked", 3])
+    if mode:
+        timedFlip()
+
+    if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
+
     return status
+        
+######
+
+class shopStorage():
+    shopStatus = "home"
+    shipLv = []
+    shipInventory = []
+    homeInventory = []
+    currentStats = []
+    totalStats = []
+    color = ()
+
+#actually the setup for home, not shop \< sorry for the confused naming
+def setupShop(shipLv, shipInventory, homeInventory, currentStats, totalStats, color):
+    shopStorage.shopStatus = "home"
+    shopStorage.shipLv = shipLv
+    shopStorage.shipInventory = shipInventory
+    shopStorage.homeInventory = homeInventory
+    shopStorage.currentStats = currentStats
+    shopStorage.totalStats = totalStats
+    shopStorage.color = color
+
+#subsection of the great big main loop that deals with the various shops of zvezda
+def home(screen):
+    shopStatus = shopStorage.shopStatus
+    shipLv = shopStorage.shipLv
+    shipInventory = shopStorage.shipInventory
+    homeInventory = shopStorage.homeInventory
+    currentStats = shopStorage.currentStats
+    totalStats = shopStorage.totalStats
+    color = shopStorage.color
+    screen.fill(color)
+
+    ####MARKET#SECTION####
+    if shopStatus == "buyMetalinit":
+        drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A", color)
+        shopStatus = "buyMetal"
+
+    elif shopStatus == "buyMetal":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyMetal", shopStatus, color)
+        
+    elif shopStatus == "buyGasinit":
+        drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A", color)
+        shopStatus = "buyGas"
+
+    elif shopStatus == "buyGas":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyMetal", shopStatus, color)
+
+    elif shopStatus == "buyCircuitsinit":
+        drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A", color)
+        shopStatus = "buyCircuits"
+
+    elif shopStatus == "buyCircuits":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyCircuits", shopStatus, color)
+        
+    elif shopStatus == "sellMetalinit":
+        drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A", color)
+        shopStatus = "sellMetal"
+
+    elif shopStatus == "sellMetal":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellMetal", shopStatus, color)
+
+    elif shopStatus == "sellGasinit":
+        drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A", color)
+        shopStatus = "sellGas"
+
+    elif shopStatus == "sellGas":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellMetal", shopStatus, color)
+
+    elif shopStatus == "sellCircuitsinit":
+        drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A", color)
+        shopStatus = "sellCircuits"
+
+    elif shopStatus == "sellCircuits":
+        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellCircuits", shopStatus, color)
+
+    elif shopStatus == "marketinit":
+        marketUI(screen, homeInventory, True)
+        shopStatus = "market"
+
+    elif shopStatus == "market":
+        shopStatus = marketUI(screen, homeInventory, False)
+    ####MARKET#SECTION####
+
+    ####REPAIR#SECTION####
+    elif shopStatus == "armorRepairinit":
+        drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True, "armor", "N/A", color)
+        shopStatus = "armorRepair"   
+
+    elif shopStatus == "armorRepair":
+        shopStatus = drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, False, "armor", shopStatus, color)
+
+    elif shopStatus == "fuelRefillinit":
+        drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True, "fuel", "N/A", color)
+        shopStatus = "fuelRefill"
+
+    elif shopStatus == "fuelRefill":
+        shopStatus = drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, False, "fuel", shopStatus, color)
+
+    elif shopStatus == "ammoRefillinit":
+        drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A", color)
+        shopStatus = "ammoRefill"
+
+    elif shopStatus == "ammoRefill":
+        shopStatus = drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, False, "torpedoes", shopStatus, color)
+
+    elif shopStatus == "shopinit":
+        drawRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True)
+        shopStatus = "shop"
+
+    elif shopStatus == "shop":
+        shopStatus = drawRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, False)
+    ####REPAIR#SECTION####
+
+    ####UPGRADE#SECTION####
+    elif shopStatus == "armorUpgradeinit":
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "armor", "N/A")
+        shopStatus = "armorUpgrade"
+
+    elif shopStatus == "armorUpgrade":
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "armor", "armorUpgrade")
+
+    elif shopStatus == "fuelUpgradeinit":
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "fuel", "N/A")
+        shopStatus = "fuelUpgrade"
+
+    elif shopStatus == "fuelUpgrade":
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "fuel", "fuelUpgrade")
+
+    elif shopStatus == "ammoUpgradeinit":
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "torpedoe", "N/A")
+        shopStatus = "ammoUpgrade"
+
+    elif shopStatus == "ammoUpgrade":
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedoe", "ammoUpgrade")
+
+    elif shopStatus == "garageinit":
+        garageUI(screen, shipLv, homeInventory, True)
+        shopStatus = "garage"
+
+    elif shopStatus == "garage":
+        shopStatus = garageUI(screen, shipLv, homeInventory, False)
+    ####UPGRADE#SECTION####
+
+    elif shopStatus == "homeinit":
+        shopStatus = "home"
     
+    elif shopStatus == "home":
+        shopStatus, shipInventory, homeInventory = homeUI(screen, shipInventory, homeInventory)
+    
+    shopStorage.shopStatus = shopStatus
+    pygame.display.flip()
+    if shopStatus != "game":
+        return "home"
+    else:
+        return shopStatus
+
+######
+
 def pauseinitUI(screen):
     Texthelper.write(screen, [("center", 540-136), "Paused", 6])
     pygame.display.flip()
