@@ -325,8 +325,49 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
         filehelper.set(currentStats,4)
 
     return status
-    
+
+#increments or decrements an instance of inputgetter
+def incrementBox(inputgetter, value):
+    text = inputgetter.getData()
+    number = inputgetter.getIntText()
+    number += value
+    text[1] = str(number)
+    inputgetter.currenttext = text
+
+#writes out a line with a -1, an inputgetter box, and a +1
+def plusminusrow(screen, inputgetter, height):
+    inputgetter.update(screen)
+    if Texthelper.writeButtonBox(screen, [(900, height), "-1", 3]) and inputgetter.getIntText() > 0:
+        incrementBox(inputgetter, -1)
+    if Texthelper.writeButtonBox(screen, [(1100, height), "+1", 3]):
+        incrementBox(inputgetter, 1)
+
+def isoverfull(inputgetter, cap):
+    if inputgetter.getIntText() <= cap:
+        return True
+    return False
+
+TRADELIST = ["metal", "gas", "circuits"]
+BUYVALUE = [10, 40, 120]
+SELLVALUE = [5, 20, 60]
+
+class marketStorage():
+    metal = ""
+    gas = ""
+    circuits = ""
+    def __init__(self):
+        marketStorage.metal = InputGetter([(1000, 430), "0", 3], "int")
+        marketStorage.gas = InputGetter([(1000, 485), "0", 3], "int")
+        marketStorage.circuits = InputGetter([(1000, 540), "0", 3], "int")
+
+#the currency to resource market of the galaxy, or at least this chunk of LEO      
 def marketUI(screen, inventory, mode):
+    if mode:
+        marketStorage()
+    metalbox = marketStorage.metal
+    gasbox = marketStorage.gas
+    circuitbox = marketStorage.circuits
+    
     largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
     Texthelper.write(screen, [(0, 0), largestring, 3])
     Texthelper.write(screen, [("center", 540-235), "market", 6])
@@ -335,35 +376,47 @@ def marketUI(screen, inventory, mode):
 
     status = "market"
 
-    Texthelper.write(screen, [(500, 540-110), "metal:", 3])
-    if Texthelper.writeButton(screen, [(900, 540-110), "buy", 3]):
-        status = "buyMetalinit"
-    elif Texthelper.writeButton(screen, [(1100, 540-110), "sell", 3]):
-        status = "sellMetalinit"
+    Texthelper.write(screen, [(500, 430), "metal:", 3])
+    plusminusrow(screen, metalbox, 430)
     if mode:
         timedFlip()
 
-    Texthelper.write(screen, [(500, 540-55), "gas:", 3])
-    if Texthelper.writeButton(screen, [(900, 540-55), "buy", 3]):
-        status = "buyGasinit"
-    elif Texthelper.writeButton(screen, [(1100, 540-55), "sell", 3]):
-        status = "sellGasinit"
+    Texthelper.write(screen, [(500, 485), "gas:", 3])
+    plusminusrow(screen, gasbox, 485)
     if mode:
         timedFlip()
         
     Texthelper.write(screen, [(500, 540), "circuits:", 3])
-    if Texthelper.writeButton(screen, [(900, 540), "buy", 3]):
-        status = "buyCircuitsinit"
-    elif Texthelper.writeButton(screen, [(1100, 540), "sell", 3]):
-        status = "sellCircuitsinit"
+    plusminusrow(screen, circuitbox, 540)
     if mode:
         timedFlip()
+
+    ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and isoverfull(circuitbox, inventory[2])
+    sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] + circuitbox.getIntText() * SELLVALUE[2]
+    if not ableToSell:
+        Texthelper.write(screen, [(900, 670), "you cannot sell what you do not have", 1])
+    if Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3]) and ableToSell:
+        inventory[0] -= metalbox.getIntText()
+        inventory[1] -= gasbox.getIntText()
+        inventory[2] -= circuitbox.getIntText()
+        inventory[3] += sellvalue
+        marketStorage()
+
+    buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() * BUYVALUE[2]
+    if Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]) and inventory[3] >= buyvalue:
+        inventory[0] += metalbox.getIntText()
+        inventory[1] += gasbox.getIntText()
+        inventory[2] += circuitbox.getIntText()
+        inventory[3] -= buyvalue
+        marketStorage()
+        
     
-    elif Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
+    if Texthelper.writeButton(screen, [("center", 760), "back", 3]):
         status = "homeinit"
         
     return status
 
+'''
 class marketScreenStorage():
     cost = -1
     editingIndex = -1
@@ -476,6 +529,7 @@ def drawMarketScreen(screen, inventory, mode, name, status, color):
         timedFlip()
         
     return status, inventory
+'''
 
 def garageUI(screen, ShipLv, homeInventory, mode):
     status = "garage"
@@ -545,49 +599,7 @@ def home(screen):
     screen.fill(color)
 
     ####MARKET#SECTION####
-    if shopStatus == "buyMetalinit":
-        drawMarketScreen(screen, homeInventory, True, "buyMetal", "N/A", color)
-        shopStatus = "buyMetal"
-
-    elif shopStatus == "buyMetal":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyMetal", shopStatus, color)
-        
-    elif shopStatus == "buyGasinit":
-        drawMarketScreen(screen, homeInventory, True, "buyGas", "N/A", color)
-        shopStatus = "buyGas"
-
-    elif shopStatus == "buyGas":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyMetal", shopStatus, color)
-
-    elif shopStatus == "buyCircuitsinit":
-        drawMarketScreen(screen, homeInventory, True, "buyCircuits", "N/A", color)
-        shopStatus = "buyCircuits"
-
-    elif shopStatus == "buyCircuits":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "buyCircuits", shopStatus, color)
-        
-    elif shopStatus == "sellMetalinit":
-        drawMarketScreen(screen, homeInventory, True, "sellMetal", "N/A", color)
-        shopStatus = "sellMetal"
-
-    elif shopStatus == "sellMetal":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellMetal", shopStatus, color)
-
-    elif shopStatus == "sellGasinit":
-        drawMarketScreen(screen, homeInventory, True, "sellGas", "N/A", color)
-        shopStatus = "sellGas"
-
-    elif shopStatus == "sellGas":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellMetal", shopStatus, color)
-
-    elif shopStatus == "sellCircuitsinit":
-        drawMarketScreen(screen, homeInventory, True, "sellCircuits", "N/A", color)
-        shopStatus = "sellCircuits"
-
-    elif shopStatus == "sellCircuits":
-        shopStatus, homeInventory = drawMarketScreen(screen, homeInventory, False, "sellCircuits", shopStatus, color)
-
-    elif shopStatus == "marketinit":
+    if shopStatus == "marketinit":
         marketUI(screen, homeInventory, True)
         shopStatus = "market"
 

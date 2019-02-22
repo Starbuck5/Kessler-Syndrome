@@ -177,6 +177,7 @@ class InputGetter():
         self.last_input = ["getready"]
         
     def update(self, screen):
+        self.rawtext = self.currenttext[1]
         if self.clicked == False:
             if Texthelper.writeButton(screen, self.currenttext) == True:
                 self.clicked = True
@@ -191,9 +192,7 @@ class InputGetter():
 
     def _handleThisShit(self, inputtype):
         last_input = self.last_input
-        inputvar = keyboard()
-        self.rawtext = self.currenttext[1]
-        
+        inputvar = keyboard()    
         if inputvar and last_input == ["getready"]:
             self.rawtext = "" 
         if inputvar != last_input:
@@ -223,6 +222,12 @@ class InputGetter():
         
     def getText(self):
         return self.rawtext
+
+    def getIntText(self):
+        text = self.rawtext
+        if text:
+            return int(text)
+        return 0
 
     def getData(self):
         return self.currenttext
