@@ -298,7 +298,7 @@ class Texthelper():
     scalar = 1
     width = 1
     height = 1
-    last_click = () 
+    lastPressTime = 0 
 
     #part of the input sanitizing process: figures out how to center text mainly
     def _interpretcoords(text_input):
@@ -379,6 +379,16 @@ class Texthelper():
         x_range -= 3 * scale
         return x_range
 
+    #tests if mouse is clicked inside the rectangle
+    def _buttonlogic(rect):
+        click = mouse()
+        time = pygame.time.get_ticks()//500 #// = Java integer math - IE truncating the ms to 1/2 seconds
+        if time != Texthelper.lastPressTime:
+            if rect[0] < click[1] < rect[0]+rect[2] and rect[1] < click[2] < rect[1]+rect[3]:
+                Texthelper.lastPressTime = time  
+                return True            
+        return False        
+
     # text_input = [(x, y), "text", text_scale]
     # text placed from upper left corner # pixels of text (1x scale) == (11 * # of characters) + (3 * # of spaces) - 3
     def write(screen, text_input, **kwargs):
@@ -407,14 +417,8 @@ class Texthelper():
         mouseoverrect = [text_location[0], text_location[1], x_range, y_range]        
         Texthelper._handlecolor(colliderect = mouseoverrect, **kwargs)
         Texthelper._drawtext(screen, text_input)
+        return Texthelper._buttonlogic(mouseoverrect)
         
-        click = mouse()
-        if click != Texthelper.last_click:
-            if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
-                Texthelper.last_click = click
-                return True
-            else:
-                return False
 
     def writeButtonBox(screen, text_input, **kwargs):
         padding = 18 /1920 * Texthelper.height * Texthelper.scalar #default value      
@@ -427,15 +431,9 @@ class Texthelper():
         color = Texthelper._handlecolor(colliderect = mouseoverrect, **kwargs)          
         Texthelper._drawtext(screen, text_input)
         Texthelper._drawbox(screen, mouseoverrect, color)
-        
-        click = mouse()    
-        if click != Texthelper.last_click:            
-            if x-padding < click[1] < x+Texthelper._textlength(text_input)+padding*2 and y-padding/2 < click[2] < y+13*text_input[2]+padding:
-                Texthelper.last_click = click
-                return True
-            else:
-                return False
-        
+        return Texthelper._buttonlogic(mouseoverrect)
+
+    #the special child of the button family                
     def writeNullButton(screen, text_input):
         Font.changeColor(Font.DEFAULT)
         text_input = Texthelper._sanitizeinput(text_input)
