@@ -274,6 +274,7 @@ def main():
     sectornum = 1
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
+    timer_paused = 0
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -290,6 +291,9 @@ def main():
     running = True
     while running:
         clock.tick(100)
+        timer_paused += 1
+        if timer_paused > 10000:
+            timer_paused = 10000
      
         if status == "menuinit":
             # sound
@@ -322,11 +326,15 @@ def main():
             Font.set_scramble_paused(True) #pauses any scrambling going on
             pauseinitUI(screen)
             pygame.display.flip()
-            saveGame(sectornum, object_list[:], width, height)            
+            saveGame(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
             status = pauseUI(screen)
+            inputvar = keyboard()
+            if ("p" in inputvar or "escape" in inputvar) and timer_paused > 25:
+                status = "game"
+                timer_paused = 0
             if status != "paused":
                 Font.set_scramble_paused(False) #resumes any scrambling going on
             pygame.display.flip()
@@ -513,7 +521,8 @@ def main():
                     previous_tick2 = ticks
                 if "m" in inputvar:
                     status = "mapscreeninit"
-                if "escape" in inputvar or "p" in inputvar or "windows" in inputvar and len(inputvar) == 1:
+                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_paused > 25:
+                    timer_paused = 0
                     status = "pauseinit"
                 lasttransit += 1
                 if "a" in inputvar and "d" in inputvar:
