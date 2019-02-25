@@ -2,6 +2,12 @@ from pgx import *
 waitTime = 300
 upgrades = Filehelper("assets\\upgrades.txt")
 
+def drawInventory(screen, inventory):
+    writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
+    Texthelper.write(screen, [(0, 0), writestring,3])
+
+#def drawBars()
+
 def timedFlip():
     pygame.display.flip()
     pygame.time.wait(waitTime)
@@ -89,7 +95,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
 
 def homeinitUI(screen, inventory):
     pygame.mouse.set_visible(True)
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
     pygame.display.flip()
     
@@ -115,8 +121,7 @@ def homeinitUI(screen, inventory):
 
 def homeUI(screen, shipInventory, homeInventory):
     status = "home"
-    inventorystring = "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3])
-    Texthelper.write(screen, [(0, 0), inventorystring, 3])
+    drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
     if Texthelper.writeButton(screen, [("center", 540-55), "upgrade shop", 3]):
         status = "garageinit"
@@ -134,7 +139,7 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
-    return [status, shipInventory, homeInventory]
+    return status
 
 
 class repairScreenStorage():
@@ -143,8 +148,7 @@ class repairScreenStorage():
     
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
-    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) +
-                              "  currency:" + str(homeInventory[3]),3])
+    drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
     status = "shop"                         
     fuelpic = repairScreenStorage.fuelpic
@@ -368,8 +372,7 @@ def marketUI(screen, inventory, mode):
     gasbox = marketStorage.gas
     circuitbox = marketStorage.circuits
     
-    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
-    Texthelper.write(screen, [(0, 0), largestring, 3])
+    drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-235), "market", 6])
     if mode:
         timedFlip()
@@ -412,124 +415,8 @@ def marketUI(screen, inventory, mode):
         
     
     if Texthelper.writeButton(screen, [("center", 760), "back", 3]):
-        status = "homeinit"
-        
+        status = "homeinit"        
     return status
-
-'''
-class marketScreenStorage():
-    cost = -1
-    editingIndex = -1
-    pointName = -1
-    buySell = -1
-    amountBox = -1
-    
-def drawMarketScreen(screen, inventory, mode, name, status, color):
-    screen.fill(color)
-    inputvar = keyboard()
-    if mode: #whether it should be init-ing or not
-        amountBox = InputGetter([("center", 540+110), "1", 3], "int")
-        if name == "buyMetal":
-            editingIndex = 0
-            pointName = "metal"
-            cost = 10
-            buySell = "buy"
-        if name == "buyGas":
-            editingIndex = 1
-            pointName = "gas"
-            cost = 40
-            buySell = "buy"
-        if name == "buyCircuits":
-            editingIndex = 2
-            pointName = "circuits"
-            cost = 120
-            buySell = "buy"
-        if name == "sellMetal":
-            editingIndex = 0
-            pointName = "metal"
-            cost = 5
-            buySell = "sell"
-        if name == "sellGas":
-            editingIndex = 1
-            pointName = "gas"
-            cost = 20
-            buySell = "sell"
-        if name == "sellCircuits":
-            editingIndex = 2
-            pointName = "circuits"
-            cost = 60
-            buySell = "sell"
-        marketScreenStorage.cost = cost
-        marketScreenStorage.editingIndex = editingIndex
-        marketScreenStorage.pointName = pointName
-        marketScreenStorage.buySell = buySell
-        marketScreenStorage.amountBox = amountBox
-        
-    editingIndex = marketScreenStorage.editingIndex
-    pointName = marketScreenStorage.pointName
-    buySell = marketScreenStorage.buySell
-    amountBox = marketScreenStorage.amountBox
-    if amountBox.currenttext[1] != "":
-        cost = marketScreenStorage.cost * int(amountBox.currenttext[1])
-    else:
-        cost = 0
-
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), buySell + " " + pointName, 6])
-
-    if mode:
-        timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), pointName + " +" + amountBox.currenttext[1], 3])
-    
-    if mode:
-        timedFlip()
-    if buySell == "buy":
-        Texthelper.write(screen, [("center", 540),"cost: " + str(cost) + " currency", 3])
-    else:
-        Texthelper.write(screen, [("center", 540),"value: " + str(cost) + " currency", 3])
-
-    if mode:
-        timedFlip()
-    Texthelper.write(screen, [("center", 540+55),"amount:", 3])
-
-    if mode:
-        timedFlip()
-    amountBox.currenttext = [("center", 540+110), amountBox.getData()[1], amountBox.getData()[2]]
-    amountBox.update(screen)
-    marketScreenStorage.amountBox = amountBox
-        
-    if mode:
-        timedFlip()
-    if buySell == "buy":
-        if inventory[3] >= cost:
-            if Texthelper.writeButton(screen, [("center", 540+165), "buy", 3]):
-                inventory[3] -= cost
-                if amountBox.currenttext[1] != "":
-                    inventory[editingIndex] += int(amountBox.currenttext[1])
-                else:
-                    pass
-                status = "marketinit"
-        else:
-            Texthelper.write(screen, [("center", 540+165), "sorry", 3])
-    else:
-        if inventory[editingIndex] != 0:
-            if Texthelper.writeButton(screen, [("center", 540+165), "sell", 3]):
-                inventory[3] += cost
-                inventory[editingIndex] -= 1
-                status = "marketinit"
-        else:
-            Texthelper.write(screen, [("center", 540+165), "sorry", 3])
-
-    if mode:
-        timedFlip()
-    if Texthelper.writeButton(screen, [("center", 540+220), "back", 3]):
-        status = "marketinit"
-
-    if mode:
-        timedFlip()
-        
-    return status, inventory
-'''
 
 def garageUI(screen, ShipLv, homeInventory, mode):
     status = "garage"
@@ -671,7 +558,7 @@ def home(screen):
         shopStatus = "home"
     
     elif shopStatus == "home":
-        shopStatus, shipInventory, homeInventory = homeUI(screen, shipInventory, homeInventory)
+        shopStatus = homeUI(screen, shipInventory, homeInventory)
     
     shopStorage.shopStatus = shopStatus
     pygame.display.flip()
