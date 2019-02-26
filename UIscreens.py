@@ -609,20 +609,20 @@ def pauseUI(screen):
         status = "game"
     elif Texthelper.writeButton(screen, [("center", 540-20), "Restart", 2]):
         status = "gameinit"   
-    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to desktop", 2]):
-        status = "exiting"
-    elif Texthelper.writeButton(screen, [("center", 540+50), "Quit to menu", 2]):
+    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
         status = "menuinit"
+    elif Texthelper.writeButton(screen, [("center", 540+50), "Quit to desktop", 2]):
+        status = "exiting"
     return status
 
 def gameoverUI(screen):
     status = "gameover"
     if Texthelper.writeButton(screen, [("center", 540-55), "Play again", 2]):
         status = "gameinit"                
-    elif Texthelper.writeButton(screen, [("center", 540-20), "Quit to desktop", 2]):
-        status = "exiting"            
-    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
+    elif Texthelper.writeButton(screen, [("center", 540-20), "Quit to menu", 2]):
         status = "menuinit"
+    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to desktop", 2]):
+        status = "exiting"
     return status
 
 def mapscreenUI(screen):
