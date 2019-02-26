@@ -579,10 +579,10 @@ def pauseinitUI(screen):
     Texthelper.write(screen, [("center", 540-20), "Restart", 2])
     pygame.display.flip()
     pygame.time.wait(200)            
-    Texthelper.write(screen, [("center", 540+15), "Quit to desktop", 2])
+    Texthelper.write(screen, [("center", 540+15), "Quit to menu", 2])
     pygame.display.flip()
     pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540+50), "Quit to menu", 2])
+    Texthelper.write(screen, [("center", 540+50), "Quit to desktop", 2])
     pygame.display.flip()
 
 def gameoverinitUI(screen):
@@ -594,12 +594,10 @@ def gameoverinitUI(screen):
     Texthelper.write(screen, text_input)
     pygame.display.flip()
     pygame.time.wait(200)
-    text_input = [("center", 540-20), "Quit to desktop", 2]
-    Texthelper.write(screen, text_input)
+    Texthelper.write(screen, [("center", 540-20), "Quit to menu", 2])
     pygame.display.flip()
     pygame.time.wait(200)
-    text_input = [("center", 540+15), "Quit to menu", 2]
-    Texthelper.write(screen, text_input)
+    Texthelper.write(screen, [("center", 540+15), "Quit to desktop", 2])
     pygame.display.flip()    
 
 def pauseUI(screen):
