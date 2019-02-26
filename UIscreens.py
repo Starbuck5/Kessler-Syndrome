@@ -134,7 +134,8 @@ def homeUI(screen, shipInventory, homeInventory):
         homeInventory[1] = homeInventory[1] + shipInventory[1]
         homeInventory[2] = homeInventory[2] + shipInventory[2]
         homeInventory[3] = homeInventory[3] + shipInventory[3]
-        shipInventory = [0,0,0,0]
+        for i in range(4): #can't just do = [0,0,0,0] because of scope and lists
+            shipInventory[i] = 0
         status = "homeinit"
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
