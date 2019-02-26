@@ -290,6 +290,16 @@ def Rotate(xpos, ypos, points, rotationPosition):
     for i in range(len(points)):
         revisedPoints += RotatePoint(xpos, ypos, points[i], rotationPosition)
     return revisedPoints
+
+def dock(xpos, ypos, image):
+    width = image.get_size()[0]
+    height = image.get_size()[1]
+    newXpos = xpos+(width/2)
+    newYpos = ypos+height+10
+    rotation = 90
+    xmom = 0
+    ymom = 0
+    return (newXpos, newYpos, xmom, ymom, rotation)
       
 class Asteroid():
     asteroidlist = "not yet a thing"
