@@ -130,10 +130,10 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540+55), "market", 3]):
         status = "marketinit"
     if  Texthelper.writeButton(screen, [("center", 540+110), "empty ship inventory", 3]):
-        homeInventory[0] = homeInventory[0] + shipInventory[0]
-        homeInventory[1] = homeInventory[1] + shipInventory[1]
-        homeInventory[2] = homeInventory[2] + shipInventory[2]
-        homeInventory[3] = homeInventory[3] + shipInventory[3]
+        homeInventory[0] += shipInventory[0]
+        homeInventory[1] += shipInventory[1]
+        homeInventory[2] += shipInventory[2]
+        homeInventory[3] += shipInventory[3]
         for i in range(4): #can't just do = [0,0,0,0] because of scope and lists
             shipInventory[i] = 0
         status = "homeinit"
