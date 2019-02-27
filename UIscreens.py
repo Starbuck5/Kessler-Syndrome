@@ -1,5 +1,5 @@
 from pgx import *
-waitTime = 300
+waitTime = 175
 upgrades = Filehelper("assets\\upgrades.txt")
 
 def drawInventory(screen, inventory):
@@ -77,7 +77,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
             inventory[2] -= cost[2]
             inventory[3] -= cost[3]
             ShipLv[editingIndex] += 1
-            status = "garageinit"
+            ##status = "garageinit"
             filehelper.set(inventory, 2)
             filehelper.set(ShipLv, 3)
     else:
