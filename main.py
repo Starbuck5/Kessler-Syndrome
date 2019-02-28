@@ -324,30 +324,18 @@ def main():
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             Font.set_scramble_paused(True) #pauses any scrambling going on
-            pauseinitUI(screen)
-            pygame.display.flip()
+            drawPauseUI(screen, True)
             saveGame(sectornum, object_list[:], width, height)
             status = "paused"
 
         if status == "paused":
-            status = pauseUI(screen)
+            status = drawPauseUI(screen, False)
             inputvar = keyboard()
             if ("p" in inputvar or "escape" in inputvar) and timer_paused > 25:
                 status = "game"
                 timer_paused = 0
             if status != "paused":
                 Font.set_scramble_paused(False) #resumes any scrambling going on
-            pygame.display.flip()
-
-        if status == "gameoverinit":            
-            pygame.mouse.set_visible(True)
-            gameoverinitUI(screen)
-            pygame.display.flip()
-            status = "gameover"
-
-        if status == "gameover":
-            status = gameoverUI(screen)
-            pygame.display.flip()
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)

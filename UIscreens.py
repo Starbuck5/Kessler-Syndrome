@@ -568,60 +568,32 @@ def home(screen):
     else:
         return shopStatus
 
-######
 
-def pauseinitUI(screen):
-    Texthelper.write(screen, [("center", 540-136), "Paused", 6])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540-55), "Resume", 2])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540-20), "Restart", 2])
-    pygame.display.flip()
-    pygame.time.wait(200)            
-    Texthelper.write(screen, [("center", 540+15), "Quit to menu", 2])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540+50), "Quit to desktop", 2])
-    pygame.display.flip()
-
-def gameoverinitUI(screen):
-    text_input = [("center", 540-136), "Game over", 6]
-    Texthelper.write(screen, text_input)            
-    pygame.display.flip()
-    pygame.time.wait(200)
-    text_input = [("center", 540-55), "Play again", 2]
-    Texthelper.write(screen, text_input)
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540-20), "Quit to menu", 2])
-    pygame.display.flip()
-    pygame.time.wait(200)
-    Texthelper.write(screen, [("center", 540+15), "Quit to desktop", 2])
-    pygame.display.flip()    
-
-def pauseUI(screen):
+def drawPauseUI(screen, mode):
     status = "paused"
+    Texthelper.write(screen, [("center", 540-136), "Paused", 6])
+    if mode:
+        timedFlip()
+        
     if Texthelper.writeButton(screen, [("center", 540-55), "Resume", 2]):
         pygame.mouse.set_visible(False)
         status = "game"
-    elif Texthelper.writeButton(screen, [("center", 540-20), "Restart", 2]):
-        status = "gameinit"   
-    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
-        status = "menuinit"
-    elif Texthelper.writeButton(screen, [("center", 540+50), "Quit to desktop", 2]):
-        status = "exiting"
-    return status
+    if mode:
+        timedFlip()
 
-def gameoverUI(screen):
-    status = "gameover"
-    if Texthelper.writeButton(screen, [("center", 540-55), "Play again", 2]):
-        status = "gameinit"                
-    elif Texthelper.writeButton(screen, [("center", 540-20), "Quit to menu", 2]):
+    if Texthelper.writeButton(screen, [("center", 540-20), "Restart", 2]):
+        status = "gameinit"
+    if mode:
+        timedFlip()
+
+    if Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
         status = "menuinit"
-    elif Texthelper.writeButton(screen, [("center", 540+15), "Quit to desktop", 2]):
+    if mode:
+        timedFlip()
+
+    if Texthelper.writeButton(screen, [("center", 540+50), "Quit to desktop", 2]):
         status = "exiting"
+    pygame.display.flip()
     return status
 
 def mapscreenUI(screen):
@@ -630,4 +602,3 @@ def mapscreenUI(screen):
         status = "game"
         pygame.mouse.set_visible(False)
     return status
-   
