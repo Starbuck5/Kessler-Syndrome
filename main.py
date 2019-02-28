@@ -336,6 +336,7 @@ def main():
                 timer_paused = 0
             if status != "paused":
                 Font.set_scramble_paused(False) #resumes any scrambling going on
+                pygame.mouse.set_visible(False)
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
@@ -422,7 +423,7 @@ def main():
         if status == "home":
             status = home(screen)
             if status != "home": #so when the code is exiting this part
-                pygame.mouse.set_visible(True)
+                pygame.mouse.set_visible(False)
                 totalarmor, totalfuel, totalammunition = shopStorage.totalStats
                 currentarmor, currentfuel, ammunition = shopStorage.currentStats
                 filehelper.set(shopStorage.currentStats, 4)

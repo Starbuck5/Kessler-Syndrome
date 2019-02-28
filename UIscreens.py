@@ -576,7 +576,6 @@ def drawPauseUI(screen, mode):
         timedFlip()
         
     if Texthelper.writeButton(screen, [("center", 540-55), "Resume", 2]):
-        pygame.mouse.set_visible(False)
         status = "game"
     if mode:
         timedFlip()
