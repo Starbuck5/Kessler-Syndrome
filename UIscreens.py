@@ -129,7 +129,10 @@ def homeUI(screen, shipInventory, homeInventory):
         status = "shopinit"
     if Texthelper.writeButton(screen, [("center", 540+55), "market", 3]):
         status = "marketinit"
-    if  Texthelper.writeButton(screen, [("center", 540+110), "empty ship inventory", 3]):
+    message = "empty ship inventory"
+    if shipInventory != [0,0,0,0]:
+        message = "-+-empty ship inventory-+-" 
+    if Texthelper.writeButton(screen, [("center", 540+110), message, 3]):
         homeInventory[0] += shipInventory[0]
         homeInventory[1] += shipInventory[1]
         homeInventory[2] += shipInventory[2]
@@ -454,7 +457,6 @@ def garageUI(screen, ShipLv, homeInventory, mode):
 
     return status
         
-######
 
 class shopStorage():
     shopStatus = "home"
