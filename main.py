@@ -275,6 +275,7 @@ def main():
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
     timer_paused = 0
+    timer_map = 0
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -292,8 +293,9 @@ def main():
     while running:
         clock.tick(100)
         timer_paused += 1
-        if timer_paused > 10000:
-            timer_paused = 10000
+        timer_paused = min(timer_paused, 10000)
+        timer_map += 1
+        timer_map = min(timer_map, 10000)
      
         if status == "menuinit":
             # sound
@@ -392,6 +394,10 @@ def main():
 
         if status == "mapscreen":
             status = mapscreenUI(screen)
+            inputvar = keyboard()
+            if ("m" in inputvar or "escape" in inputvar) and timer_map > 25:
+                status = "game"
+                timer_map = 0
             pygame.display.flip()
 
         if status == "exiting":
@@ -521,9 +527,10 @@ def main():
                     while color[0] + color[1] + color[2] > 150:
                         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     previous_tick2 = ticks
-                if "m" in inputvar:
+                if "m" in inputvar and timer_map > 25:
+                    timer_map = 0
                     status = "mapscreeninit"
-                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_paused > 25:
+                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_paused > 25 and timer_map > 25:
                     timer_paused = 0
                     status = "pauseinit"
                 lasttransit += 1
