@@ -18,10 +18,10 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
         
-        if object_number == 100:
+        if object_number == 100: #draws star
             screen.blit(specialpics[0], (xpos, ypos))
             
-        if object_number == 0:
+        if object_number == 0: #draws zvezda
             screen.blit(specialpics[1], (xpos, ypos))
                 
         if object_number == 1: #draws main ship
@@ -448,6 +448,7 @@ def main():
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
+            lastnumdebris = 0
             pygame.mouse.set_visible(False)
             
             #inventory
@@ -536,6 +537,7 @@ def main():
                                 sectornum = destinations[i]
                                 lasttransit = 0
                                 new_objects = getObjects(sectornum, width, height)
+                                lastnumdebris = 0
                                 if new_objects[0] == -1 and len(new_objects)<8:
                                     object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
@@ -592,8 +594,14 @@ def main():
                         
             # collision detection
 
-            #inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]),3])
+            # reward for killing a sector
+            numdebris = 0
+            for i in range(0, len(object_list), 8):
+                if object_list[i+4] not in [0, 100, 1, 2, 8, 6, 4, 5]:
+                    numdebris += 1
+            if numdebris == 0 and lastnumdebris > 0:
+                shipInventory[3] += 100 #adds 100 credits to ship inventory
+            lastnumdebris = numdebris
 
             # deaderizer
             object_list = deaderizer(object_list)
@@ -626,16 +634,9 @@ def main():
             #physics!
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
-            # printer and flame and score            
-            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
-            if flame == True and (object_list[4] == 1 or object_list[4] == 5):
-                #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
-                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
-                                   [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
-                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
-                pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
-                pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
-            flame = False
+            # printer and flame
+            ####inventory
+            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]),3])            
             #fuel
             fuelalert.update(currentfuel/totalfuel)
             screen.blit(fuelpic, (1600, 1000))
@@ -649,9 +650,18 @@ def main():
             #ammunition
             Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
             if DEVMODE:
-                Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])
+                Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])            
+            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+            if flame == True and (object_list[4] == 1 or object_list[4] == 5):
+                #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
+                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
+                                   [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
+                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
+                pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
+                pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
+            flame = False
             pygame.display.flip()
-            # printer and flame and score
+            # printer and flame
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
