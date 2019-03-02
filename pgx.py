@@ -4,6 +4,7 @@ import random
 from textwrap import wrap
 OS = "windows" #other option = "mac"
 
+#keyboard for continuous keypresses
 def keyboard():
     inputvar = []
     keyboard_list = ["", "", "", "", "", "", "", "", "back", "tab", "", "", "", "enter", "", "", "", "", "", "pause break", "", "", "", "", "", "",
@@ -29,6 +30,26 @@ def keyboard():
         inputvar = ""
     return inputvar
 
+#because processing events deletes them in the process, centralized space to get them from
+class AllEvents():
+    TICKINPUT = []
+
+#called from mainloop to stick events from queue into AllEvents.TICKINPUT
+def collect_inputs():
+    AllEvents.TICKINPUT = []
+    for event in pygame.event.get():
+        AllEvents.TICKINPUT.append(event)
+
+#version of the keyboard not for controlling things, but for entering text
+def keyboard_queued():
+    systemEvents = AllEvents.TICKINPUT
+    chars_out = []
+    for event in systemEvents:
+        if event.type == pygame.KEYDOWN:
+            chars_out.append(event.unicode)
+    return chars_out
+
+#returns some stuff about the mouse
 def mouse():
     if pygame.mouse.get_focused():
         if 1 in pygame.mouse.get_pressed():
@@ -167,8 +188,8 @@ Font.getReady() #initializes the font
 class InputGetter():
     BLINKSPEED = 45
     ALPHABETCHECK = "abcdefghijklmnopqrstuvwxyz"
-    def __init__ (self, initialtext, inputtype):
-        self.initialtext = initialtext
+    def __init__ (self, initialtext, inputtype): #text = [(x,y),'text', scale]
+        self.initialtext = initialtext           #type = 'str' or 'int'
         self.inputtype = inputtype
         self.currenttext = initialtext
         self.rawtext = initialtext[1]
@@ -192,21 +213,22 @@ class InputGetter():
 
     def _handleThisShit(self, inputtype):
         last_input = self.last_input
-        inputvar = keyboard()    
+        inputvar = keyboard_queued()    
         if inputvar and last_input == ["getready"]:
             self.rawtext = "" 
         if inputvar != last_input:
-            if "back" in inputvar or "delete" in inputvar:
-                self.rawtext = self.rawtext[:-1]
-            if inputtype == "int":
-                if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0].isdigit() == True:
-                    self.rawtext += inputvar[0]
-            elif inputtype == "str":
-                if len(inputvar) == 1 and len(inputvar[0]) == 1 and inputvar[0] in InputGetter.ALPHABETCHECK:
-                    self.rawtext += inputvar[0]
-            else: #maybe inputtype of 'all' for everyting; or maybe 'str' should mean all
-                if len(inputvar) == 1 and len(inputvar[0]) == 1:
-                    self.rawtext += inputvar[0]
+            for i in range(len(inputvar)):
+                if inputvar[i] == "\x08":
+                    self.rawtext = self.rawtext[:-1]
+                if inputtype == "int":
+                    if len(inputvar[i]) == 1 and inputvar[i].isdigit() == True:
+                        self.rawtext += inputvar[i]
+                elif inputtype == "str":
+                    if len(inputvar[i]) == 1 and inputvar[i] in InputGetter.ALPHABETCHECK:
+                        self.rawtext += inputvar[i]
+                else: #maybe inputtype of 'all' for everyting; or maybe 'str' should mean all
+                    if len(inputvar) == 1 and len(inputvar[i]) == 1:
+                        self.rawtext += inputvar[i]
         
         self.currenttext = [self.currenttext[0], self.rawtext, self.currenttext[2]]
         if last_input != ["getready"]:

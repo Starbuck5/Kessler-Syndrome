@@ -263,6 +263,7 @@ def main():
         screen = pygame.display.set_mode([width, height], pygame.NOFRAME | pygame.FULLSCREEN)
     else:
         screen = pygame.display.set_mode([width, height])
+    clock = pygame.time.Clock()
         
     # variable setup
     d_parts = [30]
@@ -270,7 +271,6 @@ def main():
     d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
     flame = False
-    clock = pygame.time.Clock()
     sectornum = 1
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
@@ -291,6 +291,7 @@ def main():
     running = True
     while running:
         clock.tick(100)
+        collect_inputs() #syncs up event queue in pgx
         timer_popupmenu += 1
         timer_popupmenu = min(timer_popupmenu, 10000)
      
@@ -668,7 +669,7 @@ def main():
             pygame.display.flip()
             # printer and flame
         
-        for event in pygame.event.get():
+        for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
                 running = False
                 pygame.quit()
