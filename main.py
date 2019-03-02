@@ -274,8 +274,7 @@ def main():
     sectornum = 1
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
-    timer_paused = 0
-    timer_map = 0
+    timer_popupmenu = 0
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -292,10 +291,8 @@ def main():
     running = True
     while running:
         clock.tick(100)
-        timer_paused += 1
-        timer_paused = min(timer_paused, 10000)
-        timer_map += 1
-        timer_map = min(timer_map, 10000)
+        timer_popupmenu += 1
+        timer_popupmenu = min(timer_popupmenu, 10000)
      
         if status == "menuinit":
             # sound
@@ -333,9 +330,9 @@ def main():
         if status == "paused":
             status = drawPauseUI(screen, False)
             inputvar = keyboard()
-            if ("p" in inputvar or "escape" in inputvar) and timer_paused > 25:
+            if ("p" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
-                timer_paused = 0
+                timer_popupmenu = 0
             if status != "paused":
                 Font.set_scramble_paused(False) #resumes any scrambling going on
                 pygame.mouse.set_visible(False)
@@ -395,9 +392,10 @@ def main():
         if status == "mapscreen":
             status = mapscreenUI(screen)
             inputvar = keyboard()
-            if ("m" in inputvar or "escape" in inputvar) and timer_map > 25:
+            if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
-                timer_map = 0
+                timer_popupmenu = 0
+                pygame.mouse.set_visible(False)
             pygame.display.flip()
 
         if status == "exiting":
@@ -527,11 +525,11 @@ def main():
                     while color[0] + color[1] + color[2] > 150:
                         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     previous_tick2 = ticks
-                if "m" in inputvar and timer_map > 25:
-                    timer_map = 0
+                if "m" in inputvar and timer_popupmenu > 25:
+                    timer_popupmenu = 0
                     status = "mapscreeninit"
-                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_paused > 25 and timer_map > 25:
-                    timer_paused = 0
+                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_popupmenu > 25:
+                    timer_popupmenu = 0
                     status = "pauseinit"
                 lasttransit += 1
                 if "a" in inputvar and "d" in inputvar:
