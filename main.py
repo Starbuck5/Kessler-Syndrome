@@ -49,7 +49,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             
         if 9 < object_number < 40: #draws satellites
             image = rotatePixelArt(graphlist[object_number-10], rotation)
-            screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+            screen.blit(image, (xpos, ypos))
             
         if 69 < object_number < 100: #draws asteroids
             AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
@@ -105,8 +105,8 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
     elif 9 < objectID < 40: #pixel things
         image = rotatePixelArt(graphlist[objectID-10], object_list[object_location*8+5])
-        hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
-                   image.get_height()]
+        hitBox = [xpos, ypos, image.get_size()[0], 
+                   image.get_size()[1]]
     elif 69 < objectID < 100: #asteroids
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
@@ -220,22 +220,21 @@ def main():
     max_asteroids = 8
     drag = [1,5]
 
-    #scaling
-    scalarscalar = height / 1080
-    scalar2 = 1.5 * scalarscalar # controls asteroid size
-    scalar3 = 1.2 * scalarscalar # controls ship size
-    sat_scalar = 1 * scalarscalar #controls satellite size
-    alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
-
     #graphical setup
-    graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
-                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", loadImage("Assets\\solarpanel.tif")]
+    graphlist = [loadImage("Assets\\sat1.tif"), loadImage("Assets\\sat2.tif"), loadImage("Assets\\sat3.tif"),
+                 loadImage("Assets\\sat4.tif"), "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", #random elements to pad indices
+                 loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
     specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
+
+    #scaling
+    scalarscalar = height / 1080
+    scalar2 = 1.5 * scalarscalar # controls asteroid size
+    scalar3 = 1.2 * scalarscalar # controls ship size
+    alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     # settings
     max_speed = 4 * scalarscalar
@@ -578,12 +577,18 @@ def main():
                 while i2 < int(len(object_list)/8):                   
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
+                        drops = [0,0,0,0]
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
+                            xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
+                            yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
+                            force = (xForce + yForce)*2
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            drops = satelliteDrops()
-                            #this fancy line of code from stack overflow merges the two lists by adding their like elements together
-                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]
+                            if force < 10:
+                                drops = satelliteDrops()
+                            else:
+                                currentarmor = currentarmor - (int(force) - 10)
+                                Font.scramble(100) #scrambles text for 100 ticks
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
@@ -592,11 +597,14 @@ def main():
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
-                            force = xForce + yForce
+                            force = (xForce + yForce)*2
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            currentarmor = currentarmor - int(force)
-                            Font.scramble(100) #scrambles text for 100 ticks
+                            if force < 5:
+                                drops[0] = 1
+                            else:
+                                currentarmor = currentarmor - (int(force) - 5)
+                                Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
@@ -609,6 +617,8 @@ def main():
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
                         object_list += printerlist_add
+                        #this fancy line of code from stack overflow merges the two lists by adding their like elements together
+                        shipInventory = [a + b for a, b in zip(shipInventory, drops)]
                     i2 += 1
                         
             # collision detection
