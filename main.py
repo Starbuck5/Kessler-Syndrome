@@ -478,6 +478,18 @@ def main():
 
             fuelalert = FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0))
             armoralert = FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0))
+
+            for i in range(0, len(object_list), 8):
+                        object_number = object_list[i+4]
+                        if object_number == 0:
+                            dockPosition = dock(object_list[i], object_list[i+1], specialpics[1])
+                            for i2 in range(0, len(object_list), 8):
+                                if object_list[4 + i2] == 1:
+                                    object_list[i2] = dockPosition[0]
+                                    object_list[i2+1] = dockPosition[1]
+                                    object_list[i2+2] = dockPosition[2]
+                                    object_list[i2+3] = dockPosition[3]
+                                    object_list[i2+5] = dockPosition[4]
             
             #game progression
             if file_settings[3] == 0:
