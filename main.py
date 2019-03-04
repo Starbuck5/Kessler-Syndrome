@@ -230,7 +230,7 @@ def main():
     #graphical setup
     graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
-                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", loadImage("Assets\\solarpanel.tif")]
+                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11", loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
@@ -268,8 +268,8 @@ def main():
         
     # variable setup
     d_parts = [30]
-    d_sats = [10, 11, 12, 13, 71, 72, 73, 80, 81, 82, 91]
-    d_only_sats = [10, 11, 12, 13]
+    d_sats = [10, 11, 12, 13]
+    d_asteroids = [71, 72, 73, 80, 81, 82, 91]
     status = "menuinit"
     flame = False
     sectornum = 1
@@ -558,7 +558,7 @@ def main():
                                 new_objects = getObjects(sectornum, width, height)
                                 lastnumdebris = 0
                                 if new_objects[0] == -1 and len(new_objects)<8:
-                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
+                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
@@ -578,12 +578,17 @@ def main():
                 while i2 < int(len(object_list)/8):                   
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
+                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite collision
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
                             drops = satelliteDrops()
                             #this fancy line of code from stack overflow merges the two lists by adding their like elements together
                             shipInventory = [a + b for a, b in zip(shipInventory, drops)]
+                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_parts: #ship v debris parts collision
+                           printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                           object_list[(i2*8)+7] = -1
+                           drops = solarPanelDrops()
+                           shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
                             #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
@@ -603,7 +608,7 @@ def main():
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_only_sats: #missile v satellite collision
+                        elif object_list[4 + (i2 * 8)] == 2 and (object_list[4 + (i * 8)] in d_sats or object_list[4 + (i * 8)] in d_parts): #missile v satellite/part collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
