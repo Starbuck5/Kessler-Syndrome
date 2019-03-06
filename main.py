@@ -10,52 +10,101 @@ from level1 import *
 from game import *
 from UIscreens import *
 
+def pointsToRect(pointlist):
+    xmin = 10000
+    xmax = -10000
+    ymin = 10000
+    ymax = -10000
+    for i in range(len(pointlist)):
+        x, y = pointlist[i]
+        if x<xmin:
+            xmin=x
+        if x>xmax:
+            xmax=x
+        if y<ymin:
+            ymin=y
+        if y>ymax:
+            ymax=y
+    rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
+    return rectangle
+    
+
+def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i):
+    colliderect = ""
+    if object_number == 100: #draws star
+        screen.blit(specialpics[0], (xpos, ypos))
+        
+    if object_number == 0: #draws zvezda
+        screen.blit(specialpics[1], (xpos, ypos))
+            
+    if object_number == 1: #draws main ship
+        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
+        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
+        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
+        colliderect = pointsToRect(ship_pointlist)
+        
+    if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
+        pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
+        
+    if object_number == 4: #draws explosion effects
+        pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
+        
+    if object_number == 5: #draws shielded ship
+        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
+        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
+        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
+        colliderect = pointsToRect(ship_pointlist)
+        
+    if object_number == 6: #draws alien
+        alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
+                        [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
+        colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
+        
+    if 9 < object_number < 40: #draws satellites
+        image = rotatePixelArt(graphlist[object_number-10], rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(), image.get_height()]
+        
+    if 69 < object_number < 100: #draws asteroids
+        AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
+        newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
+        colliderect = pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
+
+    return colliderect
+
 #prints everything
 def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+    #needed for testing which direction things are off the screen
+    width, height = screen.get_size()
+    left = pygame.Rect(-1,0,1,height)
+    right = pygame.Rect(width,0,1,height)    
+    up = pygame.Rect(0,-1,width,1)
+    down = pygame.Rect(0,height,width,1)
+    
     for i in range(0, len(object_list), 8):
-        xpos = object_list[i]        
+        xpos = object_list[i]       
         ypos = object_list[i+1]
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
-        
-        if object_number == 100: #draws star
-            screen.blit(specialpics[0], (xpos, ypos))
-            
-        if object_number == 0: #draws zvezda
-            screen.blit(specialpics[1], (xpos, ypos))
-                
-        if object_number == 1: #draws main ship
-            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-            pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
-            pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
-            
-        if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
-            pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
-            
-        if object_number == 4: #draws explosion effects
-            pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
-            
-        if object_number == 5: #draws shielded ship
-            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-            pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
-            pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
-            
-        if object_number == 6: #draws alien
-            alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
-                            [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
-            pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
-            
-        if 9 < object_number < 40: #draws satellites
-            image = rotatePixelArt(graphlist[object_number-10], rotation)
-            screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-            
-        if 69 < object_number < 100: #draws asteroids
-            AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
-            newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
-            pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
 
+        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i)
+        if colliderect:
+            if not screen.get_rect().contains(colliderect):
+                if left.colliderect(colliderect):
+                    xpos += width
+                elif right.colliderect(colliderect):
+                    xpos -= width
+
+                if up.colliderect(colliderect):
+                    ypos += height
+                elif down.colliderect(colliderect):
+                    ypos -= height
+                
+                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i)
+                
+            
 #flashing alerts for low fuel and armor
 class FlashyBox:
     def __init__(self, rect, threshold, color):
