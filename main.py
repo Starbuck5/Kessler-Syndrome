@@ -10,6 +10,7 @@ from level1 import *
 from game import *
 from UIscreens import *
 
+#takes a pointlist and returns a bounding box rectangle
 def pointsToRect(pointlist):
     xmin = 10000
     xmax = -10000
@@ -27,9 +28,9 @@ def pointsToRect(pointlist):
             ymax=y
     rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
     return rectangle
-    
 
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i):
+#the nuts and bolts of printing the things    
+def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics):
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -74,7 +75,7 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
 
     return colliderect
 
-#prints everything
+#takes care of the printing logic
 def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
@@ -89,7 +90,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
 
-        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i)
+        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -102,7 +103,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
                 elif down.colliderect(colliderect):
                     ypos -= height
                 
-                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, i)
+                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
                 
             
 #flashing alerts for low fuel and armor
@@ -181,16 +182,25 @@ def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, 
                 intersection = True
     return intersection
 
+
+#cool storage for sounds in a dictionary accessed through class methods
+class SoundVault():
+    storage = {}
+    def __init__(self, name, filepath, **kwargs):
+        sound = pygame.mixer.Sound(handlePath(filepath))
+        if 'volume' in kwargs:
+            sound.set_volume(kwargs['volume'])        
+        SoundVault.storage[name] = sound
+    def get(name):
+        return SoundVault.storage[name]
+
+#sound effects for collision        
 def explosion_sounds():
-    explosion1 = pygame.mixer.Sound(handlePath("Assets\\Bomb1.wav"))
-    explosion2 = pygame.mixer.Sound(handlePath("Assets\\Bomb2.wav"))
-    explosion1.set_volume(0.05)
-    explosion2.set_volume(0.05)
     explosion_picker = random.randint(0,1)
     if explosion_picker == 0:
-        explosion1.play()
+        SoundVault.get('explosion1').play()
     if explosion_picker == 1:
-        explosion2.play()
+        SoundVault.get('explosion2').play()
 
 #wrapper for saveObjects that determines how to save a level
 def saveGame(sectornum, object_list, width, height):
@@ -314,7 +324,12 @@ def main():
     else:
         screen = pygame.display.set_mode([width, height])
     clock = pygame.time.Clock()
-        
+
+    #sound setup
+    pygame.mixer.init()
+    SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.05)
+    SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.05)
+
     # variable setup
     d_parts = [30]
     d_sats = [10, 11, 12, 13]
@@ -346,9 +361,6 @@ def main():
         timer_popupmenu = min(timer_popupmenu, 10000)
      
         if status == "menuinit":
-            # sound
-            pygame.mixer.init()
-
             pygame.mouse.set_visible(True)
             screen.fill(color)
             status = "menu" 
