@@ -98,22 +98,29 @@ def generateStars(width, height):
     return stars_list
 
 #leveler
-def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan):
+def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids):
+    ASTEROID = 30
+    SATS = 50
+    PARTS = 20
     object_list = object_list[:8]
     object_list += generateStars(width, height)
     countervar = 0
     while countervar < random.randint(max_asteroids - 2, max_asteroids):
+        idChooser = random.randint(0, 100)
+        if idChooser < ASTEROID:
+            idSelection = d_asteroids
+        elif idChooser < ASTEROID + SATS:
+            idSelection = d_sats
+        else:
+            idSelection = d_parts
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
         object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0], asteroid_speedset[1]]
-        object_list_add += [d_sats[random.randint(0, len(d_sats)-1)], random.randint(0,360), random.randint(-10,10), 1] 
+        object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360), random.randint(-10,10), 1] 
         xdiff = object_list[0] - object_list_add[0]
         ydiff = object_list[1] - object_list_add[1]
         distance = ((xdiff ** 2) + (ydiff ** 2)) ** 0.5
         countervar += 1
         object_list += object_list_add
-    if object_list[4] == 1 or object_list[4] == 3:
-        object_list[4] = 5
-        object_list[7] = shield_lifespan
     return object_list
 
 #deaderizer -- perhaps amalgamated into doPhysics in the future, just outside its main for loop
@@ -180,6 +187,34 @@ def sectorGeneration(sectornum):
     if sectornum in infinite_sectors:
         output = True
     return output
+
+def solarPanelDrops():
+    drops = [0, 0, 0, 0]
+    if random.randint(1,100) <= 80:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[0] += 1
+        elif 61 <= percentHelper <= 90:
+            drops[0] += 2
+        else:
+            drops[0] += 3
+    if random.randint(1,100) <= 20:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[2] += 1
+        elif 61 <= percentHelper <= 90:
+            drops[2] += 2
+        else:
+            drops[2] += 3
+    if random.randint(1,100) <= 10:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[3] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[3] += 4
+        else:
+            drops[3] += 6
+    return drops
 
 def satelliteDrops():
     drops = [0, 0, 0, 0]
