@@ -193,14 +193,16 @@ class SoundVault():
         SoundVault.storage[name] = sound
     def get(name):
         return SoundVault.storage[name]
+    def play(name):
+        SoundVault.storage[name].play()
 
 #sound effects for collision        
 def explosion_sounds():
     explosion_picker = random.randint(0,1)
     if explosion_picker == 0:
-        SoundVault.get('explosion1').play()
+        SoundVault.play('explosion1')
     if explosion_picker == 1:
-        SoundVault.get('explosion2').play()
+        SoundVault.play('explosion2')
 
 #wrapper for saveObjects that determines how to save a level
 def saveGame(sectornum, object_list, width, height):
@@ -329,6 +331,8 @@ def main():
     pygame.mixer.init()
     SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.05)
     SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.05)
+    SoundVault("money", "Assets\\clink.wav")
+    SoundVault("death", "Assets\\powerfailure.wav", volume=0.2)
 
     # variable setup
     d_parts = [30]
@@ -340,6 +344,7 @@ def main():
     portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
     timer_popupmenu = 0
+    timer_shipdeath = 9500
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -359,6 +364,9 @@ def main():
         collect_inputs() #syncs up event queue in pgx
         timer_popupmenu += 1
         timer_popupmenu = min(timer_popupmenu, 10000)
+        timer_shipdeath += 1
+        timer_shipdeath = min(timer_shipdeath, 10000)
+        
      
         if status == "menuinit":
             pygame.mouse.set_visible(True)
@@ -575,11 +583,11 @@ def main():
             
             # input handling
             inputvar = keyboard()
-            thrust_vector = (math.cos(math.radians(object_list[5]-90)), math.sin(math.radians(object_list[5]+90)))
             ticks = pygame.time.get_ticks()
             if inputvar:
                 if object_list[4] == 1 or object_list[4] == 5:
-                    if "w" in inputvar or "uparrow" in inputvar:
+                    thrust_vector = (math.cos(math.radians(object_list[5]-90)), math.sin(math.radians(object_list[5]+90)))
+                    if "w" in inputvar or "uparrow" in inputvar:                        
                         object_list[2] += step_x * thrust_vector[0]
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
@@ -643,6 +651,8 @@ def main():
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
                             drops = satelliteDrops()
+                            if drops[3]: #if currency dropped
+                                SoundVault.play('money')
                             #this fancy line of code from stack overflow merges the two lists by adding their like elements together
                             shipInventory = [a + b for a, b in zip(shipInventory, drops)]
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_parts: #ship v debris parts collision
@@ -686,6 +696,7 @@ def main():
                     numdebris += 1
             if numdebris == 0 and lastnumdebris > 0:
                 shipInventory[3] += 100 #adds 100 credits to ship inventory
+                SoundVault.play('money')
             lastnumdebris = numdebris
 
             # deaderizer
@@ -704,17 +715,23 @@ def main():
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
                 saveGame(sectornum, object_list, width, height)
-                object_list[6] = -10
-                sectornum = 1
-                object_list = getObjects(sectornum, width, height)
+                object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
+                object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
+                SoundVault.play('death')
+                object_list[7] = -10
                 currentfuel = totalfuel
                 currentarmor = totalarmor
                 shipInventory = [0,0,0,0]
                 lasttransit = 0
+                timer_shipdeath = 0
+
+            if timer_shipdeath == 200:
+                sectornum = 1
+                object_list = getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2
                 object_list[2] = 0
-                object_list[3] = 0
+                object_list[3] = 0                
 
             #physics!
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
