@@ -1,0 +1,25 @@
+--explosion sounds--
+(bomb1 and bomb2)
+https://www.freesoundeffects.com/free-sounds/bomb-10076/
+Changes: increased volume
+
+--ship death sound--
+(powerfailure)
+http://soundbible.com/1610-Power-Failure.html
+Title: Power Failure
+Uploaded: 11-13-10
+Recorded by Mike Koenig
+Used under Attribution 3.0 License
+
+--currency sound--
+(clink)
+recorded by me!
+
+--portal travel sound--
+(electric)
+https://www.freesoundeffects.com/free-track/powerlines-426776/
+Title: powerlines
+Contributed by: Partners in Rhyme
+Changes: shortened significantly from original
+
+
