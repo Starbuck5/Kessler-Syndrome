@@ -39,7 +39,8 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         screen.blit(specialpics[1], (xpos, ypos))
             
     if object_number == 1: #draws main ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3,
+                            ypos+10*scalar3]]
         ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
         pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
         pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
@@ -52,21 +53,25 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
         
     if object_number == 5: #draws shielded ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3,
+                            ypos+10*scalar3]]
         ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
         pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
         pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
         colliderect = pointsToRect(ship_pointlist)
         
     if object_number == 6: #draws alien
-        alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
-                        [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
+        alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1],
+                           [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos],
+                           [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1],
+                           [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
         colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
         
     if 9 < object_number < 40: #draws satellites
         image = rotatePixelArt(graphlist[object_number-10], rotation)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(), image.get_height()]
+        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
+                       image.get_height()]
         
     if 69 < object_number < 100: #draws asteroids
         AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
@@ -90,7 +95,8 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
 
-        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
+                                  specialpics)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -132,8 +138,10 @@ class FlashyBox:
             
 #collision detection for the portals            
 def portalcollision(object_list, portalcoords):
-    if (portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] and portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3]
-        and (object_list[4] == 1 or object_list[4]==5)):
+    condition1 = portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] #if x is colliding
+    condition2 = portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3] #if y is colliding
+    condition3 = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
+    if condition1 and condition2 and condition3:
         return True
     else:
         return False
@@ -289,9 +297,12 @@ def main():
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
-    graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
-                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11", loadImage("Assets\\solarpanel.tif")]
+    graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
+                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
+                 loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
@@ -342,7 +353,8 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
+    portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150),
+                    (width/2-75, height-25, 150, 25)]
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
@@ -569,7 +581,8 @@ def main():
                 file_settings = filehelper.get(0)
 
             if file_settings[3] == 1:
-                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"), pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
                                 "Hey you, still alive out there? Then go pick up some space debris like a good prisoner")
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
@@ -586,7 +599,8 @@ def main():
             ticks = pygame.time.get_ticks()
             if inputvar:
                 if object_list[4] == 1 or object_list[4] == 5:
-                    thrust_vector = (math.cos(math.radians(object_list[5]-90)), math.sin(math.radians(object_list[5]+90)))
+                    thrust_vector = (math.cos(math.radians(object_list[5]-90)),
+                                     math.sin(math.radians(object_list[5]+90)))
                     if "w" in inputvar or "uparrow" in inputvar:
                         object_list[2] += step_x * thrust_vector[0]
                         object_list[3] += step_y * thrust_vector[1]
@@ -599,8 +613,10 @@ def main():
                         ammunition -= 1
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
-                        front_pointlist = RotatePoint(object_list[0], object_list[1], [object_list[0], object_list[1]-30*scalar3], object_list[5])
-                        object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2, "NA", "NA", missile_lifespan]
+                        front_pointlist = RotatePoint(object_list[0], object_list[1],
+                                                      [object_list[0], object_list[1]-30*scalar3], object_list[5])
+                        object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2,
+                                                "NA", "NA", missile_lifespan]
                         object_list += object_list_addition
                         previous_tick = ticks
                 if "shift" in inputvar and "c" in inputvar and (ticks - previous_tick2) > 360:
@@ -611,9 +627,10 @@ def main():
                 if "m" in inputvar and timer_popupmenu > 25:
                     timer_popupmenu = 0
                     status = "mapscreeninit"
-                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1 and timer_popupmenu > 25:
-                    timer_popupmenu = 0
-                    status = "pauseinit"
+                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1:
+                    if timer_popupmenu > 25:
+                        timer_popupmenu = 0
+                        status = "pauseinit"
                 lasttransit += 1
                 if "a" in inputvar and "d" in inputvar:
                     destinations = sectorDestinations(sectornum)
@@ -628,7 +645,8 @@ def main():
                                 new_objects = getObjects(sectornum, width, height)
                                 lastnumdebris = 0
                                 if new_objects[0] == -1 and len(new_objects)<8:
-                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids)
+                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                                          d_sats, d_parts, d_asteroids)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
@@ -649,32 +667,34 @@ def main():
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite collision
+                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
-                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
+                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
                             drops = satelliteDrops()
                             if drops[3]: #if currency is dropped
                                 SoundVault.play('money')
-                            #this fancy line of code from stack overflow merges the two lists by adding their like elements together
+                            #merges the two lists by adding their like elements together
                             shipInventory = [a + b for a, b in zip(shipInventory, drops)]
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_parts: #ship v debris parts collision
-                           printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_parts: #ship v debris
+                           printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
+                                                            object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                            object_list[(i2*8)+7] = -1
                            drops = solarPanelDrops()
                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
-                            #InGameTextBox(screen, 800, 500, 150, 50, "press enter", 1)
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
-                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
+                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
-                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
+                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
                             if force < 5:
                                 drops[0] = 1
@@ -682,13 +702,21 @@ def main():
                                 currentarmor = currentarmor - (int(force) - 5)
                                 Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
-                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
+                        elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and (object_list[4 + (i * 8)] in d_sats or object_list[4 + (i * 8)] in d_parts): #missile v satellite/part collision
-                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_parts: #missile v debris
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
+                            object_list[(i2*8)+7] = -1
+                            object_list[(i*8)+7] = -1
+                            explosion_sounds()
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_sats: #missile v sats
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
@@ -746,7 +774,9 @@ def main():
             
             # printer and flame
             ####inventory
-            Texthelper.write(screen, [(0, 0), "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) + "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3]),3])            
+            inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
+            inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
+            Texthelper.write(screen, [(0, 0), inventory_string,3])            
             #fuel
             fuelalert.update(currentfuel/totalfuel)
             screen.blit(fuelpic, (1600, 1000))
@@ -764,7 +794,8 @@ def main():
             printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
             if flame == True and (object_list[4] == 1 or object_list[4] == 5):
                 #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
-                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3], [object_list[0], object_list[1]+20*scalar3],
+                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3],
+                                   [object_list[0], object_list[1]+20*scalar3],
                                    [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
                 flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
                 pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
