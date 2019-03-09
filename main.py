@@ -10,102 +10,52 @@ from level1 import *
 from game import *
 from UIscreens import *
 
-#takes a pointlist and returns a bounding box rectangle
-def pointsToRect(pointlist):
-    xmin = 10000
-    xmax = -10000
-    ymin = 10000
-    ymax = -10000
-    for i in range(len(pointlist)):
-        x, y = pointlist[i]
-        if x<xmin:
-            xmin=x
-        if x>xmax:
-            xmax=x
-        if y<ymin:
-            ymin=y
-        if y>ymax:
-            ymax=y
-    rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
-    return rectangle
-
-#the nuts and bolts of printing the things    
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics):
-    colliderect = ""
-    if object_number == 100: #draws star
-        screen.blit(specialpics[0], (xpos, ypos))
-        
-    if object_number == 0: #draws zvezda
-        screen.blit(specialpics[1], (xpos, ypos))
-            
-    if object_number == 1: #draws main ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
-        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
-        colliderect = pointsToRect(ship_pointlist)
-        
-    if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
-        pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
-        
-    if object_number == 4: #draws explosion effects
-        pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
-        
-    if object_number == 5: #draws shielded ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
-        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
-        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
-        colliderect = pointsToRect(ship_pointlist)
-        
-    if object_number == 6: #draws alien
-        alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
-                        [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
-        colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
-        
-    if 9 < object_number < 40: #draws satellites
-        image = rotatePixelArt(graphlist[object_number-10], rotation)
-        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(), image.get_height()]
-        
-    if 69 < object_number < 100: #draws asteroids
-        AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
-        newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
-        colliderect = pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
-
-    return colliderect
-
-#takes care of the printing logic
+#prints everything
 def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
-    #needed for testing which direction things are off the screen
-    width, height = screen.get_size()
-    left = pygame.Rect(-1,0,1,height)
-    right = pygame.Rect(width,0,1,height)    
-    up = pygame.Rect(0,-1,width,1)
-    down = pygame.Rect(0,height,width,1)
-    
     for i in range(0, len(object_list), 8):
-        xpos = object_list[i]       
+        xpos = object_list[i]        
         ypos = object_list[i+1]
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
-
-        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
-        if colliderect:
-            if not screen.get_rect().contains(colliderect):
-                if left.colliderect(colliderect):
-                    xpos += width
-                elif right.colliderect(colliderect):
-                    xpos -= width
-
-                if up.colliderect(colliderect):
-                    ypos += height
-                elif down.colliderect(colliderect):
-                    ypos -= height
-                
-                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
-                
+        
+        if object_number == 100: #draws star
+            screen.blit(specialpics[0], (xpos, ypos))
             
+        if object_number == 0: #draws zvezda
+            screen.blit(specialpics[1], (xpos, ypos))
+                
+        if object_number == 1: #draws main ship
+            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
+            pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
+            pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
+            
+        if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
+            pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
+            
+        if object_number == 4: #draws explosion effects
+            pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
+            
+        if object_number == 5: #draws shielded ship
+            ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3, ypos+10*scalar3]]
+            ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
+            pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
+            pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
+            
+        if object_number == 6: #draws alien
+            alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1], [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos], [xpos-18*scalar1, ypos],
+                            [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1], [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
+            pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
+            
+        if 9 < object_number < 40: #draws satellites
+            image = rotatePixelArt(graphlist[object_number-10], rotation)
+            screen.blit(image, (xpos, ypos))
+            
+        if 69 < object_number < 100: #draws asteroids
+            AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
+            newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
+            pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
+
 #flashing alerts for low fuel and armor
 class FlashyBox:
     def __init__(self, rect, threshold, color):
@@ -155,8 +105,8 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
     elif 9 < objectID < 40: #pixel things
         image = rotatePixelArt(graphlist[objectID-10], object_list[object_location*8+5])
-        hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
-                   image.get_height()]
+        hitBox = [xpos, ypos, image.get_size()[0], 
+                   image.get_size()[1]]
     elif 69 < objectID < 100: #asteroids
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
@@ -181,7 +131,6 @@ def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, 
             if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
                 intersection = True
     return intersection
-
 
 #cool storage for sounds in a dictionary accessed through class methods
 class SoundVault():
@@ -281,22 +230,21 @@ def main():
     max_asteroids = 8
     drag = [1,5]
 
-    #scaling
-    scalarscalar = height / 1080
-    scalar2 = 1.5 * scalarscalar # controls asteroid size
-    scalar3 = 1.2 * scalarscalar # controls ship size
-    sat_scalar = 1 * scalarscalar #controls satellite size
-    alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
-
     #graphical setup
-    graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar), scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
-                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11", loadImage("Assets\\solarpanel.tif")]
+    graphlist = [loadImage("Assets\\sat1.tif"), loadImage("Assets\\sat2.tif"), loadImage("Assets\\sat3.tif"),
+                 loadImage("Assets\\sat4.tif"), "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", #random elements to pad indices
+                 loadImage("Assets\\solarpanel.tif")]
     fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\armor.tif")
     earthpic = loadImage("Assets\\earth.tif")
     specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
     infinitypic = loadImage("Assets\\infinity.tif")
+
+    #scaling
+    scalarscalar = height / 1080
+    scalar2 = 1.5 * scalarscalar # controls asteroid size
+    scalar3 = 1.2 * scalarscalar # controls ship size
+    alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     # settings
     max_speed = 4 * scalarscalar
@@ -336,8 +284,8 @@ def main():
 
     # variable setup
     d_parts = [30]
-    d_sats = [10, 11, 12, 13]
-    d_asteroids = [71, 72, 73, 80, 81, 82, 91]
+    d_sats = [10, 11, 12, 13, 71, 72, 73, 80, 81, 82, 91]
+    d_only_sats = [10, 11, 12, 13]
     status = "menuinit"
     flame = False
     sectornum = 1
@@ -369,6 +317,9 @@ def main():
         
      
         if status == "menuinit":
+            # sound
+            pygame.mixer.init()
+
             pygame.mouse.set_visible(True)
             screen.fill(color)
             status = "menu" 
@@ -627,7 +578,7 @@ def main():
                                 new_objects = getObjects(sectornum, width, height)
                                 lastnumdebris = 0
                                 if new_objects[0] == -1 and len(new_objects)<8:
-                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids)
+                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, shield_lifespan)
                                 else:
                                     object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
@@ -647,7 +598,11 @@ def main():
                 while i2 < int(len(object_list)/8):                   
                     if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
                         printerlist_add = []
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite collision
+                        drops = [0,0,0,0]
+                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_only_sats: #ship v satellite collision
+                            xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
+                            yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
+                            force = (xForce + yForce)*2
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
                             drops = satelliteDrops()
@@ -668,23 +623,28 @@ def main():
                         elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid collision
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
-                            force = xForce + yForce
+                            force = (xForce + yForce)*2
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            currentarmor = currentarmor - int(force)
-                            Font.scramble(100) #scrambles text for 100 ticks
+                            if force < 5:
+                                drops[0] = 1
+                            else:
+                                currentarmor = currentarmor - (int(force) - 5)
+                                Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and (object_list[4 + (i * 8)] in d_sats or object_list[4 + (i * 8)] in d_parts): #missile v satellite/part collision
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] in d_only_sats: #missile v satellite collision
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
                         object_list += printerlist_add
+                        #this fancy line of code from stack overflow merges the two lists by adding their like elements together
+                        shipInventory = [a + b for a, b in zip(shipInventory, drops)]
                     i2 += 1
                         
             # collision detection
