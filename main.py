@@ -479,6 +479,23 @@ def main():
                 status = "game"
                 timer_popupmenu = 0
                 pygame.mouse.set_visible(False)
+
+            if DEVMODE:
+                if Texthelper.writeButton(screen, [(180, 600), "[teleport home]", 2.5]):
+                    saveGame(sectornum, object_list, width, height)
+                    sectornum = 1
+                    lasttransit = 0
+                    new_objects = getObjects(sectornum, width, height)
+                    lastnumdebris = 0
+                    if new_objects[0] == -1 and len(new_objects)<8:
+                        object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                            d_sats, d_parts, d_asteroids)
+                    else:
+                        object_list = object_list[:8] + new_objects[8:]
+                    object_list[2] = 0  #kills momentum
+                    object_list[3] = 0
+                    status = "game"
+
             pygame.display.flip()
 
         if status == "exiting":
