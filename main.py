@@ -274,10 +274,7 @@ def drawSector(location, number, currentsector):
     if number == currentsector:
         pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
         Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
-    if len(str(number)) == 1:
-        Texthelper.write(screen, [(location[0]-10, location[1]-15), str(number), 2])
-    else:
-        Texthelper.write(screen, [(location[0]-20, location[1]-15), str(number), 2])
+    Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2])
            
 def main():
     global screen
@@ -358,6 +355,8 @@ def main():
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
+    sector_map_coordinates = [(960, 990), (820, 970), (1110, 980), (810, 840), (970, 830), (965, 690), (1115, 680), (830, 675), 
+        (1060, 525), (865, 535), (830, 400), (700, 630), (690, 455), (1095, 385), (1055, 250), (840, 245), (965, 415), (870, 105), (1030, 90)]  #locations for all sector icons on map screen, in order
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -423,51 +422,36 @@ def main():
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
+           
+            for i in range(len(sector_map_coordinates)):
+                drawSector(sector_map_coordinates[i], i + 1, sectornum)
+
             #consider automating connection drawing by using a map drawing method that would look at sectordesinations
-            drawSector((960, 990), 1, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960-40, 990), (820+40, 970))
-            drawSector((820, 970), 2, sectornum)
             screen.blit(infinitypic, (800,855)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (820, 970-40), (810, 840+40))
-            drawSector((810, 840), 4, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960, 990-40), (970, 830+40))
             pygame.draw.aaline(screen, (255,255,255), (810+40, 840), (970-40, 830))
-            drawSector((970, 830), 5, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (960+40, 990), (1110-40, 980))
-            drawSector((1110, 980), 3, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (970, 830-40), (965, 690+40))
-            drawSector((965, 690), 6, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (965+40, 690), (1115-40, 680))
-            drawSector((1115, 680), 7, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (965-40, 690), (830+40, 675))
-            drawSector((830, 675), 8, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (830, 675-40), (865, 535+40))
-            drawSector((865, 535), 10, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1115, 680-40), (1060, 525+40))
             pygame.draw.aaline(screen, (255,255,255), (865+40, 535), (1060-40, 525))
-            drawSector((1060, 525), 9, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1060, 525-40), (1095, 385+40))         
-            drawSector((1095, 385), 14, sectornum)
             screen.blit(infinitypic, (1085,400)) #x-10, y+15
-            drawSector((700, 630), 12, sectornum)
             screen.blit(infinitypic, (690,645)) #x-10, y+15
             pygame.draw.aaline(screen, (255,255,255), (830-40, 675), (700+40, 630))
             pygame.draw.aaline(screen, (255,255,255), (865, 535-40), (830, 400+40))
-            drawSector((830, 400), 11, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (700,630-40), (690,455+40))
             pygame.draw.aaline(screen, (255,255,255), (690+40, 455), (830-40, 400))
-            drawSector((690, 455), 13, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (830+40, 400), (965-40, 415))
-            drawSector((965, 415), 17, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (1095, 385-40), (1055, 250+40))
-            drawSector((1055, 250), 15, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (840+40,245), (1055-40,250))
             pygame.draw.aaline(screen, (255,255,255), (830,400-40), (840,245+40))
-            drawSector((840, 245), 16, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (840,245-40), (870,105+40))
-            drawSector((870, 105), 18, sectornum)
             pygame.draw.aaline(screen, (255,255,255), (870+40,105), (1030-40,90))
-            drawSector((1030, 90), 19, sectornum)
             status = mapscreenUI(screen)            
             pygame.display.flip()
             status = "mapscreen"
@@ -479,6 +463,39 @@ def main():
                 status = "game"
                 timer_popupmenu = 0
                 pygame.mouse.set_visible(False)
+
+            if DEVMODE:
+                if Texthelper.writeButton(screen, [(180, 600), "[teleport home]", 2.5]):
+                    saveGame(sectornum, object_list, width, height)
+                    sectornum = 1
+                    lasttransit = 0
+                    new_objects = getObjects(sectornum, width, height)
+                    lastnumdebris = 0
+                    if new_objects[0] == -1 and len(new_objects)<8:
+                        object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                            d_sats, d_parts, d_asteroids)
+                    else:
+                        object_list = object_list[:8] + new_objects[8:]
+                    object_list[2] = 0  #kills momentum
+                    object_list[3] = 0
+                    status = "game"
+
+                for i in range(len(sector_map_coordinates)):
+                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i + 1)) * 10, sector_map_coordinates[i][1] - 15), str(i + 1), 2]):
+                        saveGame(sectornum, object_list, width, height)
+                        sectornum = i + 1
+                        lasttransit = 0
+                        new_objects = getObjects(sectornum, width, height)
+                        lastnumdebris = 0
+                        if new_objects[0] == -1 and len(new_objects)<8:
+                            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                d_sats, d_parts, d_asteroids)
+                        else:
+                            object_list = object_list[:8] + new_objects[8:]
+                        object_list[2] = 0  #kills momentum
+                        object_list[3] = 0
+                        status = "game"
+
             pygame.display.flip()
 
         if status == "exiting":
