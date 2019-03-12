@@ -44,8 +44,10 @@ while running:
         filehelper.set(contents, 0)
         running = False
 
+    collect_inputs()
+
     pygame.display.flip()
-    for event in pygame.event.get():
+    for event in AllEvents.TICKINPUT:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
