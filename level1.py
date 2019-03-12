@@ -40,29 +40,21 @@ def level1(screen, width, height):
         screen.fill((0,191,255))
         screen.blit(mountains, (0, height-mountainsize[1]))
 
-        Texthelper.write(screen, [("center", ypos+000), "The year is 2023", 3])
-        Texthelper.write(screen, [("center", ypos+100), "76 years after the aliens came", 3])
-        Texthelper.write(screen, [("center", ypos+200), "and crashed in New Mexico", 3])
-        Texthelper.write(screen, [("center", ypos+300), "more aliens came to investigate", 3])
-        Texthelper.write(screen, [("center", ypos+400), "and thought the humans responsible", 3])
-        Texthelper.write(screen, [("center", ypos+500), "so they bombarded Earth", 3])
-        Texthelper.write(screen, [("center", ypos+600), "the humans managed to repel them", 3])
-        Texthelper.write(screen, [("center", ypos+700), "but the retreating aliens were angry", 3])
-        Texthelper.write(screen, [("center", ypos+800), "and filled the orbitals with debris", 3])
-        Texthelper.write(screen, [("center", ypos+900), "you have been framed for treason", 3])
-        Texthelper.write(screen, [("center", ypos+1000), "and your sentence is to clean up space", 3])
-        Texthelper.write(screen, [("center", ypos+1100), "until it is safe enough", 3])
-        Texthelper.write(screen, [("center", ypos+1200), "for non expendable humans", 3])
+        opening_crawl = [line.rstrip('\n') for line in open("assets\\opening_crawl.txt")]
+        line_spacing = 80;
 
-        screen.blit(soyuz, (xpos, ypos+1400))
-        screen.blit(randomflame(ypos), (xpos-4*soyuzscalar, ypos+soyuzsize[1]+1400))
-        screen.blit(randomflame(ypos), (xpos+6*soyuzscalar, ypos+soyuzsize[1]+1400))
-        screen.blit(randomflame(ypos), (xpos+10*soyuzscalar, ypos+soyuzsize[1]+1400))
-        screen.blit(randomflame(ypos), (xpos+20*soyuzscalar, ypos+soyuzsize[1]+1400))
+        for i in range(len(opening_crawl)):
+            Texthelper.write(screen, [("center", ypos + line_spacing * i), opening_crawl[i], 3])
 
-        if ypos+1700 > height/2-100:
-            namebox.currenttext = [("center", ypos+1750), namebox.getData()[1], namebox.getData()[2]]
-            Texthelper.write(screen, [("center", ypos+1700), "enter name to continue", 2])
+        screen.blit(soyuz, (xpos, ypos + line_spacing * len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos-4*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+6*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+10*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+20*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
+
+        if ypos + line_spacing * len(opening_crawl) + 400 > height/2-100:
+            namebox.currenttext = [("center", ypos + line_spacing * len(opening_crawl) + 450), namebox.getData()[1], namebox.getData()[2]]
+            Texthelper.write(screen, [("center", ypos + line_spacing * len(opening_crawl) + 400), "enter name to continue", 2])
         else:
             namebox.currenttext = [("center", height/2-50), namebox.getData()[1], namebox.getData()[2]]
             namebox.clicked = True
