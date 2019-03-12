@@ -103,6 +103,23 @@ def rotatePixelArt(image, degrees):
     image = scaleImage(image, 0.25)
     return image
 
+#breaks up sprite sheets into their separate images
+#columns can be a list, if multiple numbers of columns exist on separate rows
+def spriteSheetBreaker(sheet, xoffset, yoffset, width, height, margin, vertmargin, rows, columns):
+    if not isinstance(columns, list):
+        relcolumns = []
+        for i in range(rows):
+            relcolumns.append(columns)
+        columns = relcolumns
+    if len(columns) != rows:
+        raise Exception("column and row mismatch")
+
+    image_list = []
+    for i in range(rows):
+        for j in range(columns[i]):
+            image_list.append(sheet.subsurface((xoffset+(width+margin)*j, yoffset+(height+vertmargin)*i, width, height)))
+    return image_list
+
 # missing texture surface setup
 missingTexture = pygame.Surface((8,12))
 missingTexture.fill((255, 0, 220))
@@ -134,13 +151,8 @@ class Font():
         fontsheet = Font.fontsheet
         Font.splitSheet(fontsheet)
 
-    def splitSheet(fontsheet): #moves the stuff from one file into all of their separate surfaces
-        rows = 5 #number of character rows in font.gif
-        length_definitions = [10, 10, 10, 6, 10] #length of each row in font.gif
-        Font.char_list = []
-        for i in range(rows):
-            for j in range(length_definitions[i]):
-                Font.char_list.append(fontsheet.subsurface((2+10*j, 2+14*i, 8, 13)))
+    def splitSheet(fontsheet):
+        Font.char_list = spriteSheetBreaker(Font.fontsheet, 2, 2, 8, 13, 2, 1, 5, [10, 10, 10, 6, 10]) 
 
     def changeColor(color):
         if color != Font.COLOR:
