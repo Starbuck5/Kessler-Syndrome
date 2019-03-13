@@ -22,4 +22,8 @@ Title: powerlines
 Contributed by: Partners in Rhyme
 Changes: shortened significantly from original
 
-
+--shot sound
+(shot)
+https://www.freesoundeffects.com/free-track/gun-silencer-466513/
+Title: Gun Silencer
+Contributed by: Partners in Rhyme

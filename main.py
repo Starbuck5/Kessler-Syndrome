@@ -138,10 +138,9 @@ class FlashyBox:
             
 #collision detection for the portals            
 def portalcollision(object_list, portalcoords):
-    condition1 = portalcoords[0] < object_list[0] < portalcoords[0] + portalcoords[2] #if x is colliding
-    condition2 = portalcoords[1] < object_list[1] < portalcoords[1] + portalcoords[3] #if y is colliding
-    condition3 = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
-    if condition1 and condition2 and condition3:
+    condition1 = pygame.Rect(portalcoords).collidepoint((object_list[0], object_list[1]))
+    condition2 = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
+    if condition1 and condition2:
         return True
     else:
         return False
@@ -338,11 +337,12 @@ def main():
 
     #sound setup
     pygame.mixer.init()
-    SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.05)
-    SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.05)
+    SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.1)
+    SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.1)
     SoundVault("money", "Assets\\clink.wav")
     SoundVault("death", "Assets\\powerfailure.wav", volume=0.2)
     SoundVault("portal", "Assets\\electric.wav", volume=0.15)
+    SoundVault("shot", "Assets\\shot.wav", volume=0.25)
 
     # variable setup
     d_parts = [30]
@@ -356,8 +356,10 @@ def main():
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
-    sector_map_coordinates = [(960, 990), (820, 970), (1110, 980), (810, 840), (970, 830), (965, 690), (1115, 680), (830, 675), 
-        (1060, 525), (865, 535), (830, 400), (700, 630), (690, 455), (1095, 385), (1055, 250), (840, 245), (965, 415), (870, 105), (1030, 90)]  #locations for all sector icons on map screen, in order
+    #locations for all sector icons on map screen, in order
+    sector_map_coordinates = [(960, 990), (820, 970), (1110, 980), (810, 840), (970, 830), (965, 690), (1115, 680),
+                              (830, 675), (1060, 525), (865, 535), (830, 400), (700, 630), (690, 455), (1095, 385),
+                              (1055, 250), (840, 245), (965, 415), (870, 105), (1030, 90)]
 
     # class setup
     Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
@@ -624,6 +626,7 @@ def main():
                         object_list[5] -= step_r
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
+                        SoundVault.play('shot')
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
                         front_pointlist = RotatePoint(object_list[0], object_list[1],
