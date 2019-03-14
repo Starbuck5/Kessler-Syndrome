@@ -487,8 +487,7 @@ class Texthelper():
         text_location = text_input[0]
         
         click = mouse()
-        if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] <
-        (text_location[1] + y_range):
+        if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] <(text_location[1] + y_range):
             return True
         elif click == (0,0,0):
             return True

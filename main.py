@@ -29,8 +29,18 @@ def pointsToRect(pointlist):
     rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
     return rectangle
 
-#the nuts and bolts of printing the things    
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+#the nuts and bolts of printing the things
+def reorderObjectList(object_list):
+    newObject_list = []
+    for i in range(8):
+        for i2 in range(0, len(object_list), 8):
+            object_number = object_list[i+4]
+            if object_number == 100 and  i == 0:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            #if object_number =
+    
+def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, flame):
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -45,6 +55,15 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
         pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
         colliderect = pointsToRect(ship_pointlist)
+        if flame == True:
+            #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
+            flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3],
+                                [object_list[0], object_list[1]+20*scalar3],
+                                [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
+            flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
+            pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
+            pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
+        flame = False
         
     if object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
         pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 2, 0)
@@ -81,7 +100,7 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
     return colliderect
 
 #takes care of the printing logic
-def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics):
+def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame):
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
     left = pygame.Rect(-1,0,1,height)
@@ -96,7 +115,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
         rotation = object_list[i+5] #rotation position
 
         colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
-                                  specialpics)
+                                  specialpics, object_list, flame)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -109,7 +128,8 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
                 elif down.colliderect(colliderect):
                     ypos -= height
                 
-                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics)
+                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
+                            object_list, flame)
                 
             
 #flashing alerts for low fuel and armor
@@ -812,15 +832,7 @@ def main():
             Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
             if DEVMODE:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])            
-            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics)
-            if flame == True and (object_list[4] == 1 or object_list[4] == 5):
-                #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
-                flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3],
-                                   [object_list[0], object_list[1]+20*scalar3],
-                                   [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
-                flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
-                pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
-                pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
+            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame)
             flame = False
             pygame.display.flip()
             # printer and flame

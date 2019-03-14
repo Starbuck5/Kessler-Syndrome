@@ -3,8 +3,7 @@ waitTime = 175
 upgrades = Filehelper("assets\\upgrades.txt")
 
 def drawInventory(screen, inventory):
-    writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) +
-    "  currency:" + str(inventory[3])
+    writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
     Texthelper.write(screen, [(0, 0), writestring,3])
 
 #def drawBars()
@@ -48,8 +47,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
     pointName = UpgradeScreenStorage.pointName
     
     pygame.mouse.set_visible(True) #necessary?
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" +
-                              str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
     Texthelper.write(screen, [("center", 540-235), name + " upgrade", 6])
 
     if mode:
@@ -266,8 +264,7 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
     fuelpic = allRepairScreenStorage.fuelpic
     armorpic = allRepairScreenStorage.armorpic
 
-    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) +
-                              "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3]),3])
+    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3]),3])
     Texthelper.write(screen, [("center", 540-235), repairRefill + " " + name, 6])
 
     if mode:
@@ -302,8 +299,7 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
     if mode:
         timedFlip()
     if amountBox.currenttext[1] != "":
-        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0 and
-        int(amountBox.currenttext[1]) <= missingStat:
+        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0 and int(amountBox.currenttext[1]) <= missingStat:
             if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
                 currentStats[editingIndex] += int(amountBox.currenttext[1])
                 homeInventory[0] -= metalCost
@@ -402,10 +398,8 @@ def marketUI(screen, inventory, mode):
     if mode:
         timedFlip()
 
-    ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and
-    isoverfull(circuitbox, inventory[2])
-    sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] +
-    circuitbox.getIntText() * SELLVALUE[2]
+    ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and isoverfull(circuitbox, inventory[2])
+    sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] + circuitbox.getIntText() * SELLVALUE[2]
     if not ableToSell:
         Texthelper.write(screen, [(900, 670), "you cannot sell what you do not have", 1])
     if Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3]) and ableToSell:
@@ -415,10 +409,8 @@ def marketUI(screen, inventory, mode):
         inventory[3] += sellvalue
         marketStorage()
 
-    buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *
-    BUYVALUE[2]
-    if Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]) and
-    inventory[3] >= buyvalue:
+    buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *BUYVALUE[2]
+    if Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]) and inventory[3] >= buyvalue:
         inventory[0] += metalbox.getIntText()
         inventory[1] += gasbox.getIntText()
         inventory[2] += circuitbox.getIntText()
@@ -433,8 +425,7 @@ def marketUI(screen, inventory, mode):
 def garageUI(screen, ShipLv, homeInventory, mode):
     status = "garage"
     inventory = homeInventory
-    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) +
-    "  currency:" + str(inventory[3])
+    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
     Texthelper.write(screen, [(0, 0), largestring, 3])
     Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
     if mode:
