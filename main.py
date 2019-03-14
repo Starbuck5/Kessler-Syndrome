@@ -34,13 +34,38 @@ def reorderObjectList(object_list):
     newObject_list = []
     for i in range(8):
         for i2 in range(0, len(object_list), 8):
-            object_number = object_list[i+4]
+            object_number = object_list[i2+4]
             if object_number == 100 and  i == 0:
                 newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
                                    object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            #if object_number =
+            if object_number == 1 and i == 1:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if object_number == 5 and i == 2:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if object_number == 0 and i == 3:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if object_number == 6 and i == 4:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if 9 < object_number < 40 and i == 5:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if 69 < object_number < 100 and i == 6:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if (object_number == 2 or object_number == 8) and i == 7:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if object_number == 4 and i == 8:
+                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
+                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+    return newObject_list
     
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, object_list, flame):
+def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
+                object_list, flame, i):
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -57,10 +82,10 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         colliderect = pointsToRect(ship_pointlist)
         if flame == True:
             #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
-            flame_pointlist = [[object_list[0], object_list[1]], [object_list[0]+6*scalar3, object_list[1]+5*scalar3],
-                                [object_list[0], object_list[1]+20*scalar3],
-                                [object_list[0]-6*scalar3, object_list[1]+5*scalar3]]
-            flame_pointlist = Rotate(object_list[0], object_list[1], flame_pointlist, object_list[5])
+            flame_pointlist = [[object_list[i], object_list[i+1]], [object_list[i]+6*scalar3, object_list[i+1]+5*scalar3],
+                                [object_list[i], object_list[i+1]+20*scalar3],
+                                [object_list[i]-6*scalar3, object_list[i+1]+5*scalar3]]
+            flame_pointlist = Rotate(object_list[i], object_list[i+1], flame_pointlist, object_list[i+5])
             pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
             pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
         flame = False
@@ -101,6 +126,7 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
 
 #takes care of the printing logic
 def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame):
+    object_list = reorderObjectList(object_list)
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
     left = pygame.Rect(-1,0,1,height)
@@ -115,7 +141,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
         rotation = object_list[i+5] #rotation position
 
         colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
-                                  specialpics, object_list, flame)
+                                  specialpics, object_list, flame, i)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -129,7 +155,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                     ypos -= height
                 
                 crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
-                            object_list, flame)
+                            object_list, flame, i)
                 
             
 #flashing alerts for low fuel and armor
