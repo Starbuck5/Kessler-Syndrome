@@ -10,7 +10,8 @@ def particlemaker(xpos, ypos, xmom, ymom):
     max_deviation = 2
     printerlist_add = []
     for i in range(random.randint(max_particles - max_deviation, max_particles)):
-        printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom + ((random.randint(-20, 20))/random_factor), 4, "NA", "NA", particle_lifespan]      
+        printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom +
+                            ((random.randint(-20, 20))/random_factor), 4, "NA", "NA", particle_lifespan]  
     return printerlist_add
 
 #physics handling
@@ -80,7 +81,8 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
 #helps out by setting entities to reasonable speeds
 def asteroidspeedmaker(max_asteroid_spd):
     asteroid_speedset = []
-    if random.randint(0,1) == 1:# if else statements institute a minimum horizontal and vertical speed (separately) of half the asteroid high speed
+    # if else statements institute a minimum horizontal and vertical speed (separately) of half the asteroid high speed
+    if random.randint(0,1) == 1:
         asteroid_speedset.append(random.randint(int(max_asteroid_spd/2), max_asteroid_spd)/100)
     else:
         asteroid_speedset.append(random.randint(-1*max_asteroid_spd, int(-1*max_asteroid_spd/2))/100)
@@ -114,8 +116,10 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         else:
             idSelection = d_parts
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
-        object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0], asteroid_speedset[1]]
-        object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360), random.randint(-10,10), 1] 
+        object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
+                           asteroid_speedset[1]]
+        object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360),
+                            random.randint(-10,10), 1] 
         xdiff = object_list[0] - object_list_add[0]
         ydiff = object_list[1] - object_list_add[1]
         distance = ((xdiff ** 2) + (ydiff ** 2)) ** 0.5
@@ -357,5 +361,6 @@ class Asteroid():
             hitrange = 20
         if 89 < objectID < 100:
             hitrange = 25
-        return [xpos-hitrange*Asteroid.scalar2, ypos-hitrange*Asteroid.scalar2, hitrange*2*Asteroid.scalar2, hitrange*2*Asteroid.scalar2]
+        return [xpos-hitrange*Asteroid.scalar2, ypos-hitrange*Asteroid.scalar2, hitrange*2*Asteroid.scalar2,
+                hitrange*2*Asteroid.scalar2]
         

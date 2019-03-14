@@ -7,19 +7,22 @@ OS = "windows" #other option = "mac"
 #keyboard for continuous keypresses
 def keyboard():
     inputvar = []
-    keyboard_list = ["", "", "", "", "", "", "", "", "back", "tab", "", "", "", "enter", "", "", "", "", "", "pause break", "", "", "", "", "", "",
-                    "", "escape", "", "", "", "", "space", "", "", "", "", "", "", "", "", "", "", "", ",", "-", ".", "/", "0", "1", "2", "3", "4",
-                    "5", "6", "7", "8", "9", "", ";", "", "=", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "", "", "", "", "`", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
-                    "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "", "", "", "", "delete", "", "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8",
-                    "9", "delete", "/", "*", "-", "+", "enter", "", "uparrow", "downarrow", "rightarrow", "leftarrow", "insert", "home", "end",
-                    "page up", "page down", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "", "", "", "", "", "", "",
-                    "control", "", "shift", "shift", "control", "control", "", "alt", "", "", "windows", "", "", "", "", "", "", "", "", "", "", "",
-                    "", ""]
+    keyboard_list = ["", "", "", "", "", "", "", "", "back", "tab", "", "", "", "enter", "", "", "", "", "",
+                     "pause break", "", "", "", "", "", "","", "escape", "", "", "", "", "space", "", "", "", "", "",
+                     "", "", "", "", "", "", ",", "-", ".", "/", "0", "1", "2", "3", "4","5", "6", "7", "8", "9", "",
+                     ";", "", "=", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "", "", "", "", "", "", "`", "a", "b", "c", "d", "e", "f", "g", "h",
+                     "i", "j", "k", "l", "m", "n","o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "", "",
+                     "", "", "delete", "", "", "", "", "", "", "", "", "", "", "","", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "","", "",
+                     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "","", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "", "", "", "", "","", "", "", "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8","9", "delete", "/",
+                     "*", "-", "+", "enter", "", "uparrow", "downarrow", "rightarrow", "leftarrow", "insert", "home",
+                     "end","page up", "page down", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11",
+                     "f12", "", "", "", "", "", "", "","control", "", "shift", "shift", "control", "control", "", "alt",
+                     "", "", "windows", "", "", "", "", "", "", "", "", "", "", "", "", ""]
 
     if pygame.key.get_focused():
         raw_input = pygame.key.get_pressed()
@@ -137,8 +140,9 @@ pygame.draw.rect(missingTexture, (0,0,0), (2,10,2,2), 0)
 pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 
 class Font():
-    char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-                  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]", "?", "+", "%", "|", "-", "&"]
+    char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+                  "k", "l", "m", "n", "o","p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]",
+                  "?", "+", "%", "|", "-", "&"]
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
@@ -296,10 +300,10 @@ class AnnouncementBox():
 
     def _draw(self, screen):
         screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
-        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.width*0.4),
-                                                 round(AnnouncementBox.height*0.1)), 4)
-        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1),
-                                                 round(AnnouncementBox.height*0.1)), 4)
+        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
+                                                 round(AnnouncementBox.width*0.4),round(AnnouncementBox.height*0.1)), 4)
+        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
+                                                 round(AnnouncementBox.height*0.1),round(AnnouncementBox.height*0.1)), 4)
         words = int(self.time/20)
         if words >= sum(self.lineelements):
             self.ended = True
@@ -307,7 +311,9 @@ class AnnouncementBox():
         line = 0
         while words > 0:
             if words >= self.lineelements[line]:
-                Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)), self.linedtext[line], 2])
+                Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
+                                           round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
+                                          self.linedtext[line], 2])
                 words -= self.lineelements[line]
                 line += 1
             if words > 0:
@@ -315,11 +321,14 @@ class AnnouncementBox():
                     text = self.linedtext[line].split()
                     text = text[:words]
                     text = " ".join(text)
-                    Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)), text, 2])
+                    Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
+                                               round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
+                                              text, 2])
                     words = 0
                     line += 1                                
         if self.ended:
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.21)), "Press Enter to Continue", 1.5])
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.21)),
+                                      "Press Enter to Continue", 1.5])
             inputvar = keyboard()
             if "enter" in inputvar:
                 del AnnouncementBox.upcoming[0]
@@ -363,7 +372,8 @@ class Texthelper():
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
             if text[i] == " " and text[i-1] != " " and i != 0:
-                horizontal_pos += 3 * scale #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
+                horizontal_pos += 3 * scale
+                #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
             if text[i] == " " and text[i-1] == " " and i != 0:
                 horizontal_pos += 11 * scale
 
@@ -477,7 +487,8 @@ class Texthelper():
         text_location = text_input[0]
         
         click = mouse()
-        if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] < (text_location[1] + y_range):
+        if text_location[0] < click[1] < (text_location[0] + x_range) and text_location[1] < click[2] <
+        (text_location[1] + y_range):
             return True
         elif click == (0,0,0):
             return True

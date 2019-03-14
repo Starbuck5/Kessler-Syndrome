@@ -45,15 +45,21 @@ def level1(screen, width, height):
             Texthelper.write(screen, [("center", ypos + line_spacing * i), opening_crawl[i], 3])
 
         screen.blit(soyuz, (xpos, ypos + line_spacing * len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos-4*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+6*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+10*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+20*soyuzscalar, ypos+soyuzsize[1] + line_spacing * len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos-4*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+                                        len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+6*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+                                        len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+10*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+                                        len(opening_crawl) + 100))
+        screen.blit(randomflame(ypos), (xpos+20*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+                                        len(opening_crawl) + 100))
 
         
         if ypos + line_spacing * len(opening_crawl) + 400 > height/2-100:
-            namebox.currenttext = [("center", ypos + line_spacing * len(opening_crawl) + 450), namebox.getData()[1], namebox.getData()[2]]
-            Texthelper.write(screen, [("center", ypos + line_spacing * len(opening_crawl) + 400), "enter name to continue", 2])
+            namebox.currenttext = [("center", ypos + line_spacing * len(opening_crawl) + 450), namebox.getData()[1],
+                                   namebox.getData()[2]]
+            Texthelper.write(screen, [("center", ypos + line_spacing * len(opening_crawl) + 400),
+                                      "enter name to continue", 2])
         else:
             namebox.clicked = True
             namebox.currenttext = [("center", height/2-50), namebox.getData()[1], namebox.getData()[2]]

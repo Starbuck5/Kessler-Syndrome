@@ -438,16 +438,20 @@ def main():
                     if connections[j] != -1:
                         if j == 0:
                             line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] + 40, sector_map_coordinates[connections[j] - 1][1])
+                            line_end = (sector_map_coordinates[connections[j] - 1][0] + 40,
+                                        sector_map_coordinates[connections[j] - 1][1])
                         elif j == 1:
                             line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0], sector_map_coordinates[connections[j] - 1][1] + 40)
+                            line_end = (sector_map_coordinates[connections[j] - 1][0],
+                                        sector_map_coordinates[connections[j] - 1][1] + 40)
                         elif j == 2:
                             line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] - 40, sector_map_coordinates[connections[j] - 1][1])
+                            line_end = (sector_map_coordinates[connections[j] - 1][0] - 40,
+                                        sector_map_coordinates[connections[j] - 1][1])
                         elif j == 3:
                             line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0], sector_map_coordinates[connections[j] - 1][1] - 40)
+                            line_end = (sector_map_coordinates[connections[j] - 1][0],
+                                        sector_map_coordinates[connections[j] - 1][1] - 40)
                         pygame.draw.aaline(screen, line_color, line_start, line_end)
 
             status = mapscreenUI(screen)            
@@ -479,7 +483,8 @@ def main():
                     status = "game"
 
                 for i in range(len(sector_map_coordinates)):
-                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i + 1)) * 10, sector_map_coordinates[i][1] - 15), str(i + 1), 2]):
+                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i + 1)) * 10,
+                                                        sector_map_coordinates[i][1] - 15), str(i + 1), 2]):
                         saveGame(sectornum, object_list, width, height)
                         sectornum = i + 1
                         lasttransit = 0
