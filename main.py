@@ -29,43 +29,34 @@ def pointsToRect(pointlist):
     rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
     return rectangle
 
-#the nuts and bolts of printing the things
+#reorders the list so it will print in the correct order
 def reorderObjectList(object_list):
     newObject_list = []
-    for i in range(8):
+    for i in range(9):
         for i2 in range(0, len(object_list), 8):
             object_number = object_list[i2+4]
-            if object_number == 100 and  i == 0:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if object_number == 1 and i == 1:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if object_number == 5 and i == 2:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if object_number == 0 and i == 3:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if object_number == 6 and i == 4:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if 9 < object_number < 40 and i == 5:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if 69 < object_number < 100 and i == 6:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if (object_number == 2 or object_number == 8) and i == 7:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
-            if object_number == 4 and i == 8:
-                newObject_list += [object_list[i2], object_list[i2+1], object_list[i2+2], object_list[i2+3], object_list[i2+4],
-                                   object_list[i2+5], object_list[i2+6], object_list[i2+7]]
+            if object_number == 100 and  i == 0: #star
+                newObject_list += object_list[i2:i2+8]
+            if object_number == 1 and i == 1: #ship
+                newObject_list += object_list[i2:i2+8]
+            if object_number == 5 and i == 2: #shielded ship
+                newObject_list += object_list[i2:i2+8]
+            if object_number == 0 and i == 3: #zvezda
+                newObject_list += object_list[i2:i2+8]
+            if object_number == 6 and i == 4: #alien
+                newObject_list += object_list[i2:i2+8]
+            if 9 < object_number < 40 and i == 5: #pixel things
+                newObject_list += object_list[i2:i2+8]
+            if 69 < object_number < 100 and i == 6: #asteroids
+                newObject_list += object_list[i2:i2+8]
+            if (object_number == 2 or object_number == 8) and i == 7: #shots
+                newObject_list += object_list[i2:i2+8]
+            if object_number == 4 and i == 8: #explosion effects
+                newObject_list += object_list[i2:i2+8]
     return newObject_list
-    
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
-                object_list, flame, i):
+
+#the nuts and bolts of printing the things    
+def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame): 
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -82,10 +73,10 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         colliderect = pointsToRect(ship_pointlist)
         if flame == True:
             #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
-            flame_pointlist = [[object_list[i], object_list[i+1]], [object_list[i]+6*scalar3, object_list[i+1]+5*scalar3],
-                                [object_list[i], object_list[i+1]+20*scalar3],
-                                [object_list[i]-6*scalar3, object_list[i+1]+5*scalar3]]
-            flame_pointlist = Rotate(object_list[i], object_list[i+1], flame_pointlist, object_list[i+5])
+            flame_pointlist = [[xpos, ypos], [xpos+6*scalar3, ypos+5*scalar3],
+                                [xpos, ypos+20*scalar3],
+                                [xpos-6*scalar3, ypos+5*scalar3]]
+            flame_pointlist = Rotate(xpos, ypos, flame_pointlist, rotation)
             pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
             pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
         flame = False
@@ -118,9 +109,11 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
                        image.get_height()]
         
     if 69 < object_number < 100: #draws asteroids
-        AsteroidList = Asteroid.getPoints(xpos, ypos, object_number)
-        newAsteroidList = Rotate(xpos, ypos, AsteroidList, rotation)
-        colliderect = pygame.draw.aalines(screen, (255,255,255), True, newAsteroidList, 4)
+        asteroid_pointlist = Asteroid.getPoints(xpos, ypos, object_number)
+        asteroid_pointlist = Rotate(xpos, ypos, asteroid_pointlist, rotation)
+        pygame.gfxdraw.aapolygon(screen, asteroid_pointlist, (82,85,86))
+        pygame.gfxdraw.filled_polygon(screen, asteroid_pointlist, (82,85,86))
+        colliderect = pointsToRect(asteroid_pointlist)
 
     return colliderect
 
@@ -141,7 +134,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
         rotation = object_list[i+5] #rotation position
 
         colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
-                                  specialpics, object_list, flame, i)
+                                  specialpics, flame)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -155,7 +148,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                     ypos -= height
                 
                 crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
-                            object_list, flame, i)
+                            flame)
                 
             
 #flashing alerts for low fuel and armor
@@ -839,7 +832,8 @@ def main():
             #physics!
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
-            # printer and flame
+            # printer
+            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
             inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
@@ -858,10 +852,9 @@ def main():
             Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
             if DEVMODE:
                 Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])            
-            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame)
             flame = False
             pygame.display.flip()
-            # printer and flame
+            # printer
         
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
