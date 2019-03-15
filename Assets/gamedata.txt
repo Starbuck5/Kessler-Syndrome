@@ -1,5 +1,5 @@
 [1920, 1080, True, 2]#game info: width, height, fullscreen, gamestate
-[placeholder]#player info: name
+[placeholder, False]#player info: name, cleared first sector
 [93, 69, 100, 100]#inventory: metal, gas, circuits, currency, torpedoes(collected from debris)
 [10, 10, 10, 0]#level info: armor lv, fuel tank lv, torpedo lv
 [19, 1099, 0]#ship info: armor points, fuel points, torpedoes(able to use)

@@ -384,6 +384,7 @@ def main():
     SoundVault("shot", "Assets\\shot.wav", volume=0.25)
 
     # variable setup
+    playerinfo = filehelper.get(1)
     d_parts = [30]
     d_sats = [10, 11, 12, 13]
     d_asteroids = [71, 72, 73, 80, 81, 82, 91]
@@ -793,6 +794,13 @@ def main():
             if numdebris == 0 and lastnumdebris > 0:
                 shipInventory[3] += 100 #adds 100 credits to ship inventory
                 SoundVault.play('money')
+                if not playerinfo[1]:
+                    playerinfo[1] = True
+                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Nice job clearing your first sector, here's some cash. Don't get lazy now!")
+                    filehelper.set(playerinfo, 1)
+
             lastnumdebris = numdebris
 
             # deaderizer
