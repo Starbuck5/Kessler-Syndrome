@@ -396,6 +396,8 @@ def main():
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
+    portal_toggle = False
+    timer_portal_toggle = 0
     #locations for all sector icons on map screen, in order
     sector_map_coordinates = [(960, 990), (820, 970), (1110, 980), (810, 840), (970, 830), (965, 690), (1115, 680),
                               (830, 675), (1060, 525), (865, 535), (830, 400), (700, 630), (690, 455), (1095, 385),
@@ -421,6 +423,8 @@ def main():
         timer_popupmenu = min(timer_popupmenu, 10000)
         timer_shipdeath += 1
         timer_shipdeath = min(timer_shipdeath, 10000)
+        timer_portal_toggle += 1
+        timer_portal_toggle = min(timer_portal_toggle, 10000)
      
         if status == "menuinit":
             pygame.mouse.set_visible(True)
@@ -692,23 +696,6 @@ def main():
                         timer_popupmenu = 0
                         status = "pauseinit"
                 lasttransit += 1
-                if "a" in inputvar and "d" in inputvar:
-                    destinations = sectorDestinations(sectornum)
-                    for i in range(4):
-                        if destinations[i] != -1:
-                            pygame.draw.rect(screen, (120,22,78), portalcoords[i])
-                            if portalcollision(object_list, portalcoords[i]) and lasttransit > 150:
-                                SoundVault.play('portal')
-                                saveGame(sectornum, object_list, width, height)
-                                sectornum = destinations[i]
-                                lasttransit = 0
-                                new_objects = getObjects(sectornum, width, height)
-                                lastnumdebris = 0
-                                if new_objects[0] == -1 and len(new_objects)<8:
-                                    object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                                          d_sats, d_parts, d_asteroids)
-                                else:
-                                    object_list = object_list[:8] + new_objects[8:]
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
                     DEVMODE = not DEVMODE #switches booleans
                     previous_tick2 = ticks
@@ -718,6 +705,9 @@ def main():
                         colorA = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     Font.changeColor(colorA)
                     previous_tick2 = ticks
+                if "t" in inputvar and timer_portal_toggle > 30:
+                    portal_toggle = not portal_toggle
+                    timer_portal_toggle = 0
             # input handling
 
             # collision detection                         
@@ -781,8 +771,24 @@ def main():
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
                         object_list += printerlist_add
-                    i2 += 1
-                        
+                    i2 += 1            
+            if portal_toggle: # ship collision with portal
+                destinations = sectorDestinations(sectornum)
+                for i in range(4):
+                    if destinations[i] != -1:
+                        pygame.draw.rect(screen, (120,22,78), portalcoords[i])
+                        if portalcollision(object_list, portalcoords[i]) and lasttransit > 150:
+                            SoundVault.play('portal')
+                            saveGame(sectornum, object_list, width, height)
+                            sectornum = destinations[i]
+                            lasttransit = 0
+                            new_objects = getObjects(sectornum, width, height)
+                            lastnumdebris = 0
+                            if new_objects[0] == -1 and len(new_objects)<8:
+                                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                                      d_sats, d_parts, d_asteroids)
+                            else:
+                                object_list = object_list[:8] + new_objects[8:]
             # collision detection
 
             # reward for killing a sector
@@ -796,7 +802,7 @@ def main():
                 if not playerinfo[1]:
                     playerinfo[1] = True
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                    pygame.mixer.Sound(file="Assets\\announcements\\reward2.wav"),
+                                    pygame.mixer.Sound(file="Assets\\announcements\\reward2.wav"),                             
                                     "Nice job clearing your first sector, here's some cash. Don't get lazy now!")
                     filehelper.set(playerinfo, 1)
 
