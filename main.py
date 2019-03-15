@@ -429,8 +429,7 @@ def main():
 
         if status == "menu": #if game is in menu
             # actual text
-            text_input = [(300, 540-200), "Kessler Syndrome", 7]
-            Texthelper.write(screen, text_input)
+            Texthelper.write(screen, [(300, 540-200), "Kessler Syndrome", 7])
             
             # buttons
             text_input = [(410, 540-50), "[Play]", 3]
@@ -797,8 +796,8 @@ def main():
                 if not playerinfo[1]:
                     playerinfo[1] = True
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                "Nice job clearing your first sector, here's some cash. Don't get lazy now!")
+                                    pygame.mixer.Sound(file="Assets\\announcements\\reward2.wav"),
+                                    "Nice job clearing your first sector, here's some cash. Don't get lazy now!")
                     filehelper.set(playerinfo, 1)
 
             lastnumdebris = numdebris

@@ -142,7 +142,7 @@ pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o","p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]",
-                  "?", "+", "%", "|", "-", "&"]
+                  "?", "+", "%", "|", "-", "&", ".", "\'", "!"]
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
@@ -156,7 +156,7 @@ class Font():
         Font.splitSheet(fontsheet)
 
     def splitSheet(fontsheet):
-        Font.char_list = spriteSheetBreaker(Font.fontsheet, 2, 2, 8, 13, 2, 1, 5, [10, 10, 10, 6, 10]) 
+        Font.char_list = spriteSheetBreaker(Font.fontsheet, 2, 2, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 3]) 
 
     def changeColor(color):
         if color != Font.COLOR:
@@ -341,7 +341,8 @@ class Texthelper():
     scalar = 1
     width = 1
     height = 1
-    lastPressTime = 0 
+    lastPressTime = 0
+    HALFSIZERS = ["\'", ".", ":" ",", "!"]
 
     #part of the input sanitizing process: figures out how to center text mainly
     def _interpretcoords(text_input):
@@ -367,14 +368,18 @@ class Texthelper():
         text_location, text, scale = text_input
         horizontal_pos = text_location[0]
         for i in range(len(text)):
-            if text[i] != " ":
+            if text[i] != " " and not text[i] in Texthelper.HALFSIZERS:
                 text3 = Font.getChar(text[i], scale)                
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 11 * scale
-            if text[i] == " " and text[i-1] != " " and i != 0:
+            elif text[i] in Texthelper.HALFSIZERS:
+                text3 = Font.getChar(text[i], scale)
+                screen.blit(text3, (horizontal_pos, text_location[1]))
+                horizontal_pos += 5 * scale                
+            elif text[i] == " " and text[i-1] != " " and i != 0:
                 horizontal_pos += 3 * scale
                 #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
-            if text[i] == " " and text[i-1] == " " and i != 0:
+            elif text[i] == " " and text[i-1] == " " and i != 0:
                 horizontal_pos += 11 * scale
 
     #takes in whatever shit we tell it too and makes it standardized
@@ -414,13 +419,15 @@ class Texthelper():
         scale = text_input[2]
         x_range = 0
         for i in range(len(text)):
-            if text[i] != " ":
+            if text[i] != " " and not text[i] in Texthelper.HALFSIZERS:
                 x_range += 11 * scale
-            elif text[i-1] != " " and text[i] == " " and i != 0:
+            elif text[i] in Texthelper.HALFSIZERS:
+                x_range += 5 * scale                
+            elif text[i] == " " and text[i-1] != " " and i != 0:
                 x_range += 3 * scale
+                #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
             elif text[i] == " " and text[i-1] == " " and i != 0:
                 x_range += 11 * scale
-        x_range -= 3 * scale
         return x_range
 
     #tests if mouse is clicked inside the rectangle
