@@ -8,9 +8,10 @@ def drawInventory(screen, inventory):
 
 #def drawBars()
 
-def timedFlip():
-    pygame.display.flip()
-    pygame.time.wait(waitTime)
+def timedFlip(mode):
+    if mode:
+        pygame.display.flip()
+        pygame.time.wait(waitTime)
 
 class UpgradeScreenStorage():
     currentStat = -1
@@ -34,8 +35,8 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
             driveHead = 40
             editingIndex = 2
             pointName = "ammo"
-        UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[0]+driveHead)[4] 
-        UpgradeScreenStorage.cost = upgrades.get(ShipLv[0]+driveHead+1)
+        UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[editingIndex]+driveHead)[4] 
+        UpgradeScreenStorage.cost = upgrades.get(ShipLv[editingIndex]+driveHead+1)
         UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
         UpgradeScreenStorage.editingIndex = editingIndex
         UpgradeScreenStorage.pointName = pointName
@@ -49,28 +50,23 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
     pygame.mouse.set_visible(True) #necessary?
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
     Texthelper.write(screen, [("center", 540-235), name + " upgrade", 6])
+    timedFlip(mode)     
 
-    if mode:
-        timedFlip()       
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[0]) + " +1   " + "Stats: " + str(currentStat) +
+    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[editingIndex]) + " +1   " + "Stats: " + str(upgrades.get(ShipLv[editingIndex] + editingIndex * 20)[4]) +
                               " +" + str(addedStat) + " " + pointName, 3])
-    
-    if mode:
-        timedFlip()        
+    timedFlip(mode)         
+
     Texthelper.write(screen, [("center", 540), "cost:", 3])
-    
-    if mode:
-        timedFlip()
+    timedFlip(mode) 
+
     Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
     Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
+    timedFlip(mode) 
 
-    if mode:
-        timedFlip()       
     Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
     Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
+    timedFlip(mode)     
 
-    if mode:
-        timedFlip()        
     if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
         if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
             inventory[0] -= cost[0]
@@ -83,9 +79,8 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
             filehelper.set(ShipLv, 3)
     else:
         Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-
-    if mode:
-        timedFlip()        
+    timedFlip(mode)       
+     
     if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "garageinit"
     
@@ -160,8 +155,7 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     armorpic = repairScreenStorage.armorpic
     currentarmor, currentfuel, ammunition = currentStats
     totalarmor, totalfuel, totalammunition = totalStats
-    if mode:
-        timedFlip()
+    timedFlip(mode)
         
     #armor
     screen.blit(armorpic, (1600, 930))
@@ -170,8 +164,7 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     Texthelper.write(screen, [(600, 540-55), "Armor:", 3])   
     if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
         status = "armorRepairinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     #fuel
     screen.blit(fuelpic, (1600, 1000))
@@ -180,16 +173,14 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     Texthelper.write(screen, [(600, 540), "Fuel:", 3])   
     if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
         status = "fuelRefillinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     #ammunition
     Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
     Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3])  
     if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
         status = "ammoRefillinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
         
     if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
@@ -267,37 +258,31 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
     Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3]),3])
     Texthelper.write(screen, [("center", 540-235), repairRefill + " " + name, 6])
 
-    if mode:
-        timedFlip()       
+    timedFlip(mode)      
     Texthelper.write(screen, [("center", 540-110),  "missing: " + str(missingStat) + " " + pointName, 3])
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     Texthelper.write(screen, [("center", 540),  "cost:", 3])
     screen.blit(armorpic, (1600, 930))
     pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
     pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     Texthelper.write(screen, [(700, 540+55),  str(metalCost) + " metal" , 3])
     Texthelper.write(screen, [(1100, 540+55),  str(gasCost) + " gas" , 3])
     screen.blit(fuelpic, (1600, 1000))
     pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
     pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     Texthelper.write(screen, [("center", 540+110),  "amount:" , 3])
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     amountBox.currenttext = [("center", 540+165), amountBox.getData()[1], amountBox.getData()[2]]
     amountBox.update(screen)
     allRepairScreenStorage.amountBox = amountBox
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     if amountBox.currenttext[1] != "":
         if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0 and int(amountBox.currenttext[1]) <= missingStat:
             if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
@@ -320,8 +305,7 @@ def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory,
             Texthelper.write(screen, [("center", 540+220), "full", 3])
         Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
 
-    if mode:
-        timedFlip()
+    timedFlip(mode)
     if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "shopinit"
 
@@ -378,25 +362,21 @@ def marketUI(screen, inventory, mode):
     
     drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-235), "market", 6])
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     status = "market"
 
     Texthelper.write(screen, [(500, 430), "metal:", 3])
     plusminusrow(screen, metalbox, 430)
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     Texthelper.write(screen, [(500, 485), "gas:", 3])
     plusminusrow(screen, gasbox, 485)
-    if mode:
-        timedFlip()
+    timedFlip(mode)
         
     Texthelper.write(screen, [(500, 540), "circuits:", 3])
     plusminusrow(screen, circuitbox, 540)
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and isoverfull(circuitbox, inventory[2])
     sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] + circuitbox.getIntText() * SELLVALUE[2]
@@ -428,20 +408,17 @@ def garageUI(screen, ShipLv, homeInventory, mode):
     largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
     Texthelper.write(screen, [(0, 0), largestring, 3])
     Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     Texthelper.write(screen, [(600, 540-55), "Armor: lv " + str(ShipLv[0]), 3])
     if Texthelper.writeButton(screen, [(1000, 540-55), "Upgrade", 3]):
         status = "armorUpgradeinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     Texthelper.write(screen, [(635, 540), "Fuel: lv " + str(ShipLv[1]), 3])
     if Texthelper.writeButton(screen, [(1000, 540), "Upgrade", 3]):
         status = "fuelUpgradeinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     Texthelper.write(screen, [(470, 540+55), "torpedoes: lv " + str(ShipLv[2]), 3])
     if ShipLv[2] != 0:
@@ -449,8 +426,7 @@ def garageUI(screen, ShipLv, homeInventory, mode):
             status = "ammoUpgradeinit"    
     else:
         Texthelper.write(screen, [(1000, 540+55), "locked", 3])
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
         status = "homeinit"
@@ -577,23 +553,19 @@ def home(screen):
 def drawPauseUI(screen, mode):
     status = "paused"
     Texthelper.write(screen, [("center", 540-136), "Paused", 6])
-    if mode:
-        timedFlip()
+    timedFlip(mode)
         
     if Texthelper.writeButton(screen, [("center", 540-55), "Resume", 2]):
         status = "game"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 540-20), "Restart", 2]):
         status = "gameinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
         status = "menuinit"
-    if mode:
-        timedFlip()
+    timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 540+50), "Quit to desktop", 2]):
         status = "exiting"
