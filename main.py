@@ -30,31 +30,21 @@ def pointsToRect(pointlist):
     return rectangle
 
 #reorders the list so it will print in the correct order
+background = [100]
+ship = [1,5]
 def reorderObjectList(object_list):
     newObject_list = []
-    for i in range(9):
-        for i2 in range(0, len(object_list), 8):
-            object_number = object_list[i2+4]
-            if object_number == 100 and  i == 0: #star
-                newObject_list += object_list[i2:i2+8]
-            if object_number == 1 and i == 1: #ship
-                newObject_list += object_list[i2:i2+8]
-            if object_number == 5 and i == 2: #shielded ship
-                newObject_list += object_list[i2:i2+8]
-            if object_number == 0 and i == 3: #zvezda
-                newObject_list += object_list[i2:i2+8]
-            if object_number == 6 and i == 4: #alien
-                newObject_list += object_list[i2:i2+8]
-            if 9 < object_number < 40 and i == 5: #pixel things
-                newObject_list += object_list[i2:i2+8]
-            if 69 < object_number < 100 and i == 6: #asteroids
-                newObject_list += object_list[i2:i2+8]
-            if (object_number == 2 or object_number == 8) and i == 7: #shots
-                newObject_list += object_list[i2:i2+8]
-            if object_number == 4 and i == 8: #explosion effects
-                newObject_list += object_list[i2:i2+8]
+    for i in range(3):
+        for j in range(0, len(object_list), 8):
+            object_number = object_list[j+4]
+            if object_number in background and i == 0:
+                newObject_list += object_list[j:j+8]
+            elif object_number in ship and i == 1:
+                newObject_list += object_list[j:j+8]
+            elif object_number not in ship and object_number not in background and i == 2:
+                newObject_list += object_list[j:j+8]
     return newObject_list
-
+        
 #the nuts and bolts of printing the things    
 def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame): 
     colliderect = ""
@@ -507,7 +497,6 @@ def main():
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
                 timer_popupmenu = 0
-                pygame.mouse.set_visible(False)
 
             if DEVMODE:
                 if Texthelper.writeButton(screen, [(180, 600), "[teleport home]", 2.5]):
@@ -541,6 +530,9 @@ def main():
                         object_list[2] = 0  #kills momentum
                         object_list[3] = 0
                         status = "game"
+
+            if status == "game":
+                pygame.mouse.set_visible(False)
 
             pygame.display.flip()
 
