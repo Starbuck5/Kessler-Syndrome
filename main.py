@@ -12,22 +12,14 @@ from UIscreens import *
 
 #takes a pointlist and returns a bounding box rectangle
 def pointsToRect(pointlist):
-    xmin = 10000
-    xmax = -10000
-    ymin = 10000
-    ymax = -10000
-    for i in range(len(pointlist)):
-        x, y = pointlist[i]
-        if x<xmin:
-            xmin=x
-        if x>xmax:
-            xmax=x
-        if y<ymin:
-            ymin=y
-        if y>ymax:
-            ymax=y
-    rectangle = pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
-    return rectangle
+    xmin, xmax = (10000, -10000)
+    ymin, ymax = xmin, xmax
+    for x, y in pointlist:
+        xmin = min(xmin, x)
+        xmax = max(xmax, x)
+        ymin = min(ymin, y)
+        ymax = max(ymax, y)
+    return pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
 
 #reorders the list so it will print in the correct order
 background = [100]
