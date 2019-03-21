@@ -69,7 +69,7 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
                 object_list[3 + i] = max_speed
             if object_list[3 + i] < -1 * max_speed:
                 object_list[3 + i] = -1 * max_speed
-
+        
         #rotation
         if not isinstance(object_list[5+i], str):
             object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
@@ -144,7 +144,6 @@ sectorDestData = {1: [2, 5, 3, -1], 2: [-1, 4, 1, -1], 3: [1, -1, -1, -1], 4: [-
                   6: [8, -1, 7, 5], 7: [6, 9, -1, -1], 8: [12, 10, 6, -1], 9: [10, 14, -1, 7], 10: [-1, 11, 9, 8],
                   11: [13, 16, 17, 10], 12: [-1, 13, 8, -1], 13: [-1, -1, 11, 12], 14: [-1, 15, -1, 9], 15: [16, -1, -1, 14],
                   16: [-1, 18, 15, 11], 17: [11, -1, -1, -1], 18: [-1, -1, 19, 16], 19: [18, -1, -1, -1]}
-
 
 def sectorDestinations(sectornum):
     #[left, up, right, down]
@@ -227,45 +226,26 @@ def satelliteDrops():
     return drops
 
 def makeAsteroidList(scalar2): #generates a list of offsets for all of the separate asteroid designs
-    asteroidlist = [[[17*scalar2, 1*scalar2], [12*scalar2, 8*scalar2], [-2*scalar2, 17*scalar2],
-                     [-8*scalar2, 11*scalar2], [-16*scalar2, 3*scalar2], [-14*scalar2, -7*scalar2],
-                     [-4*scalar2, -17*scalar2], [10*scalar2, -10*scalar2]],
-                    [[16*scalar2, -3*scalar2], [12*scalar2, 10*scalar2], [-2*scalar2, 17*scalar2],
-                     [-10*scalar2, 14*scalar2], [-19*scalar2, -2*scalar2], [-8*scalar2, -13*scalar2],
-                     [2*scalar2, -16*scalar2], [8*scalar2, -12*scalar2]],
-                    [[16*scalar2, 3*scalar2], [7*scalar2, 13*scalar2], [-8*scalar2, 14*scalar2],
-                     [-18*scalar2, 4*scalar2], [-11*scalar2, -11*scalar2], [-3*scalar2, -16*scalar2],
-                     [11*scalar2, -9*scalar2]],
-                    [[18*scalar2, 0], [10*scalar2, -10*scalar2], [0*scalar2, -17*scalar2],
-                     [-13*scalar2, -12*scalar2], [-20*scalar2, 0], [-11*scalar2, 11*scalar2],
-                     [0*scalar2, 13*scalar2], [14*scalar2, 12*scalar2]],
+    asteroidlist = [[[17, 1], [12, 8], [-2, 17], [-8, 11], [-16, 3], [-14, -7], [-4, -17], [10, -10]],
+                    [[16, -3], [12, 10], [-2, 17], [-10, 14], [-19, -2], [-8, -13], [2, -16], [8, -12]],
+                    [[16, 3], [7, 13], [-8, 14], [-18, 4], [-11, -11], [-3, -16], [11, -9]],
+                    [[18, 0], [10, -10], [0, -17], [-13, -12], [-20, 0], [-11, 11], [0, 13], [14, 12]],
                     "4", "5", "6", "7", "8", "9",
-                    [[26*scalar2, -3*scalar2], [20*scalar2, 10*scalar2], [4*scalar2, 21*scalar2],
-                     [-8*scalar2, 9*scalar2], [-8*scalar2, 10*scalar2], [-18*scalar2, 14*scalar2],
-                     [-26*scalar2, 10*scalar2], [-25*scalar2, -1*scalar2], [-9*scalar2, -18*scalar2],
-                     [10*scalar2, -12*scalar2], [19*scalar2, -16*scalar2]],
-                    [[24*scalar2, 2*scalar2], [11*scalar2, 9*scalar2], [4*scalar2, 24*scalar2],
-                     [-9*scalar2, 19*scalar2], [-22*scalar2, 5*scalar2], [-13*scalar2, -20*scalar2],
-                     [3*scalar2, -24*scalar2], [18*scalar2, -13*scalar2]],
-                    [[23*scalar2, -1*scalar2], [16*scalar2, 19*scalar2], [-4*scalar2, 26*scalar2],
-                     [-13*scalar2, 13*scalar2], [-26*scalar2, 3*scalar2], [-17*scalar2, -20*scalar2],
-                     [-4*scalar2, -23*scalar2], [16*scalar2, -14*scalar2]],
-                    [[27*scalar2, 0], [15*scalar2, -15*scalar2], [0*scalar2, -25*scalar2],
-                     [-21*scalar2, -15*scalar2], [-22*scalar2, 0],
-                     [-19*scalar2, 15*scalar2], [0*scalar2, 24*scalar2], [21*scalar2, 17*scalar2]],
+                    [[26, -3], [20, 10], [4, 21], [-8, 9], [-8, 10], [-18, 14], [-26, 10], [-25, -1], [-9, -18], [10, -12], [19, -16]],
+                    [[24, 2], [11, 9], [4, 24], [-9, 19], [-22, 5], [-13, -20], [3, -24], [18, -13]],
+                    [[23, -1], [16, 19], [-4, 26], [-13, 13], [-26, 3], [-17, -20], [-4, -23], [16, -14]],
+                    [[27, 0], [15, -15], [0, -25], [-21, -15], [-22, 0], [-19, 15], [0, 24], [21, 17]],
                     "14", "15", "16", "17", "18", "19",
-                    [[33*scalar2, -4*scalar2], [27*scalar2, 23*scalar2], [-6*scalar2, 30*scalar2],
-                     [-18*scalar2, 24*scalar2], [-32*scalar2, 5*scalar2], [-25*scalar2, -18*scalar2],
-                     [6*scalar2, -30*scalar2], [20*scalar2, -22*scalar2]],
-                    [[20*scalar2, 0], [24*scalar2, 24*scalar2], [-8*scalar2, 32*scalar2], [-23*scalar2, 18*scalar2],
-                     [-33*scalar2, 5*scalar2], [-26*scalar2, -28*scalar2], [3*scalar2, -33*scalar2],
-                     [27*scalar2, -22*scalar2]],
-                    [[30*scalar2, 0], [26*scalar2, -22*scalar2], [3*scalar2, -33*scalar2],
-                     [-22*scalar2, -22*scalar2], [-38*scalar2, 0], [-27*scalar2, 22*scalar2],
-                     [3*scalar2, 34*scalar2], [30*scalar2, 23*scalar2]],
-                    [[39*scalar2, 0], [29*scalar2, -22*scalar2], [0, -35*scalar2], [-28*scalar2, -20*scalar2],
-                     [-37*scalar2, 0], [-24*scalar2, 23*scalar2], [0, 35*scalar2], [19*scalar2, 22*scalar2]],
+                    [[33, -4], [27, 23], [-6, 30], [-18, 24], [-32, 5], [-25, -18], [6, -30], [20, -22]],
+                    [[20, 0], [24, 24], [-8, 32], [-23, 18], [-33, 5], [-26, -28], [3, -33], [27, -22]],
+                    [[30, 0], [26, -22], [3, -33], [-22, -22], [-38, 0], [-27, 22], [3, 34], [30, 23]],
+                    [[39, 0], [29, -22], [0, -35], [-28, -20], [-37, 0], [-24, 23], [0, 35], [19, 22]],
                     "24", "25", "26", "27", "28", "29"]
+    for i in range(len(asteroidlist)):
+        if not isinstance(asteroidlist[i], str):
+            for j in range(len(asteroidlist[i])):
+                asteroidlist[i][j][0] *= scalar2
+                asteroidlist[i][j][1] *= scalar2       
     return asteroidlist
 
 def RotatePoint(xpos, ypos, point, rotation):
@@ -295,7 +275,6 @@ def RotatePoint(xpos, ypos, point, rotation):
 
 def Rotate(xpos, ypos, points, rotationPosition):
     revisedPoints = []
-    currentPosition = 0
     for i in range(len(points)):
         revisedPoints += RotatePoint(xpos, ypos, points[i], rotationPosition)
     return revisedPoints
