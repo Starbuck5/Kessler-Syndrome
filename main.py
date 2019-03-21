@@ -373,8 +373,10 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150),
-                    (width/2-75, height-25, 150, 25)]
+    portalcoordsRevised = [[[0, height/2], [100, height/2-50], [100, height/2+50]], [[width/2, 0], [width/2-50, 100],[width/2+50, 100]],
+                    [[width, height/2], [width-100, height/2-50], [width-100, height/2+50]],
+                    [[width/2, height], [width/2+50, height-100], [width/2-50, height-100]]]
+    portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
@@ -760,7 +762,9 @@ def main():
                 destinations = sectorDestinations(sectornum)
                 for i in range(4):
                     if destinations[i] != -1:
-                        pygame.draw.rect(screen, (120,22,78), portalcoords[i])
+                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (120,22,78))
+                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (120,22,78))
+                        #pygame.draw.rect(screen, (120,22,78), portalcoords[i])
                         if portalcollision(object_list, portalcoords[i]) and lasttransit > 100:
                             SoundVault.play('portal')
                             saveGame(sectornum, object_list, width, height)
