@@ -761,7 +761,7 @@ def main():
                 for i in range(4):
                     if destinations[i] != -1:
                         pygame.draw.rect(screen, (120,22,78), portalcoords[i])
-                        if portalcollision(object_list, portalcoords[i]) and lasttransit > 150:
+                        if portalcollision(object_list, portalcoords[i]) and lasttransit > 100:
                             SoundVault.play('portal')
                             saveGame(sectornum, object_list, width, height)
                             sectornum = destinations[i]

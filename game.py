@@ -140,46 +140,16 @@ def deaderizer(object_list):
         indexadj += 8
     return object_list
 
+sectorDestData = {1: [2, 5, 3, -1], 2: [-1, 4, 1, -1], 3: [1, -1, -1, -1], 4: [-1, -1, 5, 2], 5: [4, 6, -1, 1],
+                  6: [8, -1, 7, 5], 7: [6, 9, -1, -1], 8: [12, 10, 6, -1], 9: [10, 14, -1, 7], 10: [-1, 11, 9, 8],
+                  11: [13, 16, 17, 10], 12: [-1, 13, 8, -1], 13: [-1, -1, 11, 12], 14: [-1, 15, -1, 9], 15: [16, -1, -1, 14],
+                  16: [-1, 18, 15, 11], 17: [11, -1, -1, -1], 18: [-1, -1, 19, 16], 19: [18, -1, -1, -1]}
+
+
 def sectorDestinations(sectornum):
     #[left, up, right, down]
-    if sectornum == 1:
-        return [2, 5, 3, -1]
-    if sectornum == 5:
-        return [4, 6, -1, 1]
-    if sectornum == 2:
-        return [-1, 4, 1, -1]
-    if sectornum == 3:
-        return [1, -1, -1, -1]
-    if sectornum == 4:
-        return [-1, -1, 5, 2]
-    if sectornum == 6:
-        return [8, -1, 7, 5]
-    if sectornum == 7:
-        return [6, 9, -1, -1]
-    if sectornum == 8:
-        return [12, 10, 6, -1]
-    if sectornum == 9:
-        return [10, 14, -1, 7]
-    if sectornum == 10:
-        return [-1, 11, 9, 8]
-    if sectornum == 11:
-        return [13, 16, 17, 10]
-    if sectornum == 12:
-        return [-1, 13, 8, -1]
-    if sectornum == 13:
-        return [-1, -1, 11, 12]
-    if sectornum == 14:
-        return [-1, 15, -1, 9]
-    if sectornum == 15:
-        return [16, -1, -1, 14]
-    if sectornum == 16:
-        return [-1, 18, 15, 11]
-    if sectornum == 17:
-        return [11, -1, -1, -1]
-    if sectornum == 18:
-        return [-1, -1, 19, 16]
-    if sectornum == 19:
-        return [18, -1, -1, -1]
+    if sectornum in sectorDestData:
+        return sectorDestData[sectornum]
     else:
         return [1, 1, 1, 1] #in case you go into a sector that doesn't exist, it will redirect you to the home sector
 
