@@ -108,7 +108,7 @@ def rotatePixelArt(image, degrees):
 
 #breaks up sprite sheets into their separate images
 #columns can be a list, if multiple numbers of columns exist on separate rows
-def spriteSheetBreaker(sheet, xoffset, yoffset, width, height, margin, vertmargin, rows, columns):
+def spriteSheetBreaker(sheet, width, height, margin, vertmargin, rows, columns):
     if not isinstance(columns, list):
         relcolumns = []
         for i in range(rows):
@@ -120,7 +120,7 @@ def spriteSheetBreaker(sheet, xoffset, yoffset, width, height, margin, vertmargi
     image_list = []
     for i in range(rows):
         for j in range(columns[i]):
-            image_list.append(sheet.subsurface((xoffset+(width+margin)*j, yoffset+(height+vertmargin)*i, width, height)))
+            image_list.append(sheet.subsurface(((width+margin)*j, (height+vertmargin)*i, width, height)))
     return image_list
 
 # missing texture surface setup
@@ -156,7 +156,7 @@ class Font():
         Font.splitSheet(fontsheet)
 
     def splitSheet(fontsheet):
-        Font.char_list = spriteSheetBreaker(Font.fontsheet, 2, 2, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 3]) 
+        Font.char_list = spriteSheetBreaker(Font.fontsheet, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 3]) 
 
     def changeColor(color):
         if color != Font.COLOR:

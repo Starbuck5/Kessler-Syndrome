@@ -15,7 +15,7 @@ def level1(screen, width, height):
     mountainsize = mountains.get_size()
 
     flamesheet = loadImage("Assets\\flames.tif")
-    all_flames = spriteSheetBreaker(flamesheet, 0, 0, 8, 15, 0, 0, 2, 4)
+    all_flames = spriteSheetBreaker(flamesheet, 8, 15, 0, 0, 2, 4)
     for i in range(len(all_flames)):
         all_flames[i] = scaleImage(all_flames[i], soyuzscalar*2)
     
