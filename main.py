@@ -131,8 +131,7 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                 
                 crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                             flame)
-                
-            
+                            
 #flashing alerts for low fuel and armor
 class FlashyBox:
     def __init__(self, rect, threshold, color):
@@ -157,15 +156,6 @@ class FlashyBox:
         if self.displaying: #draws the rectangle
             pygame.draw.rect(screen, self.color, self.rect, 0)
             
-#collision detection for the portals            
-def portalcollision(object_list, portalcoords):
-    condition1 = pygame.Rect(portalcoords).collidepoint((object_list[0], object_list[1]))
-    condition2 = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
-    if condition1 and condition2:
-        return True
-    else:
-        return False
-
 #backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
     xpos = object_list[object_location*8]
@@ -373,10 +363,13 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoordsRevised = [[[0, height/2], [100, height/2-50], [100, height/2+50]], [[width/2, 0], [width/2-50, 100],[width/2+50, 100]],
-                    [[width, height/2], [width-100, height/2-50], [width-100, height/2+50]],
-                    [[width/2, height], [width/2+50, height-100], [width/2-50, height-100]]]
-    portalcoords = [(0, height/2-75, 25, 150), (width/2-75, 0, 150, 25), (width-25, height/2-75, 25, 150), (width/2-75, height-25, 150, 25)]
+    portalcoordsRevised = [[[0, height/2], [60, height/2-50], [60, height/2+50]],
+                           [[width/2, 0], [width/2-50, 60],[width/2+50, 60]],
+                           [[width, height/2], [width-60, height/2-50], [width-60, height/2+50]],
+                           [[width/2, height], [width/2+50, height-60], [width/2-50, height-60]]]
+    portalRects = []
+    for i in range(len(portalcoordsRevised)):
+        portalRects.append(pointsToRect(portalcoordsRevised[i]))
     lasttransit = 0
     timer_popupmenu = 0
     timer_shipdeath = 9500
@@ -758,14 +751,19 @@ def main():
                             explosion_sounds()
                         object_list += printerlist_add
                     i2 += 1            
+            # collision detection
+
+            #portals
             if portal_toggle: # ship collision with portal
                 destinations = sectorDestinations(sectornum)
                 for i in range(4):
                     if destinations[i] != -1:
-                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (120,22,78))
-                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (120,22,78))
-                        #pygame.draw.rect(screen, (120,22,78), portalcoords[i])
-                        if portalcollision(object_list, portalcoords[i]) and lasttransit > 100:
+                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (176,196,222))
+                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (176,196,222))
+                        isValidTransfer = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
+                        isValidTime = lasttransit > 100
+                        isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        
+                        if isValidTransfer and isValidTime and isValidCollision:
                             SoundVault.play('portal')
                             saveGame(sectornum, object_list, width, height)
                             sectornum = destinations[i]
@@ -777,7 +775,6 @@ def main():
                                                       d_sats, d_parts, d_asteroids)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
-            # collision detection
 
             # reward for killing a sector
             numdebris = 0
