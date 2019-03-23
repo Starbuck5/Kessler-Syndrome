@@ -6,7 +6,6 @@ def drawInventory(screen, inventory):
     writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
     Texthelper.write(screen, [(0, 0), writestring,3])
 
-#def drawBars()
 
 def timedFlip(mode):
     if mode:
@@ -143,8 +142,8 @@ def homeUI(screen, shipInventory, homeInventory):
 
 
 class repairScreenStorage():
-    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)  #these really should be loaded only once
-    armorpic = loadImage("Assets\\armor.tif")                       #they're already loaded in main
+    fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)  #these really should be loaded only once
+    armorpic = loadImage("Assets\\images\\armor.tif")                       #they're already loaded in main
     
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
@@ -189,8 +188,8 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     return status
 
 class allRepairScreenStorage():
-    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)  #these really should be loaded only once
-    armorpic = loadImage("Assets\\armor.tif")                       #they're already loaded in main
+    fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)  #these really should be loaded only once
+    armorpic = loadImage("Assets\\images\\armor.tif")                       #they're already loaded in main
     editingIndex = -1
     repairRefill = -1
     pointName = -1

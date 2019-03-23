@@ -305,17 +305,17 @@ def main():
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
-    graphlist = [scaleImage(loadImage("Assets\\sat1.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat3.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\sat4.tif"), sat_scalar),
+    graphlist = [scaleImage(loadImage("Assets\\images\\sat1.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\images\\sat2.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\images\\sat3.tif"), sat_scalar),
+                 scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
                  "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
-                 loadImage("Assets\\solarpanel.tif")]
-    fuelpic = scaleImage(loadImage("Assets\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\armor.tif")
-    earthpic = loadImage("Assets\\earth.tif")
-    specialpics = [loadImage("Assets\\star.tif"), scaleImage(loadImage("Assets\\zvezda.tif"), 2)]
-    infinitypic = loadImage("Assets\\infinity.tif")
+                 loadImage("Assets\\images\\solarpanel.tif")]
+    fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)
+    armorpic = loadImage("Assets\\images\\armor.tif")
+    earthpic = loadImage("Assets\\images\\earth.tif")
+    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2)]
+    infinitypic = loadImage("Assets\\images\\infinity.tif")
 
     # settings
     max_speed = 4 * scalarscalar
