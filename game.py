@@ -1,5 +1,8 @@
 import random
 import math
+from pgx import loadImage
+from pgx import spriteSheetBreaker
+from pgx import scaleImage
 
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -222,29 +225,6 @@ def satelliteDrops():
             drops[3] += 20
     return drops
 
-def makeAsteroidList(scalar2): #generates a list of offsets for all of the separate asteroid designs
-    asteroidlist = [[[17, 1], [12, 8], [-2, 17], [-8, 11], [-16, 3], [-14, -7], [-4, -17], [10, -10]],
-                    [[16, -3], [12, 10], [-2, 17], [-10, 14], [-19, -2], [-8, -13], [2, -16], [8, -12]],
-                    [[16, 3], [7, 13], [-8, 14], [-18, 4], [-11, -11], [-3, -16], [11, -9]],
-                    [[18, 0], [10, -10], [0, -17], [-13, -12], [-20, 0], [-11, 11], [0, 13], [14, 12]],
-                    "4", "5", "6", "7", "8", "9",
-                    [[26, -3], [20, 10], [4, 21], [-8, 9], [-8, 10], [-18, 14], [-26, 10], [-25, -1], [-9, -18], [10, -12], [19, -16]],
-                    [[24, 2], [11, 9], [4, 24], [-9, 19], [-22, 5], [-13, -20], [3, -24], [18, -13]],
-                    [[23, -1], [16, 19], [-4, 26], [-13, 13], [-26, 3], [-17, -20], [-4, -23], [16, -14]],
-                    [[27, 0], [15, -15], [0, -25], [-21, -15], [-22, 0], [-19, 15], [0, 24], [21, 17]],
-                    "14", "15", "16", "17", "18", "19",
-                    [[33, -4], [27, 23], [-6, 30], [-18, 24], [-32, 5], [-25, -18], [6, -30], [20, -22]],
-                    [[20, 0], [24, 24], [-8, 32], [-23, 18], [-33, 5], [-26, -28], [3, -33], [27, -22]],
-                    [[30, 0], [26, -22], [3, -33], [-22, -22], [-38, 0], [-27, 22], [3, 34], [30, 23]],
-                    [[39, 0], [29, -22], [0, -35], [-28, -20], [-37, 0], [-24, 23], [0, 35], [19, 22]],
-                    "24", "25", "26", "27", "28", "29"]
-    for i in range(len(asteroidlist)):
-        if not isinstance(asteroidlist[i], str):
-            for j in range(len(asteroidlist[i])):
-                asteroidlist[i][j][0] *= scalar2
-                asteroidlist[i][j][1] *= scalar2       
-    return asteroidlist
-
 def RotatePoint(xpos, ypos, point, rotation):
     point[1] -= ypos
     point[0] -= xpos
@@ -290,23 +270,27 @@ class Asteroid():
     asteroidlist = "not yet a thing"
     scalar2 = -1
     def __init__ (self, scalar2):
-        Asteroid.asteroidlist = makeAsteroidList(scalar2)
+        small = loadImage("Assets\\images\\smallasteroids.gif")
+        small.set_colorkey((255,255,255))
+        small = spriteSheetBreaker(small, 40, 40, 0, 0, 1, 4)
+        medium = loadImage("Assets\\images\\mediumasteroids.gif")
+        medium.set_colorkey((255,255,255))
+        medium = spriteSheetBreaker(medium, 50, 50, 0, 0, 1, 4)
+        large = loadImage("Assets\\images\\largeasteroids.gif")
+        large.set_colorkey((255,255,255))
+        large = spriteSheetBreaker(large, 80, 80, 0, 0, 1, 4)
+        fillerlist = ["4", "5", "6", "7", "8", "9"]
+        asteroidlist = small + fillerlist + medium + fillerlist + large + fillerlist
+        for i in range(len(asteroidlist)):
+            if not isinstance(asteroidlist[i], str):
+                asteroidlist[i] = scaleImage(asteroidlist[i], scalar2)
+        Asteroid.asteroidlist = asteroidlist
         Asteroid.scalar2 = scalar2
 
-    def getPoints(xpos, ypos, objectID):
-        offsetList = Asteroid.asteroidlist[objectID-70][:]
-        pointList = []
-        for i in range(len(offsetList)):
-            pointList.append([xpos + offsetList[i][0], ypos + offsetList[i][1]])
-        return pointList
+    def getImage(objectID):
+        return Asteroid.asteroidlist[objectID - 70]
 
     def getHitbox(xpos, ypos, objectID): # in rect format
-        if 69 < objectID < 80:
-            hitrange = 15
-        if 79 < objectID < 90:
-            hitrange = 20
-        if 89 < objectID < 100:
-            hitrange = 25
-        return [xpos-hitrange*Asteroid.scalar2, ypos-hitrange*Asteroid.scalar2, hitrange*2*Asteroid.scalar2,
-                hitrange*2*Asteroid.scalar2]
+        image = Asteroid.getImage(objectID)
+        return image.get_rect().move(int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()))
         

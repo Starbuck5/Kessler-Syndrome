@@ -91,11 +91,9 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
                        image.get_height()]
         
     if 69 < object_number < 100: #draws asteroids
-        asteroid_pointlist = Asteroid.getPoints(xpos, ypos, object_number)
-        asteroid_pointlist = Rotate(xpos, ypos, asteroid_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, asteroid_pointlist, (82,85,86))
-        pygame.gfxdraw.filled_polygon(screen, asteroid_pointlist, (82,85,86))
-        colliderect = pointsToRect(asteroid_pointlist)
+        image = rotatePixelArt(Asteroid.getImage(object_number), rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = Asteroid.getHitbox(xpos, ypos, object_number)
 
     return colliderect
 
