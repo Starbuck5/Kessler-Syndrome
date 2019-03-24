@@ -363,10 +363,10 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoordsRevised = [[[0, height/2], [60, height/2-50], [60, height/2+50]],
-                           [[width/2, 0], [width/2-50, 60],[width/2+50, 60]],
-                           [[width, height/2], [width-60, height/2-50], [width-60, height/2+50]],
-                           [[width/2, height], [width/2+50, height-60], [width/2-50, height-60]]]
+    portalcoordsRevised = [[[0, height/2], [60, height/2-80], [60, height/2+80]],
+                           [[width/2, 0], [width/2-80, 60],[width/2+80, 60]],
+                           [[width, height/2], [width-60, height/2-80], [width-60, height/2+80]],
+                           [[width/2, height], [width/2+80, height-60], [width/2-80, height-60]]]
     portalRects = []
     for i in range(len(portalcoordsRevised)):
         portalRects.append(pointsToRect(portalcoordsRevised[i]))
@@ -758,8 +758,8 @@ def main():
                 destinations = sectorDestinations(sectornum)
                 for i in range(4):
                     if destinations[i] != -1:
-                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (176,196,222))
-                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (176,196,222))
+                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (100,149,237))
+                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (100,149,237))
                         isValidTransfer = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
                         isValidTime = lasttransit > 100
                         isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        

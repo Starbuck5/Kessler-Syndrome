@@ -120,9 +120,6 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
                            asteroid_speedset[1]]
         object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360),
                             random.randint(-10,10), 1] 
-        xdiff = object_list[0] - object_list_add[0]
-        ydiff = object_list[1] - object_list_add[1]
-        distance = ((xdiff ** 2) + (ydiff ** 2)) ** 0.5
         countervar += 1
         object_list += object_list_add
     return object_list
