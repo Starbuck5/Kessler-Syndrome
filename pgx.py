@@ -123,22 +123,6 @@ def spriteSheetBreaker(sheet, width, height, margin, vertmargin, rows, columns):
             image_list.append(sheet.subsurface(((width+margin)*j, (height+vertmargin)*i, width, height)))
     return image_list
 
-# missing texture surface setup
-missingTexture = pygame.Surface((8,12))
-missingTexture.fill((255, 0, 220))
-pygame.draw.rect(missingTexture, (0,0,0), (0,0,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (4,0,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (2,2,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (6,2,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (0,4,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (4,4,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (2,6,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (6,6,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (0,8,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (4,8,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (2,10,2,2), 0)
-pygame.draw.rect(missingTexture, (0,0,0), (6,10,2,2), 0)
-
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o","p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]",
@@ -150,11 +134,25 @@ class Font():
     COLOR = DEFAULT
     SCRAMBLED = False
     scrambleTimeLeft = -1
+    missingTexture = 1 #1 is placeholder for image
+    
     def getReady(): #'poor mans __init__'
         Font.fontsheet = loadImage("Assets\\images\\font.gif")
         fontsheet = Font.fontsheet
         Font.splitSheet(fontsheet)
+        Font.missingTexture = Font._makeMissingTexture()
 
+    def _makeMissingTexture():
+        missingTexture = pygame.Surface((8,12))
+        for i in range(6):
+            if i % 2 == 0:
+                x = 2
+            else:                
+                x = 0
+            pygame.draw.rect(missingTexture, (255, 0, 220), (x,i*2,2,2), 0)
+            pygame.draw.rect(missingTexture, (255, 0, 220), (x+4,i*2,2,2), 0)
+        return missingTexture
+        
     def splitSheet(fontsheet):
         Font.char_list = spriteSheetBreaker(Font.fontsheet, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 3]) 
 
@@ -173,7 +171,7 @@ class Font():
         elif char in Font.char_index:
             charImage = scaleImage(Font.char_list[Font.char_index.index(char)], scale)
         else:
-            charImage = scaleImage(missingTexture, scale)
+            charImage = scaleImage(Font.missingTexture, scale)
         return charImage
 
     def scramble(duration): #unscrambles with an input of -1
@@ -293,7 +291,7 @@ class AnnouncementBox():
     def play(screen):
         if AnnouncementBox.upcoming != []:
             AnnouncementBox.upcoming[0]._draw(screen)
-        if AnnouncementBox.upcoming != []: ##entire entry can be deleted from draw, so this text actually is necessary
+        if AnnouncementBox.upcoming != []: ##entire entry can be deleted from draw, so this test actually is necessary
             if AnnouncementBox.upcoming[0].time == 0:
                 AnnouncementBox.upcoming[0].sound.play()
             AnnouncementBox.upcoming[0]._timehelper()
@@ -521,6 +519,7 @@ class Screenhelper():
 class Filehelper():
     def __init__(self, filepath):
         self.info_file = handlePath(filepath)
+        
     #converts file contents back to the ints and strings they started as and returns them by line
     def get(self, line): #line is line # in file being extracted
         file = open(self.info_file, "r")
