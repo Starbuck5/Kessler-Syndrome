@@ -331,7 +331,8 @@ def main():
     # pygame setup
     pygame.init()
     pygame.display.set_caption("Kessler Syndrome")
-    logo = loadImage("Assets\\earth2.png")
+    logo = loadImage("Assets\\images\\earth2.png")
+    logo.set_colorkey((255,0,0))
     pygame.display.set_icon(logo)
     if width == 0 or height == 0:
         screen_sizes = pygame.display.list_modes()

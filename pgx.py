@@ -151,7 +151,7 @@ class Font():
     SCRAMBLED = False
     scrambleTimeLeft = -1
     def getReady(): #'poor mans __init__'
-        Font.fontsheet = loadImage("Assets\\font.gif")
+        Font.fontsheet = loadImage("Assets\\images\\font.gif")
         fontsheet = Font.fontsheet
         Font.splitSheet(fontsheet)
 
