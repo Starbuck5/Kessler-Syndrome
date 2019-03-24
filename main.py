@@ -579,7 +579,6 @@ def main():
             scalar1 = 0
             lastnumdebris = 0
             pygame.mouse.set_visible(False)
-            
             #inventory
             shipInventory = [0,0,0,0]
 
@@ -616,6 +615,8 @@ def main():
                                     object_list[i2+5] = dockPosition[4]
             
             #game progression
+            achievements = Filehelper("assets\\Achievements.txt")
+            discoverSector = achievements.get(0)
             if file_settings[3] == 0:
                 level1(screen, width, height)
                 file_settings[3] = 1
@@ -775,6 +776,38 @@ def main():
                                                       d_sats, d_parts, d_asteroids)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
+                            #recordings needed
+                            if sectornum == 4 and discoverSector[3] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Took you long enough to get here. Now clear this sector.")
+                                discoverSector[3] = True
+                            if sectornum == 6 and discoverSector[5] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "I see you finally decided to travel further. Better pray before you die.")
+                                discoverSector[5] = True
+                            if sectornum == 9 and discoverSector[8] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "congrats, you finally made it to the land of explosives. Have fun out there.")
+                                discoverSector[8] = True
+                            if sectornum == 12 and discoverSector[11] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Wow, you are so slow. Just clean this mess up before i get bored and launch rockets at you.")
+                                discoverSector[11] = True
+                            if sectornum == 17 and discoverSector[16] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "I see you found some more debree to clean up, so make it quick.")
+                                discoverSector[16] = True
+                            if sectornum == 19 and discoverSector[18] == False:
+                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                "Take a look at this, this is the edge of your cleaning zone. Nothing more to do other than to keep cleaning for the rest of your life.")
+                                discoverSector[18] = True
+                            achievements.set(discoverSector, 0)
 
             # reward for killing a sector
             numdebris = 0
