@@ -83,6 +83,12 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
                            [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos], [xpos-7*scalar1, ypos-7*scalar1],
                            [xpos, ypos-10*scalar1], [xpos+7*scalar1, ypos-7*scalar1], [xpos+10*scalar1, ypos]]
         colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
+
+    if object_number == 7: #draws alien mines
+        image = rotatePixelArt(specialpics[2], rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
+                       image.get_height()]
         
     if 9 < object_number < 40: #draws satellites
         image = rotatePixelArt(graphlist[object_number-10], rotation)
@@ -173,6 +179,10 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
     elif 9 < objectID < 40: #pixel things
         image = rotatePixelArt(graphlist[objectID-10], object_list[object_location*8+5])
+        hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
+                   image.get_height()]
+    elif objectID == 7: #alien mines
+        image = rotatePixelArt(specialpics[2], object_list[object_location*8+5])
         hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
                    image.get_height()]
     elif 69 < objectID < 100: #asteroids
@@ -314,7 +324,7 @@ def main():
     fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\images\\armor.tif")
     earthpic = loadImage("Assets\\images\\earth.tif")
-    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2)]
+    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2), scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
     infinitypic = loadImage("Assets\\images\\infinity.tif")
 
     # settings

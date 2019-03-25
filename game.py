@@ -101,17 +101,20 @@ def generateStars(width, height):
 
 #leveler
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids):
-    ASTEROID = 30
-    SATS = 50
-    PARTS = 20
+    ASTEROID = 25
+    SATS = 45
+    PARTS = 15
+    MINES = 15
     object_list = object_list[:8]
     object_list += generateStars(width, height)
     countervar = 0
     while countervar < random.randint(max_asteroids - 2, max_asteroids):
         idChooser = random.randint(0, 100)
-        if idChooser < ASTEROID:
+        if idChooser < MINES:
+            idSelection = [7, 7]
+        elif idChooser < ASTEROID + MINES:
             idSelection = d_asteroids
-        elif idChooser < ASTEROID + SATS:
+        elif idChooser < ASTEROID + MINES + SATS:
             idSelection = d_sats
         else:
             idSelection = d_parts
