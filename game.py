@@ -23,7 +23,22 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
         #decaying objects
         if object_list[4 + i] in [2, 8, 5, 4]: #stuff in list should have a decrement to their life force
             object_list[7 + i] -= 1
+
+        #speed limit for ship
+        if object_list[4+i] == 1 or object_list[4+i] == 5:
+            if object_list[2 + i] > max_speed:
+                object_list[2 + i] = max_speed
+            if object_list[2 + i] < -1 * max_speed:
+                object_list[2 + i] =  -1 * max_speed
+            if object_list[3 + i] > max_speed:
+                object_list[3 + i] = max_speed
+            if object_list[3 + i] < -1 * max_speed:
+                object_list[3 + i] = -1 * max_speed
             
+        # positioner
+        object_list[i] += object_list[2 + i]
+        object_list[1 + i] -= object_list[3 + i]
+
         # edges section
         if object_list[i] > width:
             object_list[i] -= width
@@ -33,10 +48,6 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
             object_list[1 + i] -= height
         if object_list[1 + i] < 0:
             object_list[1 + i] += height
-
-        # positioner
-        object_list[i] += object_list[2 + i]
-        object_list[1 + i] -= object_list[3 + i]
 
         #drag
         if object_list[4 +i] in drag:
@@ -62,17 +73,6 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
             elif step_drag_y < object_list[3 +i] < 0:
                 object_list[3 +i] = 0
 
-        #speed limit for ship
-        if object_list[4+i] == 1 or object_list[4+i] == 5:
-            if object_list[2 + i] > max_speed:
-                object_list[2 + i] = max_speed
-            if object_list[2 + i] < -1 * max_speed:
-                object_list[2 + i] =  -1 * max_speed
-            if object_list[3 + i] > max_speed:
-                object_list[3 + i] = max_speed
-            if object_list[3 + i] < -1 * max_speed:
-                object_list[3 + i] = -1 * max_speed
-        
         #rotation
         if not isinstance(object_list[5+i], str):
             object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
@@ -137,7 +137,8 @@ def deaderizer(object_list):
                 object_list[4+indexadj] = 1
             else:
                 del object_list[indexadj:8+indexadj]
-        indexadj += 8
+        else:
+            indexadj += 8
     return object_list
 
 sectorDestData = {1: [2, 5, 3, -1], 2: [-1, 4, 1, -1], 3: [1, -1, -1, -1], 4: [-1, -1, 5, 2], 5: [4, 6, -1, 1],
@@ -155,11 +156,10 @@ def sectorDestinations(sectornum):
 #returns true if an infinite level that always regenerates
 #else returns false to signal a level that doesn't get regenerated
 def sectorGeneration(sectornum):
-    output = False
     infinite_sectors = [4, 12, 14]
     if sectornum in infinite_sectors:
-        output = True
-    return output
+        return True
+    return False
 
 def solarPanelDrops():
     drops = [0, 0, 0, 0]
