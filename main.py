@@ -97,11 +97,9 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
                        image.get_height()]
         
     if 69 < object_number < 100: #draws asteroids
-        asteroid_pointlist = Asteroid.getPoints(xpos, ypos, object_number)
-        asteroid_pointlist = Rotate(xpos, ypos, asteroid_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, asteroid_pointlist, (82,85,86))
-        pygame.gfxdraw.filled_polygon(screen, asteroid_pointlist, (82,85,86))
-        colliderect = pointsToRect(asteroid_pointlist)
+        image = rotatePixelArt(Asteroid.getImage(object_number), rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = Asteroid.getHitbox(xpos, ypos, object_number)
 
     return colliderect
 
@@ -343,7 +341,8 @@ def main():
     # pygame setup
     pygame.init()
     pygame.display.set_caption("Kessler Syndrome")
-    logo = loadImage("Assets\\earth2.png")
+    logo = loadImage("Assets\\images\\earth2.png")
+    logo.set_colorkey((255,0,0))
     pygame.display.set_icon(logo)
     if width == 0 or height == 0:
         screen_sizes = pygame.display.list_modes()
@@ -373,10 +372,10 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoordsRevised = [[[0, height/2], [60, height/2-50], [60, height/2+50]],
-                           [[width/2, 0], [width/2-50, 60],[width/2+50, 60]],
-                           [[width, height/2], [width-60, height/2-50], [width-60, height/2+50]],
-                           [[width/2, height], [width/2+50, height-60], [width/2-50, height-60]]]
+    portalcoordsRevised = [[[0, height/2], [60, height/2-80], [60, height/2+80]],
+                           [[width/2, 0], [width/2-80, 60],[width/2+80, 60]],
+                           [[width, height/2], [width-60, height/2-80], [width-60, height/2+80]],
+                           [[width/2, height], [width/2+80, height-60], [width/2-80, height-60]]]
     portalRects = []
     for i in range(len(portalcoordsRevised)):
         portalRects.append(pointsToRect(portalcoordsRevised[i]))
@@ -769,8 +768,8 @@ def main():
                 destinations = sectorDestinations(sectornum)
                 for i in range(4):
                     if destinations[i] != -1:
-                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (176,196,222))
-                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (176,196,222))
+                        pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (100,149,237))
+                        pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (100,149,237))
                         isValidTransfer = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
                         isValidTime = lasttransit > 100
                         isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        
