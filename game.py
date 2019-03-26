@@ -177,19 +177,19 @@ def solarPanelDrops():
     if random.randint(1,100) <= 20:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[2] += 1
-        elif 61 <= percentHelper <= 90:
             drops[2] += 2
-        else:
+        elif 61 <= percentHelper <= 90:
             drops[2] += 3
+        else:
+            drops[2] += 6
     if random.randint(1,100) <= 10:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[3] += 2
+            drops[3] += 3
         elif 61 <= percentHelper <= 90:
-            drops[3] += 4
-        else:
             drops[3] += 6
+        else:
+            drops[3] += 9
     return drops
 
 def satelliteDrops():
@@ -197,27 +197,27 @@ def satelliteDrops():
     if random.randint(1,100) <= 80:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[0] += 1
-        elif 61 <= percentHelper <= 90:
             drops[0] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[0] += 4
         else:
-            drops[0] += 3
+            drops[0] += 6
     if random.randint(1,100) <= 40:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[1] += 1
-        elif 61 <= percentHelper <= 90:
             drops[1] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[1] += 4
         else:
-            drops[1] += 3
+            drops[1] += 6
     if random.randint(1,100) <= 20:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[2] += 1
-        elif 61 <= percentHelper <= 90:
             drops[2] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[2] += 4
         else:
-            drops[2] += 3
+            drops[2] += 6
     if random.randint(1,100) <= 70:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
