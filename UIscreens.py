@@ -143,45 +143,79 @@ def homeUI(screen, shipInventory, homeInventory):
 
 class repairScreenStorage():
     fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)  #these really should be loaded only once
-    armorpic = loadImage("Assets\\images\\armor.tif")                       #they're already loaded in main
-    
+    armorpic = loadImage("Assets\\images\\armor.tif")                       #they're already loaded in main'
+    armorcost = 1/3
+    fuelcost = 1/250
+    torpedocost = 1/5
+    costlist = [1/3, 1/250, 1/5]
+    namelist = ["Armor", "Fuel", "Torpedoes"]
+    shortattribute = ["HP", "FP", "Shots"]
+    wordlist = ["repair", "refill", "refill"]
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
     drawInventory(screen, homeInventory)
-    Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
-    status = "shop"                         
+
+    #draws fuel and armor and shots, should be methodized
     fuelpic = repairScreenStorage.fuelpic
     armorpic = repairScreenStorage.armorpic
     currentarmor, currentfuel, ammunition = currentStats
-    totalarmor, totalfuel, totalammunition = totalStats
-    timedFlip(mode)
-        
-    #armor
+    totalarmor, totalfuel, totalammunition = totalStats 
     screen.blit(armorpic, (1600, 930))
     pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
     pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-    Texthelper.write(screen, [(600, 540-55), "Armor:", 3])   
-    if Texthelper.writeButton(screen, [(1000, 540-55), "repair", 3]):
-        status = "armorRepairinit"
+    screen.blit(fuelpic, (1600, 1000))
+    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
+    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
+    
+    Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
+    status = "shop"                         
+    timedFlip(mode)
+        
+    #armor
+    armorY = 485
+    Texthelper.write(screen, [(470, armorY), "Armor:", 3])
+    totalrepaircost = int((totalStats[0] - currentStats[0]) * repairScreenStorage.armorcost)
+    repair1cost = 1
+    repair1effect = int(1/repairScreenStorage.armorcost*repair1cost)
+    if currentStats[0] < totalStats[0]:
+        #full repair
+        if homeInventory[0] >= totalrepaircost:
+            if Texthelper.writeButtonBox(screen, [(700, armorY), "repair all", 3], color=(34,178,34)):
+                homeInventory[0] -= totalrepaircost
+                currentStats[0] = totalStats[0]
+        else:
+            Texthelper.writeBox(screen, [(700, armorY), "repair all", 3], color=(178,34,34))
+
+        #repair1    
+        if homeInventory[0] >= repair1cost:
+            if Texthelper.writeButtonBox(screen, [(1100, armorY), "repair " + str(repair1effect) + " HP", 3], color=(34,178,34)):
+                homeInventory[0] -= repair1cost
+                currentStats[0] = min(currentStats[0]+repair1effect, totalStats[0])
+        else:
+            Texthelper.writeBox(screen, [(1100, armorY), "repair " + str(repair1effect) + " HP", 3], color=(178,34,34))
+    else:
+        Texthelper.writeBox(screen, [(700, armorY), "repair all", 3], color=(34,34,178))
+        Texthelper.writeBox(screen, [(1100, armorY), "repair " + str(repair1effect) + " HP", 3], color=(34,34,178))
+    Texthelper.write(screen, [(750, armorY+45), "for " + str(totalrepaircost) + " metal", 1])
+    Texthelper.write(screen, [(1150, armorY+45), "for " + str(repair1cost) + " metal", 1])
     timedFlip(mode)
 
     #fuel
-    screen.blit(fuelpic, (1600, 1000))
-    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])        
-    Texthelper.write(screen, [(600, 540), "Fuel:", 3])   
-    if Texthelper.writeButton(screen, [(1000, 540), "refill", 3]):
+    fuelY = 560      
+    Texthelper.write(screen, [(600, fuelY), "Fuel:", 3])   
+    if Texthelper.writeButton(screen, [(1000, fuelY), "refill", 3]):
         status = "fuelRefillinit"
     timedFlip(mode)
 
     #ammunition
-    Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-    Texthelper.write(screen, [(600, 540+55), "Torpedoes:", 3])  
-    if Texthelper.writeButton(screen, [(1000, 540+55), "refill", 3]):
+    torpY = 640
+    Texthelper.write(screen, [(600, torpY), "Torpedoes:", 3])  
+    if Texthelper.writeButton(screen, [(1000, torpY), "refill", 3]):
         status = "ammoRefillinit"
     timedFlip(mode)
         
-    if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
+    if Texthelper.writeButton(screen, [("center", 700), "back", 3]):
         status = "homeinit"
     if mode:
         pygame.display.flip()
