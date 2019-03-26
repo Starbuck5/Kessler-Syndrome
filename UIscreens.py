@@ -66,7 +66,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
     Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
     timedFlip(mode)     
 
-    if inventory[0] > cost[0] and inventory[1] > cost[1] and inventory[2] > cost[2] and inventory[3] > cost[3]:
+    if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
         if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
             inventory[0] -= cost[0]
             inventory[1] -= cost[1]
@@ -76,6 +76,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
             ##status = "garageinit"
             filehelper.set(inventory, 2)
             filehelper.set(ShipLv, 3)
+            
     else:
         Texthelper.write(screen, [("center", 540+220), "sorry", 3])
     timedFlip(mode)       
