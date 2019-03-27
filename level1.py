@@ -64,12 +64,14 @@ def level1(screen, width, height):
             namebox.clicked = True
             namebox.currenttext = [("center", height/2-50), namebox.getData()[1], namebox.getData()[2]]
             Texthelper.write(screen, [("center", height/2-100), "enter name to continue", 2])
-            if Texthelper.writeButton(screen, [("center", height/2), "then press here or enter", 2]):
+            if len(namebox.getText()) > 11:
+                Texthelper.write(screen, [("center", height/2+30), "name should be less than 12 characters", 1])
+            isValidInput = namebox.getText() != "name" and len(namebox.getText()) < 12
+            isPressed = Texthelper.writeButton(screen, [("center", height/2), "then press here or enter", 2])
+            isKeyed = len(keyboard()) == 1 and keyboard()[0] == "enter"
+            if (isPressed or isKeyed) and isValidInput:
                 running = False
-                filehelper.set([namebox.getText()], 1)
-            if len(keyboard()) == 1 and keyboard()[0] == "enter" and namebox.getText() != "name":
-                running = False
-                filehelper.setElement(namebox.getText(), 1, 0)                
+                filehelper.setElement(namebox.getText(), 1, 0)           
             
         #namebox.currenttext = [("center", ypos+1850), namebox.getData()[1], namebox.getData()[2]]
         namebox.update(screen)
