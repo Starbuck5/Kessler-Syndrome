@@ -863,6 +863,7 @@ def main():
 
             if timer_shipdeath == 200:
                 sectornum = 1
+                lastnumdebris = 0
                 object_list = getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2
