@@ -218,7 +218,7 @@ def buttonRow(screen, index, x, y, currentStats, totalStats, homeInventory):
                 applyCosts(homeInventory, costSpread, repair2cost)
                 currentStats[index] = min(currentStats[index]+repair2effect, totalStats[index])
         else:
-            Texthelper.writeBox(screen, [(x+100, y), verb + " " + str(repair2effect) + attribute, 3], color=(178,34,34))
+            Texthelper.writeBox(screen, [(x+1000, y), verb + " " + str(repair2effect) + attribute, 3], color=(178,34,34))
     
     else:
         Texthelper.writeBox(screen, [(x+130, y), verb + " all", 3], color=(34,34,178))
