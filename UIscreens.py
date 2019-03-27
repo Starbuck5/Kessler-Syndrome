@@ -148,53 +148,65 @@ class repairScreenStorage():
     fuelcost = 1/250
     torpedocost = 1/5
     costlist = [1/3, 1/250, 1/5]
-    costnamelist = ["metal", "gas", "????????"]
+    costnamelist = ["metal", "gas", "metal"]
     namelist = ["Armor", "Fuel", "Torpedoes"]
     shortattribute = ["HP", "FP", "Shots"]
     wordlist = ["repair", "refill", "refill"]
 
 def buttonRow(screen, index, x, y, currentStats, totalStats, homeInventory):
-    Texthelper.write(screen, [(x, y), repairScreenStorage.namelist[index]+":", 3])
+    Texthelper.write(screen, [("right." + str(x+100), y), repairScreenStorage.namelist[index]+":", 3])
+    
     totalrepaircost = int((totalStats[index] - currentStats[index]) * repairScreenStorage.costlist[index])
     repair1cost = 3
     repair1effect = int(1/repairScreenStorage.costlist[index]*repair1cost)
     repair2cost = 1
     repair2effect = int(1/repairScreenStorage.costlist[index]*repair2cost)
+
+    costname = repairScreenStorage.costnamelist[index]
+    totalRepairStr = "for " + str(totalrepaircost) + " " + costname
+    repair1Str = "for " + str(repair1cost) + " " + costname
+    repair2Str = "for " + str(repair2cost) + " " + costname
+    if index == 2: #if torpedoes are being refilled    
+        totalRepairStr += " and " + str(totalrepaircost) + " gas"
+        repair1Str += " and " + str(repair1cost) + " gas"
+        repair2Str +=" and " + str(repair2cost) + " gas"
+        
+    
     attribute = " " + repairScreenStorage.shortattribute[index]
     verb = repairScreenStorage.wordlist[index]
-    costname = repairScreenStorage.costnamelist[index]
+    
     if currentStats[index] < totalStats[index]:
         #full repair
         if homeInventory[index] >= totalrepaircost:
-            if Texthelper.writeButtonBox(screen, [(x+230, y), verb + " all", 3], color=(34,178,34)):
+            if Texthelper.writeButtonBox(screen, [(x+130, y), verb + " all", 3], color=(34,178,34)):
                 homeInventory[index] -= totalrepaircost
                 currentStats[index] = totalStats[index]
         else:
-            Texthelper.writeBox(screen, [(x+230, y), verb + " all", 3], color=(178,34,34))
+            Texthelper.writeBox(screen, [(x+130, y), verb + " all", 3], color=(178,34,34))
 
         #repair1    
         if homeInventory[index] >= repair1cost:
-            if Texthelper.writeButtonBox(screen, [(x+630, y), verb + " " + str(repair1effect) + attribute, 3], color=(34,178,34)):
+            if Texthelper.writeButtonBox(screen, [(x+520, y), verb + " " + str(repair1effect) + attribute, 3], color=(34,178,34)):
                 homeInventory[index] -= repair1cost
                 currentStats[index] = min(currentStats[index]+repair1effect, totalStats[index])
         else:
-            Texthelper.writeBox(screen, [(x+630, y), verb + " " + str(repair1effect) + attribute, 3], color=(178,34,34))
+            Texthelper.writeBox(screen, [(x+520, y), verb + " " + str(repair1effect) + attribute, 3], color=(178,34,34))
 
         #repair2
         if homeInventory[index] >= repair2cost:
-            if Texthelper.writeButtonBox(screen, [(x+1030, y), verb + " " + str(repair2effect) + attribute, 3], color=(34,178,34)):
+            if Texthelper.writeButtonBox(screen, [(x+1000, y), verb + " " + str(repair2effect) + attribute, 3], color=(34,178,34)):
                 homeInventory[index] -= repair2cost
                 currentStats[index] = min(currentStats[index]+repair2effect, totalStats[index])
         else:
-            Texthelper.writeBox(screen, [(x+1030, y), verb + " " + str(repair2effect) + attribute, 3], color=(178,34,34))
+            Texthelper.writeBox(screen, [(x+100, y), verb + " " + str(repair2effect) + attribute, 3], color=(178,34,34))
     
     else:
-        Texthelper.writeBox(screen, [(x+230, y), verb + " all", 3], color=(34,34,178))
-        Texthelper.writeBox(screen, [(x+630, y), verb + " " + str(repair1effect) + attribute, 3], color=(34,34,178))
-        Texthelper.writeBox(screen, [(x+1030, y), verb + " " + str(repair2effect) + attribute, 3], color=(34,34,178))
-    Texthelper.write(screen, [(750, y+45), "for " + str(totalrepaircost) + " " + costname, 1])
-    Texthelper.write(screen, [(1150, y+45), "for " + str(repair1cost) + " " + costname, 1])
-    Texthelper.write(screen, [(1550, y+45), "for " + str(repair2cost) + " " + costname, 1])
+        Texthelper.writeBox(screen, [(x+130, y), verb + " all", 3], color=(34,34,178))
+        Texthelper.writeBox(screen, [(x+520, y), verb + " " + str(repair1effect) + attribute, 3], color=(34,34,178))
+        Texthelper.writeBox(screen, [(x+1000, y), verb + " " + str(repair2effect) + attribute, 3], color=(34,34,178))
+    Texthelper.write(screen, [(x+180, y+45), totalRepairStr, 1])
+    Texthelper.write(screen, [(x+570, y+45), repair1Str, 1])
+    Texthelper.write(screen, [(x+1050, y+45), repair2Str, 1])
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
     drawInventory(screen, homeInventory)
@@ -217,155 +229,21 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     timedFlip(mode)
         
     #armor
-    buttonRow(screen, 0, 470, 485, currentStats, totalStats, homeInventory)
+    buttonRow(screen, 0, 360, 480, currentStats, totalStats, homeInventory)
     timedFlip(mode)
     
-
     #fuel     
-    buttonRow(screen, 1, 470, 560, currentStats, totalStats, homeInventory)
+    buttonRow(screen, 1, 360, 580, currentStats, totalStats, homeInventory)
     timedFlip(mode)
 
     #ammunition
-    torpY = 640
-    Texthelper.write(screen, [(600, torpY), "Torpedoes:", 3])  
-    if Texthelper.writeButton(screen, [(1000, torpY), "refill", 3]):
-        status = "ammoRefillinit"
+    buttonRow(screen, 2, 360, 680, currentStats, totalStats, homeInventory)
     timedFlip(mode)
         
-    if Texthelper.writeButton(screen, [("center", 700), "back", 3]):
+    if Texthelper.writeButton(screen, [("center", 820), "back", 3]):
         status = "homeinit"
     if mode:
         pygame.display.flip()
-    return status
-
-class allRepairScreenStorage():
-    fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)  #these really should be loaded only once
-    armorpic = loadImage("Assets\\images\\armor.tif")                       #they're already loaded in main
-    editingIndex = -1
-    repairRefill = -1
-    pointName = -1
-    missingStat = -1
-    costRatio = -1
-    amountBox = -1
-
-def drawAllRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode, name, status, color):
-    screen.fill(color)
-    inputvar = keyboard()
-    currentarmor = currentStats[0]
-    currentfuel = currentStats[1]
-    ammunition = currentStats[2]
-    totalarmor = totalStats[0]
-    totalfuel = totalStats[1]
-    if mode: #whether it should be init-ing or not\
-        if name == "armor":
-            editingIndex = 0
-            pointName = "hp"
-            costRatio = 1/3
-            repairRefill = "repair"
-        if name == "fuel":
-            editingIndex = 1
-            pointName = "fp"
-            costRatio = 1/250
-            repairRefill = "refill"
-        if name == "torpedoes":
-            editingIndex = 2
-            pointName = "ammo"
-            costRatio = 1/5
-            repairRefill = "refill"
-        allRepairScreenStorage.editingIndex = editingIndex
-        allRepairScreenStorage.repairRefill = repairRefill
-        allRepairScreenStorage.pointName = pointName
-        allRepairScreenStorage.costRatio = costRatio
-        missingStat = totalStats[editingIndex] - currentStats[editingIndex]
-        allRepairScreenStorage.missingStat = missingStat
-        amountBox = InputGetter([("center", 540+165), str(missingStat), 3], "int")
-        allRepairScreenStorage.amountBox = amountBox
-
-    editingIndex = allRepairScreenStorage.editingIndex
-    repairRefill = allRepairScreenStorage.repairRefill
-    pointName = allRepairScreenStorage.pointName
-    missingStat = allRepairScreenStorage.missingStat
-    costRatio = allRepairScreenStorage.costRatio
-    amountBox = allRepairScreenStorage.amountBox
-    if amountBox.currenttext[1] != "":
-        cost = int(costRatio * int(amountBox.currenttext[1])) + 1
-        if cost - 1 == costRatio * int(amountBox.currenttext[1]):
-            cost -= 1
-    else:
-        cost = 0
-    if editingIndex == 0:
-        metalCost = cost
-        gasCost = 0
-    elif editingIndex == 1:
-        metalCost = 0
-        gasCost = cost
-    else:
-        metalCost = cost
-        gasCost = cost
-    fuelpic = allRepairScreenStorage.fuelpic
-    armorpic = allRepairScreenStorage.armorpic
-
-    Texthelper.write(screen, [(0, 0), "metal:" + str(homeInventory[0]) + "  gas:" + str(homeInventory[1]) + "  circuits:" + str(homeInventory[2]) + "  currency:" + str(homeInventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), repairRefill + " " + name, 6])
-
-    timedFlip(mode)      
-    Texthelper.write(screen, [("center", 540-110),  "missing: " + str(missingStat) + " " + pointName, 3])
-
-    timedFlip(mode)
-    Texthelper.write(screen, [("center", 540),  "cost:", 3])
-    screen.blit(armorpic, (1600, 930))
-    pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-    pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-
-    timedFlip(mode)
-    Texthelper.write(screen, [(700, 540+55),  str(metalCost) + " metal" , 3])
-    Texthelper.write(screen, [(1100, 540+55),  str(gasCost) + " gas" , 3])
-    screen.blit(fuelpic, (1600, 1000))
-    pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-    pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
-
-    timedFlip(mode)
-    Texthelper.write(screen, [("center", 540+110),  "amount:" , 3])
-
-    timedFlip(mode)
-    amountBox.currenttext = [("center", 540+165), amountBox.getData()[1], amountBox.getData()[2]]
-    amountBox.update(screen)
-    allRepairScreenStorage.amountBox = amountBox
-
-    timedFlip(mode)
-    if amountBox.currenttext[1] != "":
-        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0 and int(amountBox.currenttext[1]) <= missingStat:
-            if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
-                currentStats[editingIndex] += int(amountBox.currenttext[1])
-                homeInventory[0] -= metalCost
-                homeInventory[1] -= gasCost
-                status = "shopinit"
-        elif missingStat == 0:
-            Texthelper.write(screen, [("center", 540+220), "full", 3])
-        elif int(amountBox.currenttext[1]) > missingStat:
-            Texthelper.write(screen, [("center", 540+220), "excess", 3])
-        else:
-            Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-    else:
-        if metalCost <= homeInventory[0] and gasCost <= homeInventory[1] and missingStat != 0:
-            if Texthelper.writeButton(screen, [("center", 540+220), repairRefill, 3]):
-                status = "shopinit"
-        elif missingStat == 0:
-            Texthelper.write(screen, [("center", 540+220), "full", 3])
-        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
-
-    timedFlip(mode)
-    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
-        status = "shopinit"
-
-    if mode:
-        pygame.display.flip()
-
-    if not mode:
-        filehelper.set(homeInventory,2)
-        filehelper.set(currentStats,4)
-
     return status
 
 #increments or decrements an instance of inputgetter
@@ -524,14 +402,6 @@ def home(screen):
     ####MARKET#SECTION####
 
     ####REPAIR#SECTION####
-    elif shopStatus == "ammoRefillinit":
-        drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True, "torpedoes", "N/A", color)
-        shopStatus = "ammoRefill"
-
-    elif shopStatus == "ammoRefill":
-        shopStatus = drawAllRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, False, "torpedoes",
-                                         shopStatus, color)
-
     elif shopStatus == "shopinit":
         drawRepairScreen(screen, shipLv, currentStats, totalStats, homeInventory, True)
         shopStatus = "shop"
