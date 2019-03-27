@@ -152,6 +152,21 @@ class repairScreenStorage():
     namelist = ["Armor", "Fuel", "Torpedoes"]
     shortattribute = ["HP", "FP", "Shots"]
     wordlist = ["repair", "refill", "refill"]
+    applycost = [(1,0,0,0), (0,1,0,0), (1,1,0,0)]
+
+def canAfford(homeInventory, costSpread, cost):
+    flag = True
+    for i in range(len(costSpread)):
+        if costSpread[i] == 1:
+            if not homeInventory[i] >= cost:
+                flag = False
+    return flag
+
+def applyCosts(homeInventory, costSpread, cost):
+    for i in range(len(costSpread)):
+        if costSpread[i] == 1:
+            homeInventory[i] -= cost
+    return homeInventory
 
 def buttonRow(screen, index, x, y, currentStats, totalStats, homeInventory):
     Texthelper.write(screen, [("right." + str(x+100), y), repairScreenStorage.namelist[index]+":", 3])
@@ -174,28 +189,29 @@ def buttonRow(screen, index, x, y, currentStats, totalStats, homeInventory):
     
     attribute = " " + repairScreenStorage.shortattribute[index]
     verb = repairScreenStorage.wordlist[index]
+    costSpread = repairScreenStorage.applycost[index]
     
     if currentStats[index] < totalStats[index]:
         #full repair
-        if homeInventory[index] >= totalrepaircost:
+        if canAfford(homeInventory, costSpread, totalrepaircost):
             if Texthelper.writeButtonBox(screen, [(x+130, y), verb + " all", 3], color=(34,178,34)):
-                homeInventory[index] -= totalrepaircost
+                applyCosts(homeInventory, costSpread, totalrepaircost)
                 currentStats[index] = totalStats[index]
         else:
             Texthelper.writeBox(screen, [(x+130, y), verb + " all", 3], color=(178,34,34))
 
         #repair1    
-        if homeInventory[index] >= repair1cost:
+        if canAfford(homeInventory, costSpread, repair1cost):
             if Texthelper.writeButtonBox(screen, [(x+520, y), verb + " " + str(repair1effect) + attribute, 3], color=(34,178,34)):
-                homeInventory[index] -= repair1cost
+                applyCosts(homeInventory, costSpread, repair1cost)
                 currentStats[index] = min(currentStats[index]+repair1effect, totalStats[index])
         else:
             Texthelper.writeBox(screen, [(x+520, y), verb + " " + str(repair1effect) + attribute, 3], color=(178,34,34))
 
         #repair2
-        if homeInventory[index] >= repair2cost:
+        if canAfford(homeInventory, costSpread, repair2cost):
             if Texthelper.writeButtonBox(screen, [(x+1000, y), verb + " " + str(repair2effect) + attribute, 3], color=(34,178,34)):
-                homeInventory[index] -= repair2cost
+                applyCosts(homeInventory, costSpread, repair2cost)
                 currentStats[index] = min(currentStats[index]+repair2effect, totalStats[index])
         else:
             Texthelper.writeBox(screen, [(x+100, y), verb + " " + str(repair2effect) + attribute, 3], color=(178,34,34))
