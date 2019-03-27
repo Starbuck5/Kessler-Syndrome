@@ -347,17 +347,33 @@ class Texthelper():
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
         text_input2 = text_input[0:] #very important line
-        if str(location_list[0]).isdigit() == False:
-            if location_list[0] == "center":
-                location_list[0] = Texthelper.width / 2 - Texthelper._textlength(text_input) / 2
-            elif location_list[0] == "right":
-                location_list[0] = Texthelper.width - Texthelper._textlength(text_input)
+        if isinstance(location_list[0], str):
+            if "center" in location_list[0]:
+                if location_list[0][-1].isdigit():
+                     num = int(location_list[0][location_list[0].rfind(".")+1:])
+                     num *= Texthelper.scalar
+                     location_list[0] = num - Texthelper._textlength(text_input) / 2 
+                else:
+                    location_list[0] = Texthelper.width / 2 - Texthelper._textlength(text_input) / 2
+            elif "left" in location_list[0]:
+                if location_list[0][-1].isdigit():
+                     num = int(location_list[0][location_list[0].rfind(".")+1:])
+                     num *= Texthelper.scalar
+                     location_list[0] = num
+                else:
+                    location_list[0] = 0
+            elif "right" in location_list[0]:
+                if location_list[0][-1].isdigit():
+                     num = int(location_list[0][location_list[0].rfind(".")+1:])
+                     num *= Texthelper.scalar
+                     location_list[0] = num - Texthelper._textlength(text_input) 
+                else:
+                    location_list[0] = Texthelper.width - Texthelper._textlength(text_input)                
             else:
-                location_list[0] = 0
-            location_list[1] *= Texthelper.scalar
+                raise ValueError("invalid string keyword for coordinates")
         else:
             location_list[0] *= Texthelper.scalar
-            location_list[1] *= Texthelper.scalar
+        location_list[1] *= Texthelper.scalar            
         text_input2[0] = (location_list[0], location_list[1])
         return text_input2
 
