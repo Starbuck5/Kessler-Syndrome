@@ -1,5 +1,6 @@
 from pgx import *
 waitTime = 175
+maxLevel = 20
 upgrades = Filehelper("assets\\upgrades.txt")
 
 def drawInventory(screen, inventory):
@@ -19,21 +20,18 @@ class UpgradeScreenStorage():
     editingIndex = -1
     pointName = -1
     
-def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = true/false init, name = fuel/armor/etc.   
+def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status): #mode = true/false init, upgradeType = fuel/armor/etc.   
     if mode: #whether it should be init-ing or not
-        driveHead = 0
-        if name == "armor":
-            driveHead = 0
+        if upgradeType == "armor":
             editingIndex = 0
             pointName = "hp"
-        if name == "fuel":
-            driveHead = 20
+        if upgradeType == "fuel":
             editingIndex = 1
             pointName = "fp"
-        if name == "torpedoe":
-            driveHead = 40
+        if upgradeType == "torpedoe":
             editingIndex = 2
             pointName = "ammo"
+        driveHead = editingIndex * maxLevel
         UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[editingIndex]+driveHead)[4] 
         UpgradeScreenStorage.cost = upgrades.get(ShipLv[editingIndex]+driveHead+1)
         UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
@@ -48,38 +46,43 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, name, status): #mode = tr
     
     pygame.mouse.set_visible(True) #necessary?
     Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
-    Texthelper.write(screen, [("center", 540-235), name + " upgrade", 6])
+    Texthelper.write(screen, [("center", 540-235), upgradeType + " upgrade", 6])
     timedFlip(mode)     
 
-    Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[editingIndex]) + " +1   " + "Stats: " + str(upgrades.get(ShipLv[editingIndex] + editingIndex * 20)[4]) +
-                              " +" + str(addedStat) + " " + pointName, 3])
-    timedFlip(mode)         
-
-    Texthelper.write(screen, [("center", 540), "cost:", 3])
-    timedFlip(mode) 
-
-    Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
-    Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
-    timedFlip(mode) 
-
-    Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
-    Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
-    timedFlip(mode)     
-
-    if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
-        if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
-            inventory[0] -= cost[0]
-            inventory[1] -= cost[1]
-            inventory[2] -= cost[2]
-            inventory[3] -= cost[3]
-            ShipLv[editingIndex] += 1
-            ##status = "garageinit"
-            filehelper.set(inventory, 2)
-            filehelper.set(ShipLv, 3)
-            
+    if ShipLv[editingIndex] >= maxLevel:
+        Texthelper.write(screen, [("center", 540), "max level", 3])
     else:
-        Texthelper.write(screen, [("center", 540+220), "sorry", 3])
-    timedFlip(mode)       
+        Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[editingIndex]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " " + pointName, 3])
+        timedFlip(mode)         
+
+        Texthelper.write(screen, [("center", 540), "cost:", 3])
+        timedFlip(mode) 
+
+        Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
+        Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
+        timedFlip(mode) 
+
+        Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
+        Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
+        timedFlip(mode)     
+
+        if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
+            if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+                inventory[0] -= cost[0]
+                inventory[1] -= cost[1]
+                inventory[2] -= cost[2]
+                inventory[3] -= cost[3]
+                ShipLv[editingIndex] += 1
+                filehelper.set(inventory, 2)
+                filehelper.set(ShipLv, 3)
+                UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[editingIndex] + editingIndex * maxLevel)[4] 
+                UpgradeScreenStorage.cost = upgrades.get(ShipLv[editingIndex] + editingIndex * maxLevel + 1)
+                UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
+                UpgradeScreenStorage.editingIndex = editingIndex
+                UpgradeScreenStorage.pointName = pointName
+        else:
+            Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+        timedFlip(mode)       
      
     if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
         status = "garageinit"

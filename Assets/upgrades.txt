@@ -59,3 +59,4 @@
 [34, 0, 17, 0, 54] #58
 [36, 0, 18, 0, 57] #59
 [38, 0, 19, 0, 60] #60
+[0, 0, 0, 0, 0] #this line prevent the game from crashing
