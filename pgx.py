@@ -576,5 +576,11 @@ class Filehelper():
         file.writelines(contents)
         file.close()
 
+    #sets a specific element of one of the lists to a new value
+    def setElement(self, content, line, column):
+        lineData = Filehelper.get(self, line)
+        lineData[column] = content
+        Filehelper.set(self, lineData, line)
+
 
 filehelper = Filehelper("Assets\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class

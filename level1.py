@@ -69,7 +69,7 @@ def level1(screen, width, height):
                 filehelper.set([namebox.getText()], 1)
             if len(keyboard()) == 1 and keyboard()[0] == "enter" and namebox.getText() != "name":
                 running = False
-                filehelper.set([namebox.getText()], 1)                
+                filehelper.setElement(namebox.getText(), 1, 0)                
             
         #namebox.currenttext = [("center", ypos+1850), namebox.getData()[1], namebox.getData()[2]]
         namebox.update(screen)
