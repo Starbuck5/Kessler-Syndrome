@@ -298,8 +298,13 @@ class AnnouncementBox():
 
     def _draw(self, screen):
         screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
-        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
-                                                 round(AnnouncementBox.width*0.4),round(AnnouncementBox.height*0.1)), 4)
+        boxheight = AnnouncementBox.height*0.1
+        if len(self.linedtext) > 3:
+            length = len(self.linedtext)
+            boxheight += AnnouncementBox.height*((length-3)*0.03333)
+        boxheight = round(boxheight)
+        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3+AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1),
+                                                 round(AnnouncementBox.width*0.4-AnnouncementBox.height*0.1), boxheight), 4)
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
                                                  round(AnnouncementBox.height*0.1),round(AnnouncementBox.height*0.1)), 4)
         words = int(self.time/20)
@@ -325,7 +330,7 @@ class AnnouncementBox():
                     words = 0
                     line += 1                                
         if self.ended:
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.21)),
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.11 + boxheight)),
                                       "Press Enter to Continue", 1.5])
             inputvar = keyboard()
             if "enter" in inputvar:
