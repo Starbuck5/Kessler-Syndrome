@@ -1,5 +1,5 @@
 [1920, 1080, True, 2]#game info: width, height, fullscreen, gamestate
-[icemoon]#player info: name, cleared first sector
+[icemoon, False, 8881888888888888888]#player info: name, cleared first sector
 [0, 100, 100, 100]#inventory: metal, gas, circuits
 [4, 4, 3, 0]#level info: armor lv, fuel tank lv, torpedo lv
 [12, 1586, 6]#ship info: armor points, fuel points, torpedoes(able to use)

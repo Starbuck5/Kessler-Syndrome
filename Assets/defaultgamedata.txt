@@ -1,5 +1,5 @@
 [?, 1080, True, 0]#game info: width, height, fullscreen, gamestate
-[placeholder, False]#player info: name, cleared first sector
+[placeholder, False, 8888888888888888888]#player info: name, cleared first sector
 [0, 30, 0, 0]#inventory: metal, gas, circuits
 [1, 1, 1, 0]#level info: armor lv, fuel tank lv, torpedo lv
 [10, 1500, 3]#ship info: armor points, fuel points, torpedoes(able to use)

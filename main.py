@@ -438,7 +438,17 @@ def main():
             Screenhelper.greyOut(screen)
             Font.set_scramble_paused(True) #pauses any scrambling going on
             drawPauseUI(screen, True)
+            
+            #saving objectlist, sector achievements data
             saveGame(sectornum, object_list[:], width, height)
+            discovery = ""
+            for i in range(len(discoverSector)):
+                if discoverSector[i] == False:
+                    discovery += "8"
+                else:
+                    discovery += "1"
+            filehelper.setElement(discovery, 1, 2)
+            
             status = "paused"
 
         if status == "paused":
@@ -624,8 +634,14 @@ def main():
                                     object_list[i2+5] = dockPosition[4]
             
             #game progression
-            achievements = Filehelper("assets\\Achievements.txt")
-            discoverSector = achievements.get(0)
+            discoverSector = filehelper.get(1)[2]
+            discoverSector = list(str(discoverSector))
+            for i in range(len(discoverSector)):
+                if discoverSector[i] == "8":
+                    discoverSector[i] = False
+                else:
+                    discoverSector[i] = True
+                
             if file_settings[3] == 0:
                 level1(screen, width, height)
                 file_settings[3] = 1
@@ -816,7 +832,6 @@ def main():
                                 pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
                                 "Take a look at this, this is the edge of your cleaning zone. Nothing more to do other than to keep cleaning for the rest of your life.")
                                 discoverSector[18] = True
-                            achievements.set(discoverSector, 0)
 
             # reward for killing a sector
             numdebris = 0
