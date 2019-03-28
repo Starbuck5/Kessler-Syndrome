@@ -38,7 +38,7 @@ def reorderObjectList(object_list):
     return newObject_list
         
 #the nuts and bolts of printing the things    
-def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame): 
+def crayprinter(xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast): 
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -89,6 +89,11 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
+
+    if object_number == 9:
+        scale = 1 + (.1 * (300 - decayLife))
+        ionBlast = scaleImage(ionBlast, scale)
+        screen.blit(ionBlast, (xpos, ypos))
         
     if 9 < object_number < 40: #draws satellites
         image = rotatePixelArt(graphlist[object_number-10], rotation)
@@ -104,7 +109,7 @@ def crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist
     return colliderect
 
 #takes care of the printing logic
-def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame):
+def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast):
     object_list = reorderObjectList(object_list)
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
@@ -118,9 +123,10 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
         ypos = object_list[i+1]
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
+        decayLife = object_list[i+7]
 
-        colliderect = crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
-                                  specialpics, flame)
+        colliderect = crayprinter(xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
+                                  specialpics, flame, ionBlast)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -133,8 +139,8 @@ def printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                 elif down.colliderect(colliderect):
                     ypos -= height
                 
-                crayprinter(xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
-                            flame)
+                crayprinter(xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics,
+                            flame, ionBlast)
                             
 #flashing alerts for low fuel and armor
 class FlashyBox:
@@ -322,8 +328,10 @@ def main():
     fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\images\\armor.tif")
     earthpic = loadImage("Assets\\images\\earth.tif")
-    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2), scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
+    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2),
+                   scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
     infinitypic = loadImage("Assets\\images\\infinity.tif")
+    ionBlast = scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5)
 
     # settings
     max_speed = 4 * scalarscalar
@@ -775,6 +783,10 @@ def main():
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missle v mine
+                            printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], -.5,
+                                                .5, 9, "NA", "NA", 300]
+                            object_list[(i*8)+7] = -1
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
@@ -889,7 +901,7 @@ def main():
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer
-            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame)
+            printer(object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
             inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
