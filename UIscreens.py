@@ -277,10 +277,17 @@ def incrementBox(inputgetter, value):
 #writes out a line with a -1, an inputgetter box, and a +1
 def plusminusrow(screen, inputgetter, height):
     inputgetter.update(screen)
-    if Texthelper.writeButtonBox(screen, [(900, height), "-1", 3]) and inputgetter.getIntText() > 0:
+    if Texthelper.writeButtonBox(screen, [(850, height), "-10", 3]):
+        if inputgetter.getIntText() >= 10:
+            incrementBox(inputgetter, -10)
+        else:
+            incrementBox(inputgetter, -1 * inputgetter.getIntText())
+    if Texthelper.writeButtonBox(screen, [(975, height), "-1", 3]) and inputgetter.getIntText() > 0:
         incrementBox(inputgetter, -1)
-    if Texthelper.writeButtonBox(screen, [(1100, height), "+1", 3]):
+    if Texthelper.writeButtonBox(screen, [(1250, height), "+1", 3]):
         incrementBox(inputgetter, 1)
+    if Texthelper.writeButtonBox(screen, [(1345, height), "+10", 3]):
+        incrementBox(inputgetter, 10)
 
 def isoverfull(inputgetter, cap):
     if inputgetter.getIntText() <= cap:
@@ -296,9 +303,9 @@ class marketStorage():
     gas = ""
     circuits = ""
     def __init__(self):
-        marketStorage.metal = InputGetter([(1000, 430), "0", 3], "int")
-        marketStorage.gas = InputGetter([(1000, 485), "0", 3], "int")
-        marketStorage.circuits = InputGetter([(1000, 540), "0", 3], "int")
+        marketStorage.metal = InputGetter([(1090, 430), "0", 3], "int")
+        marketStorage.gas = InputGetter([(1090, 485), "0", 3], "int")
+        marketStorage.circuits = InputGetter([(1090, 540), "0", 3], "int")
 
 #the currency to resource market of the galaxy, or at least this chunk of LEO      
 def marketUI(screen, inventory, mode):
@@ -329,24 +336,31 @@ def marketUI(screen, inventory, mode):
     ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and isoverfull(circuitbox, inventory[2])
     sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] + circuitbox.getIntText() * SELLVALUE[2]
     if not ableToSell:
-        Texthelper.write(screen, [(900, 670), "you cannot sell what you do not have", 1])
-    if Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3]) and ableToSell:
+        Texthelper.write(screen, [("center", 670), "you cannot sell what you do not have", 1])
+        Texthelper.writeBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(178,34,34))
+    elif Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3]):
         inventory[0] -= metalbox.getIntText()
         inventory[1] -= gasbox.getIntText()
         inventory[2] -= circuitbox.getIntText()
         inventory[3] += sellvalue
         marketStorage()
 
+    timedFlip(mode);
+
     buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *BUYVALUE[2]
-    if Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]) and inventory[3] >= buyvalue:
+    if buyvalue > inventory[3]:
+        Texthelper.write(screen, [("center", 745), "you cannot afford this", 1])
+        Texthelper.writeBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(178,34,34))
+    elif Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]):
         inventory[0] += metalbox.getIntText()
         inventory[1] += gasbox.getIntText()
         inventory[2] += circuitbox.getIntText()
         inventory[3] -= buyvalue
         marketStorage()
         
-    
-    if Texthelper.writeButton(screen, [("center", 760), "back", 3]):
+    timedFlip(mode);
+
+    if Texthelper.writeButton(screen, [("center", 780), "back", 3]):
         status = "homeinit"        
     return status
 
