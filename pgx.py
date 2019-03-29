@@ -356,7 +356,7 @@ class Texthelper():
     width = 1
     height = 1
     lastPressTime = 0
-    HALFSIZERS = ["\'", ".", ":" ",", "!"]
+    HALFSIZERS = ["\'", ".", ":" ",", "!", "|"]
 
     #part of the input sanitizing process: figures out how to center text mainly
     def _interpretcoords(text_input):
