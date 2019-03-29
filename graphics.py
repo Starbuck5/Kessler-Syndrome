@@ -2,6 +2,7 @@ from pgx import pointsToRect
 from game import Rotate
 from pgx import rotatePixelArt
 from game import Asteroid
+from pgx import scaleImage
 
 import pygame
 from pygame import gfxdraw
@@ -141,9 +142,10 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, spec
         ypos = object_list[i+1]
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
+        decayLife = object_list[i+7]
 
         colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
-                                  specialpics, flame)
+                                  specialpics, flame, ionBlast)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -157,4 +159,4 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, spec
                     ypos -= height
                 
                 crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics,
-                            flame)
+                            flame, ionBlast)

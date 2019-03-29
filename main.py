@@ -770,7 +770,7 @@ def main():
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer
-            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame)
+            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
             inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
