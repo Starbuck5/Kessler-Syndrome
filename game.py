@@ -16,12 +16,12 @@ def particlemaker(xpos, ypos, xmom, ymom):
         printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom +
                             ((random.randint(-20, 20))/random_factor), 4, "NA", "NA", particle_lifespan]  
     return printerlist_add
-
+    
 #physics handling
 def doPhysics(object_list, width, height, max_speed, drag, step_drag):
     for i in range(0, len(object_list), 8):
         #decaying objects
-        if object_list[4 + i] in [2, 8, 5, 4]: #stuff in list should have a decrement to their life force
+        if object_list[4 + i] in [2, 8, 5, 4, 9]: #stuff in list should have a decrement to their life force
             object_list[7 + i] -= 1
 
         #speed limit for ship
