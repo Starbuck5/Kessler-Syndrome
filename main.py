@@ -194,8 +194,10 @@ def main():
     fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)
     armorpic = loadImage("Assets\\images\\armor.tif")
     earthpic = loadImage("Assets\\images\\earth.tif")
-    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2), scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
+    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2),
+                   scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
     infinitypic = loadImage("Assets\\images\\infinity.tif")
+    ionBlast = scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5)
 
     # settings
     max_speed = 4 * scalarscalar

@@ -56,7 +56,7 @@ def reorderObjectList(object_list):
     return newObject_list
 
 #the nuts and bolts of printing the things    
-def crayprinter(screen, xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame): 
+def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast): 
     colliderect = ""
     if object_number == 100: #draws star
         screen.blit(specialpics[0], (xpos, ypos))
@@ -107,6 +107,11 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, scalar1, scalar3, g
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
+
+    if object_number == 9: #draws alien blasts
+        scale = 1 + (.1 * (300 - decayLife))
+        ionBlast = scaleImage(ionBlast, scale)
+        screen.blit(ionBlast, (xpos, ypos))
         
     if 9 < object_number < 40: #draws satellites
         image = Images.get(object_number, rotation)
@@ -122,7 +127,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, scalar1, scalar3, g
     return colliderect
 
 #takes care of the printing logic
-def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame):
+def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast):
     object_list = reorderObjectList(object_list)
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
@@ -137,7 +142,7 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, spec
         object_number = object_list[i+4] #object type
         rotation = object_list[i+5] #rotation position
 
-        colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar,
+        colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
                                   specialpics, flame)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
@@ -151,5 +156,5 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, spec
                 elif down.colliderect(colliderect):
                     ypos -= height
                 
-                crayprinter(screen, xpos, ypos, object_number, rotation, scalar1, scalar3, graphlist, scalarscalar, specialpics,
+                crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                             flame)
