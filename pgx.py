@@ -106,6 +106,17 @@ def rotatePixelArt(image, degrees):
     image = scaleImage(image, 0.25)
     return image
 
+#takes a pointlist and returns a bounding box rectangle
+def pointsToRect(pointlist):
+    xmin, xmax = (10000, -10000)
+    ymin, ymax = xmin, xmax
+    for x, y in pointlist:
+        xmin = min(xmin, x)
+        xmax = max(xmax, x)
+        ymin = min(ymin, y)
+        ymax = max(ymax, y)
+    return pygame.Rect(xmin, ymin, xmax-xmin, ymax-ymin)
+
 #breaks up sprite sheets into their separate images
 #columns can be a list, if multiple numbers of columns exist on separate rows
 def spriteSheetBreaker(sheet, width, height, margin, vertmargin, rows, columns):
