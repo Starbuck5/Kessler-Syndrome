@@ -7,31 +7,7 @@ from level1 import *
 from game import *
 from UIscreens import *
 import graphics
-                                    
-#flashing alerts for low fuel and armor
-class FlashyBox:
-    def __init__(self, rect, threshold, color):
-        self.rect = rect
-        self.threshold = threshold
-        self.color = color
-        self.timer = -1
-        self.displaying = False
-
-    def update(self, current):
-        if current < self.threshold:
-            self.timer += 1
-        elif current > self.threshold:
-            self.timer = -1
-            self.displaying = False
-
-        if self.timer != -1: #flips displaying when timer reaches 50
-            if self.timer == 50:
-                self.displaying = not self.displaying
-                self.timer = 0
-
-        if self.displaying: #draws the rectangle
-            pygame.draw.rect(screen, self.color, self.rect, 0)
-            
+                                                
 #backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
     xpos = object_list[object_location*8]
@@ -191,8 +167,6 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
                  "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  loadImage("Assets\\images\\solarpanel.tif")]
-    fuelpic = scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2)
-    armorpic = loadImage("Assets\\images\\armor.tif")
     earthpic = loadImage("Assets\\images\\earth.tif")
     specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2),
                    scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
@@ -495,8 +469,9 @@ def main():
                 totalammunition = ammunitionHelp[4]
             ammunition = filehelper.get(4)[2]
 
-            fuelalert = FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0))
-            armoralert = FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0))
+            #initializes printouts of fuel and armor and ammo
+            graphics.InfoBars.init(graphics.FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0)),
+                                   graphics.FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0)))
 
             for i in range(0, len(object_list), 8):
                         object_number = object_list[i+4]
@@ -771,24 +746,13 @@ def main():
             
             # printer
             graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast)
+            graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
             inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
-            Texthelper.write(screen, [(0, 0), inventory_string,3])            
-            #fuel
-            fuelalert.update(currentfuel/totalfuel)
-            screen.blit(fuelpic, (1600, 1000))
-            pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-            pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
-            #armor
-            armoralert.update(currentarmor/totalarmor)
-            screen.blit(armorpic, (1600, 930))
-            pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-            pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
-            #ammunition
-            Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
+            Texthelper.write(screen, [(0, 0), inventory_string,3])
             if DEVMODE:
-                Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3])            
+                Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3]) 
             flame = False
             pygame.display.flip()
             # printer

@@ -3,6 +3,8 @@ from game import Rotate
 from pgx import rotatePixelArt
 from game import Asteroid
 from pgx import scaleImage
+from pgx import Texthelper
+from pgx import loadImage
 
 import pygame
 from pygame import gfxdraw
@@ -39,6 +41,8 @@ def init(d_asteroids, d_parts, d_sats, graphlist):
         for j in range(36):
             rotatedict[j*10] = rotatePixelArt(surf, j*10)
         Images.add(pixelStuff[i], rotatedict)
+    Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
+    Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
 
 #reorders the list so it will print in the correct order
 background = [100]
@@ -160,3 +164,52 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, spec
                 
                 crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, specialpics,
                             flame, ionBlast)
+
+#flashing alerts for low fuel and armor
+class FlashyBox:
+    def __init__(self, rect, threshold, color):
+        self.rect = rect
+        self.threshold = threshold
+        self.color = color
+        self.timer = -1
+        self.displaying = False
+
+    def update(self, screen, current):
+        if current < self.threshold:
+            self.timer += 1
+        elif current > self.threshold:
+            self.timer = -1
+            self.displaying = False
+
+        if self.timer != -1: #flips displaying when timer reaches 50
+            if self.timer == 50:
+                self.displaying = not self.displaying
+                self.timer = 0
+
+        if self.displaying: #draws the rectangle
+            pygame.draw.rect(screen, self.color, self.rect, 0)
+
+#controls the fuel, armor, and ammunition readout in bottom right
+class InfoBars:
+    fuelalert = 1
+    armoralert = 1
+    def init(fuelalert, armoralert):
+        InfoBars.fuelalert = fuelalert
+        InfoBars.armoralert = armoralert
+
+    #prints out the fuel and armor bars
+    def draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition):
+        fuelpic = Images.get("fuelpic")
+        armorpic = Images.get("armorpic")
+        #fuel
+        InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
+        screen.blit(fuelpic, (1600, 1000))
+        pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
+        pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+        #armor
+        InfoBars.armoralert.update(screen, currentarmor/totalarmor)
+        screen.blit(armorpic, (1600, 930))
+        pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
+        pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
+        #ammunition
+        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
