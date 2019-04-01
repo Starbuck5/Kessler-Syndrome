@@ -35,8 +35,13 @@ def keyboard():
 
 #because processing events deletes them in the process, centralized space to get them from
 class AllEvents():
-    TICKINPUT = []
-
+    TICKINPUT = []    
+    def contains(eventType):
+        for event in AllEvents.TICKINPUT:
+            if event.type == eventType:
+                return True
+        return False
+            
 #called from mainloop to stick events from queue into AllEvents.TICKINPUT
 def collect_inputs():
     AllEvents.TICKINPUT = []
@@ -133,6 +138,22 @@ def spriteSheetBreaker(sheet, width, height, margin, vertmargin, rows, columns):
         for j in range(columns[i]):
             image_list.append(sheet.subsurface(((width+margin)*j, (height+vertmargin)*i, width, height)))
     return image_list
+
+#cool storage for sounds in a dictionary accessed through class methods
+class SoundVault():
+    storage = {}
+    def __init__(self, name, filepath, **kwargs):
+        sound = pygame.mixer.Sound(handlePath(filepath))
+        if 'volume' in kwargs:
+            sound.set_volume(kwargs['volume'])        
+        SoundVault.storage[name] = sound
+    def get(name):
+        return SoundVault.storage[name]
+    def play(name):
+        SoundVault.storage[name].play()
+
+pygame.mixer.init()
+SoundVault('button', "Assets\\click.wav", volume=0.5)
 
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
@@ -465,9 +486,11 @@ class Texthelper():
         click = mouse()
         time = pygame.time.get_ticks()//500 #// = Java integer math - IE truncating the ms to 1/2 seconds
         if time != Texthelper.lastPressTime:
-            if rect[0] < click[1] < rect[0]+rect[2] and rect[1] < click[2] < rect[1]+rect[3]:
-                Texthelper.lastPressTime = time  
-                return True            
+            if AllEvents.contains(pygame.MOUSEBUTTONDOWN):
+                if rect[0] < click[1] < rect[0]+rect[2] and rect[1] < click[2] < rect[1]+rect[3]:
+                    Texthelper.lastPressTime = time
+                    SoundVault.play('button')
+                    return True            
         return False        
 
     # text_input = [(x, y), "text", text_scale]

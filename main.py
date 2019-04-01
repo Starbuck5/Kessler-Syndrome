@@ -56,20 +56,6 @@ def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, 
                 intersection = True
     return intersection
 
-
-#cool storage for sounds in a dictionary accessed through class methods
-class SoundVault():
-    storage = {}
-    def __init__(self, name, filepath, **kwargs):
-        sound = pygame.mixer.Sound(handlePath(filepath))
-        if 'volume' in kwargs:
-            sound.set_volume(kwargs['volume'])        
-        SoundVault.storage[name] = sound
-    def get(name):
-        return SoundVault.storage[name]
-    def play(name):
-        SoundVault.storage[name].play()
-
 #sound effects for collision        
 def explosion_sounds():
     explosion_picker = random.randint(0,1)
@@ -204,7 +190,6 @@ def main():
     clock = pygame.time.Clock()
 
     #sound setup
-    pygame.mixer.init()
     SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.1)
     SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.1)
     SoundVault("money", "Assets\\clink.wav")

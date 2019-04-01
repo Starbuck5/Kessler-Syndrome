@@ -22,8 +22,15 @@ Title: powerlines
 Contributed by: Partners in Rhyme
 Changes: shortened significantly from original
 
---shot sound
+--shot sound--
 (shot)
 https://www.freesoundeffects.com/free-track/gun-silencer-466513/
 Title: Gun Silencer
 Contributed by: Partners in Rhyme
+
+--button click sound--
+(click)
+https://freesound.org/people/KorgMS2000B/sounds/54405/
+Title: Button Click.wav
+Contributed by KorgMS2000B
+Changes: cut off beginning lead time
