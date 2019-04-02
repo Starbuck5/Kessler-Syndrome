@@ -9,7 +9,7 @@ from UIscreens import *
 import graphics
                                                 
 #backened for collinfo, returns hitboxes when given an index of the objectlist
-def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
+def getHitbox(object_list, object_location, scalar3, specialpics, graphlist, ionBlast):
     xpos = object_list[object_location*8]
     ypos = object_list[1+object_location*8]
     objectID = object_list[4+object_location*8]
@@ -31,18 +31,24 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist):
         image = rotatePixelArt(specialpics[2], object_list[object_location*8+5])
         hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
                    image.get_height()]
+    elif objectID == 9:
+        scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
+        ionBlast = scaleImage(ionBlast, scale)
+        image = ionBlast
+        hitBox = [xpos, ypos, image.get_width(), 
+                   image.get_height()]
     elif 69 < objectID < 100: #asteroids
         hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
     return hitBox
 
 #returns true if there is a collision between two objects, returns false otherwise
-def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, DEVMODE):
+def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, ionBlast, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
         #hitBox = [xpos, ypos, width, height]
 
-        hitBox1 = getHitbox(object_list, object_number1, scalar3, specialpics, graphlist)
-        hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist)
+        hitBox1 = getHitbox(object_list, object_number1, scalar3, specialpics, graphlist, ionBlast)
+        hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist, ionBlast)
 
         # shows all the hitboxes
         if DEVMODE:
@@ -433,6 +439,8 @@ def main():
             previous_tick2 = 0
             scalar1 = 0
             lastnumdebris = 0
+            move = True
+            ionBlastTicks = 0
             pygame.mouse.set_visible(False)
             #inventory
             shipInventory = [0,0,0,0]
@@ -506,15 +514,15 @@ def main():
                 if object_list[4] == 1 or object_list[4] == 5:
                     thrust_vector = (math.cos(math.radians(object_list[5]-90)),
                                      math.sin(math.radians(object_list[5]+90)))
-                    if "w" in inputvar or "uparrow" in inputvar:
+                    if "w" in inputvar or "uparrow" in inputvar and move == True:
                         object_list[2] += step_x * thrust_vector[0]
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
-                    if "e" in inputvar or "rightarrow" in inputvar:
+                    if "e" in inputvar or "rightarrow" in inputvar and move == True:
                         object_list[5] += step_r
-                    if "q" in inputvar or "leftarrow" in inputvar:
+                    if "q" in inputvar or "leftarrow" in inputvar and move == True:
                         object_list[5] -= step_r
-                    if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
+                    if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0 and move == True:
                         ammunition -= 1
                         SoundVault.play('shot')
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
@@ -556,7 +564,7 @@ def main():
             for i in range(int(len(object_list)/8)):
                 i2 = i + 1
                 while i2 < int(len(object_list)/8):                   
-                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, DEVMODE) == True:
+                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, ionBlast, DEVMODE) == True:
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
@@ -616,6 +624,13 @@ def main():
                             printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], -.5,
                                                 .5, 9, "NA", "NA", 300]
                             object_list[(i*8)+7] = -1
+                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 7: #ship v mine
+                            printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], -.5,
+                                                .5, 9, "NA", "NA", 300]
+                            object_list[(i2*8)+7] = -1
+                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 9: #ship v explosion
+                            ionBlastTicks = 200
+                            currentarmor -= 0.03
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
@@ -741,6 +756,16 @@ def main():
             flame = False
             pygame.display.flip()
             # printer
+
+            # explosion affect ticks
+            ionBlastTicks -= 1
+            if ionBlastTicks < 0:
+                ionBlastTicks = 0
+            if ionBlastTicks > 0:
+                move = False
+            else:
+                move = True
+                
         
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
