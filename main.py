@@ -196,12 +196,12 @@ def main():
     clock = pygame.time.Clock()
 
     #sound setup
-    SoundVault("explosion1", "Assets\\Bomb1.wav", volume=0.1)
-    SoundVault("explosion2", "Assets\\Bomb2.wav", volume=0.1)
-    SoundVault("money", "Assets\\clink.wav")
-    SoundVault("death", "Assets\\powerfailure.wav", volume=0.2)
-    SoundVault("portal", "Assets\\electric.wav", volume=0.15)
-    SoundVault("shot", "Assets\\shot.wav", volume=0.25)
+    SoundVault("explosion1", "Assets\\sounds\\Bomb1.wav", volume=0.1)
+    SoundVault("explosion2", "Assets\\sounds\\Bomb2.wav", volume=0.1)
+    SoundVault("money", "Assets\\sounds\\clink.wav")
+    SoundVault("death", "Assets\\sounds\\powerfailure.wav", volume=0.2)
+    SoundVault("portal", "Assets\\sounds\\electric.wav", volume=0.15)
+    SoundVault("shot", "Assets\\sounds\\shot.wav", volume=0.25)
 
     # variable setup
     playerinfo = filehelper.get(1)
