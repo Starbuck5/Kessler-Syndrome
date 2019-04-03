@@ -69,7 +69,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
     if object_number == 0: #draws zvezda
         screen.blit(specialpics[1], (xpos, ypos))
             
-    if object_number == 1: #draws main ship
+    if object_number == 1 or object_number == 5: #draws main ship
         ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3,
                             ypos+10*scalar3]]
         ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
@@ -91,15 +91,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         
     if object_number == 4: #draws explosion effects
         pygame.draw.circle(screen, (255, 255, 255), (int(xpos), int(ypos)), 1, 0)
-        
-    if object_number == 5: #draws shielded ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3,
-                            ypos+10*scalar3]]
-        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (100,100,100))
-        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (100,100,100))
-        colliderect = pointsToRect(ship_pointlist)
-        
+                
     if object_number == 6: #draws alien
         alien_pointlist = [[xpos-25*scalar1, ypos], [xpos-18*scalar1, ypos], [xpos-10*scalar1, ypos+8*scalar1],
                            [xpos+10*scalar1, ypos+8*scalar1], [xpos+18*scalar1, ypos], [xpos+25*scalar1, ypos],
