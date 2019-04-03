@@ -488,15 +488,11 @@ def drawPauseUI(screen, mode):
         status = "game"
     timedFlip(mode)
 
-    if Texthelper.writeButton(screen, [("center", 540-20), "Restart", 2]):
-        status = "gameinit"
-    timedFlip(mode)
-
-    if Texthelper.writeButton(screen, [("center", 540+15), "Quit to menu", 2]):
+    if Texthelper.writeButton(screen, [("center", 540-20), "Quit to menu", 2]):
         status = "menuinit"
     timedFlip(mode)
 
-    if Texthelper.writeButton(screen, [("center", 540+50), "Quit to desktop", 2]):
+    if Texthelper.writeButton(screen, [("center", 540+15), "Quit to desktop", 2]):
         status = "exiting"
     pygame.display.flip()
     return status
