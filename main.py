@@ -614,7 +614,7 @@ def main():
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missle v mine
+                        elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missile v mine
                             printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], -.5,
                                                 .5, 9, "NA", "NA", 300]
                             object_list[(i*8)+7] = -1
@@ -622,6 +622,10 @@ def main():
                             printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], -.5,
                                                 .5, 9, "NA", "NA", 300]
                             object_list[(i2*8)+7] = -1
+                            object_list[4] = 5
+                            object_list[7] = 200
+                            Font.scramble(200)
+                            currentarmor -= 1
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 9: #ship v explosion
                             object_list[4] = 5
                             object_list[7] = 200
