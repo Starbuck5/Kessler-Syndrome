@@ -434,6 +434,7 @@ def main():
             previous_tick2 = 0
             scalar1 = 0
             lastnumdebris = 0
+            dmgTick = 0
             pygame.mouse.set_visible(False)
             #inventory
             shipInventory = [0,0,0,0]
@@ -625,7 +626,8 @@ def main():
                             object_list[4] = 5
                             object_list[7] = 200
                             Font.scramble(200)
-                            currentarmor -= 0.3
+                            if dmgTick == 0:
+                                dmgTick = 201
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
@@ -649,7 +651,7 @@ def main():
                             lastnumdebris = 0
                             if new_objects[0] == -1 and len(new_objects)<8:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                                      d_sats, d_parts, d_asteroids)
+                                                      d_sats, d_parts, d_asteroids, sectornum)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
                             #recordings needed
@@ -710,10 +712,14 @@ def main():
 
             #HACKZ
             if DEVMODE:
-                    currentfuel = totalfuel
-                    currentarmor = totalarmor
-                    ammunition = totalammunition
+                currentfuel = totalfuel
+                currentarmor = totalarmor
+                ammunition = totalammunition
 
+            if dmgTick > 0:
+                currentarmor -= .03
+                dmgTick -= 1
+                
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
                 saveGame(sectornum, object_list, width, height)
