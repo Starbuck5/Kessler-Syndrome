@@ -626,6 +626,7 @@ def main():
                             object_list[7] = 200
                             Font.scramble(200)
                             currentarmor -= 1
+                            dmgTick = 201
                         elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 9: #ship v explosion
                             object_list[4] = 5
                             object_list[7] = 200
@@ -721,7 +722,7 @@ def main():
                 ammunition = totalammunition
 
             if dmgTick > 0:
-                currentarmor -= .03
+                currentarmor -= .02
                 dmgTick -= 1
                 
             #ship death
