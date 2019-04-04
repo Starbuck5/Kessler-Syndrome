@@ -5,14 +5,14 @@ Protagonist framed for crimes on Earth, exiled to space to collect orbital debri
 Protagonist becomes powerful by salvaging peices of old satellites, eventually confronting his framer (President of the World)
 in a boss battle.
 
-Controls:
-Q W E (left rotate) (forward) (right rotate)
-                    or
-< ^ > (left rotate) (forward) (right rotate)
-SPACE to fire
-M to go to map screen
-P to pause
-T to activate portals
+Controls:  
+Q W E (left rotate) (forward) (right rotate)      
+                    or  
+< ^ > (left rotate) (forward) (right rotate)  
+SPACE to fire  
+M to go to map screen  
+P to pause  
+T to activate portals  
 
 Extra Notes:
 The setupper asks for a resolution to run the game at, but right now it only supports 1920x1080
