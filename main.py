@@ -367,7 +367,7 @@ def main():
                         lastnumdebris = 0
                         if new_objects[0] == -1 and len(new_objects)<8:
                             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                d_sats, d_parts, d_asteroids)
+                                d_sats, d_parts, d_asteroids, sectornum)
                         else:
                             object_list = object_list[:8] + new_objects[8:]
                         object_list[2] = 0  #kills momentum
