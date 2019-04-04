@@ -9,10 +9,11 @@ from UIscreens import *
 import graphics
                                                 
 #backened for collinfo, returns hitboxes when given an index of the objectlist
-def getHitbox(object_list, object_location, scalar3, specialpics, graphlist, ionBlast):
+def getHitbox(object_list, object_location, scalar3, graphlist, ionBlast):
     xpos = object_list[object_location*8]
     ypos = object_list[1+object_location*8]
     objectID = object_list[4+object_location*8]
+    rotation = object_list[5+object_location*8]
     
     hitBox = [xpos, ypos, 0,0]
     if objectID == 1: #main ship
@@ -22,15 +23,11 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist, ion
     elif objectID == 6: #aliens
         hitBox = [xpos, ypos, 60, 60]
     elif objectID == 0: #zvezda
-        hitBox = [xpos, ypos, specialpics[1].get_size()[0], specialpics[1].get_size()[1]]
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation, False)
     elif 9 < objectID < 40: #pixel things
-        image = rotatePixelArt(graphlist[objectID-10], object_list[object_location*8+5])
-        hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
-                   image.get_height()]
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 7: #alien mines
-        image = rotatePixelArt(specialpics[2], object_list[object_location*8+5])
-        hitBox = [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
-                   image.get_height()]
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 9:
         scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
         ionBlast = scaleImage(ionBlast, scale)
@@ -38,17 +35,17 @@ def getHitbox(object_list, object_location, scalar3, specialpics, graphlist, ion
         hitBox = [xpos, ypos, image.get_width(), 
                    image.get_height()]
     elif 69 < objectID < 100: #asteroids
-        hitBox = Asteroid.getHitbox(xpos, ypos, objectID)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     return hitBox
 
 #returns true if there is a collision between two objects, returns false otherwise
-def collinfo(object_number1, object_number2, object_list, scalar3, specialpics, graphlist, ionBlast, DEVMODE):
+def collinfo(object_number1, object_number2, object_list, scalar3, graphlist, ionBlast, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
         #hitBox = [xpos, ypos, width, height]
 
-        hitBox1 = getHitbox(object_list, object_number1, scalar3, specialpics, graphlist, ionBlast)
-        hitBox2 = getHitbox(object_list, object_number2, scalar3, specialpics, graphlist, ionBlast)
+        hitBox1 = getHitbox(object_list, object_number1, scalar3, graphlist, ionBlast)
+        hitBox2 = getHitbox(object_list, object_number2, scalar3, graphlist, ionBlast)
 
         # shows all the hitboxes
         if DEVMODE:
@@ -160,8 +157,6 @@ def main():
                  "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  loadImage("Assets\\images\\solarpanel.tif")]
     earthpic = loadImage("Assets\\images\\earth.tif")
-    specialpics = [loadImage("Assets\\images\\star.tif"), scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2),
-                   scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2)]
     infinitypic = loadImage("Assets\\images\\infinity.tif")
     ionBlast = scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5)
 
@@ -423,7 +418,7 @@ def main():
                     for i in range(0, len(object_list), 8):
                         object_number = object_list[i+4]
                         if object_number == 0:
-                            dockPosition = dock(object_list[i], object_list[i+1], specialpics[1])
+                            dockPosition = dock(object_list[i], object_list[i+1], graphics.Images.get(0))
                             for i2 in range(0, len(object_list), 8):
                                 if object_list[4 + i2] == 1:
                                     object_list[i2] = dockPosition[0]
@@ -467,7 +462,7 @@ def main():
             for i in range(0, len(object_list), 8):
                         object_number = object_list[i+4]
                         if object_number == 0:
-                            dockPosition = dock(object_list[i], object_list[i+1], specialpics[1])
+                            dockPosition = dock(object_list[i], object_list[i+1], graphics.Images.get(0))
                             for i2 in range(0, len(object_list), 8):
                                 if object_list[4 + i2] == 1:
                                     object_list[i2] = dockPosition[0]
@@ -562,7 +557,7 @@ def main():
             for i in range(int(len(object_list)/8)):
                 i2 = i + 1
                 while i2 < int(len(object_list)/8):                   
-                    if collinfo(i,i2,object_list, scalar3, specialpics, graphlist, ionBlast, DEVMODE) == True:
+                    if collinfo(i,i2,object_list, scalar3, graphlist, ionBlast, DEVMODE) == True:
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
@@ -745,7 +740,7 @@ def main():
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
             
             # printer
-            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, specialpics, flame, ionBlast)
+            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame, ionBlast)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
