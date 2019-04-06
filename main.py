@@ -667,7 +667,7 @@ def main():
                             if sectornum == 9 and discoverSector[8] == False:
                                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                 pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                "congrats, you finally made it to the land of explosives. Have fun out there.")
+                                "Congrats, you finally made it to the land of explosives. Have fun out there.")
                                 discoverSector[8] = True
                             if sectornum == 12 and discoverSector[11] == False:
                                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
@@ -677,7 +677,7 @@ def main():
                             if sectornum == 17 and discoverSector[16] == False:
                                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                 pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                "I see you found some more debree to clean up, so make it quick.")
+                                "I see you found some more debris to clean up, make it quick.")
                                 discoverSector[16] = True
                             if sectornum == 19 and discoverSector[18] == False:
                                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
