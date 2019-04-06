@@ -336,7 +336,7 @@ def marketUI(screen, inventory, mode):
         inventory[3] += sellvalue
         marketStorage()
 
-    timedFlip(mode);
+    timedFlip(mode)
 
     buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *BUYVALUE[2]
     if buyvalue > inventory[3]:
@@ -349,7 +349,7 @@ def marketUI(screen, inventory, mode):
         inventory[3] -= buyvalue
         marketStorage()
         
-    timedFlip(mode);
+    timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 780), "back", 3]):
         status = "homeinit"        
