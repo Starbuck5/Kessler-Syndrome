@@ -60,6 +60,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist):
     Images.add(100, loadImage("Assets\\images\\star.tif"))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
+    Images.add("shotpic", loadImage("Assets\\images\\missile.tif")) ####
 
 #reorders the list so it will print in the correct order
 background = [100]
@@ -210,9 +211,10 @@ class InfoBars:
         InfoBars.armoralert = armoralert
 
     #prints out the fuel and armor bars
-    def draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition):
+    def draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition):
         fuelpic = Images.get("fuelpic")
         armorpic = Images.get("armorpic")
+        shotpic = Images.get("shotpic")
         #fuel
         InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
         screen.blit(fuelpic, (1600, 1000))
@@ -224,4 +226,6 @@ class InfoBars:
         pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
         pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
         #ammunition
-        Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
+        screen.blit(shotpic, (1600, 860))
+        Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
+        #Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
