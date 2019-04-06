@@ -158,7 +158,7 @@ SoundVault('button', "Assets\\sounds\\click.wav", volume=0.5)
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o","p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ":", ",", "[", "]",
-                  "?", "+", "%", "|", "-", "&", ".", "\'", "!"]
+                  "?", "+", "%", "|", "-", "&", ".", "\'", "!", "/"]
     fontsheet = 1 #1 is placeholder for image
     char_list = [] #holder for all the surfaces that are the letters
     DEFAULT = (255,255,255) #default color for the font
@@ -186,7 +186,7 @@ class Font():
         return missingTexture
         
     def splitSheet(fontsheet):
-        Font.char_list = spriteSheetBreaker(Font.fontsheet, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 3]) 
+        Font.char_list = spriteSheetBreaker(Font.fontsheet, 8, 13, 2, 1, 6, [10, 10, 10, 6, 10, 4]) 
 
     def changeColor(color):
         if color != Font.COLOR:
