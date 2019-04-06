@@ -9,14 +9,14 @@ from UIscreens import *
 import graphics
                                                 
 #backened for collinfo, returns hitboxes when given an index of the objectlist
-def getHitbox(object_list, object_location, scalar3, graphlist, ionBlast):
+def getHitbox(object_list, object_location, scalar3, graphlist):
     xpos = object_list[object_location*8]
     ypos = object_list[1+object_location*8]
     objectID = object_list[4+object_location*8]
     rotation = object_list[5+object_location*8]
     
     hitBox = [xpos, ypos, 0,0]
-    if objectID == 1: #main ship
+    if objectID == 1 or objectID == 5: #main ship
         hitBox = [xpos-15*scalar3, ypos-15*scalar3, 30*scalar3, 30*scalar3]
     elif objectID == 2 or objectID == 8: #shots
         hitBox = [xpos-2, ypos-2, 4, 4]
@@ -30,22 +30,19 @@ def getHitbox(object_list, object_location, scalar3, graphlist, ionBlast):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 9:
         scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
-        ionBlast = scaleImage(ionBlast, scale)
-        image = ionBlast
-        hitBox = [xpos, ypos, image.get_width(), 
-                   image.get_height()]
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation, False, scale)
     elif 69 < objectID < 100: #asteroids
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     return hitBox
 
 #returns true if there is a collision between two objects, returns false otherwise
-def collinfo(object_number1, object_number2, object_list, scalar3, graphlist, ionBlast, DEVMODE):
+def collinfo(object_number1, object_number2, object_list, scalar3, graphlist, DEVMODE):
     intersection = False
     if object_number1 != object_number2: #exempts object intersecting itself
         #hitBox = [xpos, ypos, width, height]
 
-        hitBox1 = getHitbox(object_list, object_number1, scalar3, graphlist, ionBlast)
-        hitBox2 = getHitbox(object_list, object_number2, scalar3, graphlist, ionBlast)
+        hitBox1 = getHitbox(object_list, object_number1, scalar3, graphlist)
+        hitBox2 = getHitbox(object_list, object_number2, scalar3, graphlist)
 
         # shows all the hitboxes
         if DEVMODE:
@@ -158,7 +155,6 @@ def main():
                  loadImage("Assets\\images\\solarpanel.tif")]
     earthpic = loadImage("Assets\\images\\earth.tif")
     infinitypic = loadImage("Assets\\images\\infinity.tif")
-    ionBlast = scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5)
 
     # settings
     max_speed = 4 * scalarscalar
@@ -203,6 +199,7 @@ def main():
     d_parts = [30]
     d_sats = [10, 11, 12, 13]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93]
+    ship_id = [1, 5]
     status = "menuinit"
     flame = False
     sectornum = 1
@@ -434,7 +431,6 @@ def main():
             previous_tick2 = 0
             scalar1 = 0
             lastnumdebris = 0
-            dmgTick = 0
             pygame.mouse.set_visible(False)
             #inventory
             shipInventory = [0,0,0,0]
@@ -558,7 +554,7 @@ def main():
             for i in range(int(len(object_list)/8)):
                 i2 = i + 1
                 while i2 < int(len(object_list)/8):                   
-                    if collinfo(i,i2,object_list, scalar3, graphlist, ionBlast, DEVMODE) == True:
+                    if collinfo(i,i2,object_list, scalar3, graphlist, DEVMODE) == True:
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
@@ -573,17 +569,17 @@ def main():
                                 SoundVault.play('money')
                             #merges the two lists by adding their like elements together
                             shipInventory = [a + b for a, b in zip(shipInventory, drops)]
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_parts: #ship v debris
+                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] in d_parts: #ship v debris
                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                            object_list[(i2*8)+7] = -1
                            drops = solarPanelDrops()
                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 0: #going to garage
+                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 0: #going to garage
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
-                        elif object_list[4 + (i * 8)] == 1 and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid
+                        elif object_list[4 + (i * 8)] in ship_id and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
@@ -615,24 +611,22 @@ def main():
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missile v mine
-                            printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], -.5,
-                                                .5, 9, "NA", "NA", 300]
+                            printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i*8)],
+                                                object_list[3+(i*8)], 9, "NA", "NA", 300]
                             object_list[(i*8)+7] = -1
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 7: #ship v mine
-                            printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], -.5,
-                                                .5, 9, "NA", "NA", 300]
+                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 7: #ship v mine
+                            printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2*8)],
+                                                object_list[3+(i2*8)], 9, "NA", "NA", 300]
                             object_list[(i2*8)+7] = -1
                             object_list[4] = 5
                             object_list[7] = 200
                             Font.scramble(200)
                             currentarmor -= 1
-                            dmgTick = 201
-                        elif object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] == 9: #ship v explosion
+                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 9: #ship v explosion
                             object_list[4] = 5
                             object_list[7] = 200
                             Font.scramble(200)
-                            if dmgTick == 0:
-                                dmgTick = 201
+                            currentarmor -= 0.03
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
@@ -720,10 +714,6 @@ def main():
                 currentfuel = totalfuel
                 currentarmor = totalarmor
                 ammunition = totalammunition
-
-            if dmgTick > 0:
-                currentarmor -= .02
-                dmgTick -= 1
                 
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
@@ -749,9 +739,9 @@ def main():
 
             #physics!
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
-            
+
             # printer
-            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame, ionBlast)
+            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition)
             ####inventory
             inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 

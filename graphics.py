@@ -31,36 +31,35 @@ class Images:
         var = int(var)
         var %= 360
         return Images.storage[name][var]
-    
-    def getHitbox(xpos, ypos, name, rotation, centered=True):
+
+    #method used to get hitbox by looking at the image stored in Images class
+    #when calling use scale parameter, centered parameter must be explicitly set
+    def getHitbox(xpos, ypos, name, rotation, centered=True, scale=1):
         if isinstance(rotation, str):
             image = Images.get(name)
         else:
             image = Images.get(name, rotation)
         if centered:
-            return [xpos-0.5*image.get_width(), ypos-0.5*image.get_height(), image.get_width(), 
-                      image.get_height()]
-        return [xpos, ypos, image.get_width(), image.get_height()]
+            return [xpos-0.5*image.get_width()*scale, ypos-0.5*image.get_height()*scale, image.get_width()*scale, 
+                      image.get_height()*scale]
+        return [xpos, ypos, image.get_width()*scale, image.get_height()*scale]
 
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images, right now just asteroids
 def init(d_asteroids, d_parts, d_sats, graphlist):
     for i in range(len(d_asteroids)):
         surf = Asteroid.getImage(d_asteroids[i])
-        rotatedict = {}
         Images.addRotate(d_asteroids[i], surf)
     pixelStuff = d_parts + d_sats
     for i in range(len(pixelStuff)):
         surf = graphlist[pixelStuff[i] - 10]
-        rotatedict = {}
-        for j in range(36):
-            rotatedict[j*10] = rotatePixelArt(surf, j*10)
-        Images.add(pixelStuff[i], rotatedict)
+        Images.addRotate(pixelStuff[i], surf)
     Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
     Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
     Images.add(100, loadImage("Assets\\images\\star.tif"))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
+    Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
 
 #reorders the list so it will print in the correct order
 background = [100]
@@ -79,7 +78,7 @@ def reorderObjectList(object_list):
     return newObject_list
 
 #the nuts and bolts of printing the things    
-def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame, ionBlast): 
+def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame): 
     colliderect = ""
     if object_number == 100: #draws star
         image = Images.get(100)
@@ -127,8 +126,9 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
 
     if object_number == 9: #draws alien blasts
         scale = 1 + (.1 * (300 - decayLife))
-        ionBlast = scaleImage(ionBlast, scale)
+        ionBlast = scaleImage(Images.get(9), scale)
         screen.blit(ionBlast, (xpos, ypos))
+        colliderect = Images.getHitbox(xpos, ypos, 9, rotation, False, scale)
         
     if 9 < object_number < 40: #draws satellites
         image = Images.get(object_number, rotation)
@@ -144,7 +144,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
     return colliderect
 
 #takes care of the printing logic
-def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame, ionBlast):
+def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame):
     object_list = reorderObjectList(object_list)
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
@@ -161,7 +161,7 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flam
         decayLife = object_list[i+7]
 
         colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
-                                  flame, ionBlast)
+                                  flame)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
                 if left.colliderect(colliderect):
@@ -175,7 +175,7 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flam
                     ypos -= height
                 
                 crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
-                            flame, ionBlast)
+                            flame)
 
 #flashing alerts for low fuel and armor
 class FlashyBox:
