@@ -762,6 +762,7 @@ def main():
 
 #checks if it needs to run setupper
 if filehelper.get(0)[0] == "?":
-    from setupper import *
+    import setupper
+    setupper.setup()
     
 main()
