@@ -104,11 +104,12 @@ def generateStars(width, height):
 
 #leveler
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids, sectornum):
-    if sectornum in [12, 14]:
-        ASTEROID = 25
-        SATS = 45
+    mineGeneration = [9, 10, 11, 12, 13, 14 ,15 ,16, 17, 18, 19]
+    if sectornum in mineGeneration:
+        ASTEROID = 20
+        SATS = 40
         PARTS = 15
-        MINES = 15
+        MINES = 25
     else:
         ASTEROID = 30
         SATS = 50

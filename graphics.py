@@ -128,8 +128,8 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
 
     if object_number == 9: #draws alien blasts
         scale = 1 + (.1 * (300 - decayLife))
-        ionBlast = scaleImage(Images.get(9), scale)
-        screen.blit(ionBlast, (xpos, ypos))
+        image = scaleImage(Images.get(9), scale)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = Images.getHitbox(xpos, ypos, 9, rotation, False, scale)
         
     if 9 < object_number < 40: #draws satellites
