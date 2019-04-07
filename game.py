@@ -165,7 +165,7 @@ def sectorDestinations(sectornum):
 #returns true if an infinite level that always regenerates
 #else returns false to signal a level that doesn't get regenerated
 def sectorGeneration(sectornum):
-    infinite_sectors = [4, 12, 14]
+    infinite_sectors = [4, 12, 15]
     if sectornum in infinite_sectors:
         return True
     return False
