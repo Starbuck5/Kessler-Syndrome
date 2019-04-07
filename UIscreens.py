@@ -233,7 +233,7 @@ def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mo
     #draws fuel and armor and shots
     currentarmor, currentfuel, ammunition = currentStats
     totalarmor, totalfuel, totalammunition = totalStats
-    graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition)
+    graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
         
     Texthelper.write(screen, [("center", 540-180), "repair & refill shop", 6])
     status = "shop"                         
