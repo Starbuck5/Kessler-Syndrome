@@ -6,7 +6,7 @@ from pgx import *
 from level1 import *
 from game import *
 from UIscreens import *
-from graphics import *
+import graphics
                                                 
 #backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, graphlist):
@@ -30,7 +30,7 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 9: #mine explosion
         scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
-        image = scaleImage(Images.get(9), scale)
+        image = scaleImage(graphics.Images.get(9), scale)
         hitBox = graphics.Images.getHitbox(int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), objectID, rotation, False, scale)
     elif 69 < objectID < 100: #asteroids
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
@@ -612,12 +612,12 @@ def main():
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missile v mine
-                            printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], 0,
-                                                0, 9, "NA", "NA", 300]
+                            printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i*8)],
+                                                object_list[3+(i*8)], 9, "NA", "NA", 300]
                             object_list[(i*8)+7] = -1
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 7: #ship v mine
-                            printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], 0,
-                                                0, 9, "NA", "NA", 300]
+                            printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2*8)],
+                                                object_list[3+(i2*8)], 9, "NA", "NA", 300]
                             object_list[(i2*8)+7] = -1
                             object_list[4] = 5
                             object_list[7] = 200
