@@ -484,7 +484,7 @@ class Texthelper():
     #tests if mouse is clicked inside the rectangle
     def _buttonlogic(rect):
         click = mouse()
-        time = pygame.time.get_ticks()//500 #// = Java integer math - IE truncating the ms to 1/2 seconds
+        time = pygame.time.get_ticks()//200 #// = Java integer math - IE truncating the ms to 1/5 seconds
         if time != Texthelper.lastPressTime:
             if AllEvents.contains(pygame.MOUSEBUTTONDOWN):
                 if rect[0] < click[1] < rect[0]+rect[2] and rect[1] < click[2] < rect[1]+rect[3]:

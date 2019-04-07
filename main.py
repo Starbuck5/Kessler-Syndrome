@@ -639,7 +639,7 @@ def main():
                         pygame.gfxdraw.aapolygon(screen, portalcoordsRevised[i], (100,149,237))
                         pygame.gfxdraw.filled_polygon(screen, portalcoordsRevised[i], (100,149,237))
                         isValidTransfer = object_list[4] == 1 or object_list[4]==5 #if the first thing in object_list is allowed to transit
-                        isValidTime = lasttransit > 100
+                        isValidTime = lasttransit > 70
                         isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        
                         if isValidTransfer and isValidTime and isValidCollision:
                             SoundVault.play('portal')
