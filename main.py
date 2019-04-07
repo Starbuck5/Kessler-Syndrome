@@ -398,7 +398,7 @@ def main():
             pygame.display.flip()
             ShipLv = filehelper.get(3)
             currentStats = filehelper.get(4)
-            totalStats = (totalarmor, totalfuel, totalammunition)
+            totalStats = [totalarmor, totalfuel, totalammunition]
             setupShop(ShipLv, shipInventory, homeInventory, currentStats, totalStats, color)
             status = "home"
             

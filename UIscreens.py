@@ -21,7 +21,7 @@ class UpgradeScreenStorage():
     editingIndex = -1
     pointName = -1
     
-def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status): #mode = true/false init, upgradeType = fuel/armor/etc.   
+def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, currentStats, totalStats): #mode = true/false init, upgradeType = fuel/armor/etc.   
     if mode: #whether it should be init-ing or not
         if upgradeType == "armor":
             editingIndex = 0
@@ -76,6 +76,11 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status): #mo
                 ShipLv[editingIndex] += 1
                 filehelper.set(inventory, 2)
                 filehelper.set(ShipLv, 3)
+
+                #prevents bug with stats not updating
+                totalStats[editingIndex] = upgrades.get(ShipLv[editingIndex] + editingIndex * maxLevel)[4]            
+                currentStats[editingIndex] = totalStats[editingIndex]
+                
                 UpgradeScreenStorage.currentStat = upgrades.get(ShipLv[editingIndex] + editingIndex * maxLevel)[4] 
                 UpgradeScreenStorage.cost = upgrades.get(ShipLv[editingIndex] + editingIndex * maxLevel + 1)
                 UpgradeScreenStorage.addedStat = UpgradeScreenStorage.cost[4] - UpgradeScreenStorage.currentStat
@@ -437,25 +442,25 @@ def home(screen):
 
     ####UPGRADE#SECTION####
     elif shopStatus == "armorUpgradeinit":
-        drawUpgradeScreen(screen, shipLv, homeInventory, True, "armor", "N/A")
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "armor", "N/A", currentStats, totalStats)
         shopStatus = "armorUpgrade"
 
     elif shopStatus == "armorUpgrade":
-        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "armor", "armorUpgrade")
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "armor", "armorUpgrade", currentStats, totalStats)
 
     elif shopStatus == "fuelUpgradeinit":
-        drawUpgradeScreen(screen, shipLv, homeInventory, True, "fuel", "N/A")
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "fuel", "N/A", currentStats, totalStats)
         shopStatus = "fuelUpgrade"
 
     elif shopStatus == "fuelUpgrade":
-        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "fuel", "fuelUpgrade")
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "fuel", "fuelUpgrade", currentStats, totalStats)
 
     elif shopStatus == "ammoUpgradeinit":
-        drawUpgradeScreen(screen, shipLv, homeInventory, True, "torpedoe", "N/A")
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "torpedoe", "N/A", currentStats, totalStats)
         shopStatus = "ammoUpgrade"
 
     elif shopStatus == "ammoUpgrade":
-        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedoe", "ammoUpgrade")
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedoe", "ammoUpgrade", currentStats, totalStats)
 
     elif shopStatus == "garageinit":
         garageUI(screen, shipLv, homeInventory, True)
