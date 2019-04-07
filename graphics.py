@@ -60,7 +60,10 @@ def init(d_asteroids, d_parts, d_sats, graphlist):
     Images.add(100, loadImage("Assets\\images\\star.tif"))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
-    Images.add("shotpic", loadImage("Assets\\images\\missile.tif")) ####
+    Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
+    shipImage = loadImage("Assets\\images\ship.png")
+    shipImage.set_colorkey((255,255,255))
+    Images.add(1, shipImage)
 
 #reorders the list so it will print in the correct order
 background = [100]
@@ -90,12 +93,10 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         screen.blit(image, (xpos, ypos))
             
     if object_number == 1 or object_number == 5: #draws main ship
-        ship_pointlist = [[xpos, ypos-30*scalar3], [xpos+15*scalar3, ypos+10*scalar3], [xpos, ypos], [xpos-15*scalar3,
-                            ypos+10*scalar3]]
-        ship_pointlist = Rotate(xpos, ypos, ship_pointlist, rotation)
-        pygame.gfxdraw.aapolygon(screen, ship_pointlist, (255,255,255))
-        pygame.gfxdraw.filled_polygon(screen, ship_pointlist, (255,255,255))
-        colliderect = pointsToRect(ship_pointlist)
+        image = rotatePixelArt(Images.get(1), -rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
+                       image.get_height()]
         if flame == True:
             #flame_pointlist = [[50 + 6, 50 + 5], [50, 50 + 20], [50 - 6, 50 + 5]]
             flame_pointlist = [[xpos, ypos], [xpos+6*scalar3, ypos+5*scalar3],
@@ -228,4 +229,3 @@ class InfoBars:
         #ammunition
         screen.blit(shotpic, (1600, 860))
         Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
-        #Texthelper.write(screen,[(1650,860), "shots:" + str(ammunition),3])
