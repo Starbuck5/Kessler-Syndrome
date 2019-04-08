@@ -295,6 +295,9 @@ def main():
             if status != "paused":
                 Font.set_scramble_paused(False) #resumes any scrambling going on
                 pygame.mouse.set_visible(False)
+            if status == "menuinit":
+                Font.endScramble()
+
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)

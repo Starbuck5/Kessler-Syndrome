@@ -211,8 +211,7 @@ class Font():
             Font.scrambleTimeLeft = duration
             Font.SCRAMBLED = True
         else:
-            Font.scrambleTimeLeft = -1
-            Font.SCRAMBLED = False
+            Font.endScramble()
 
     def set_scramble_paused(flag): #True pauses scrambling, False resumes
         if flag:
@@ -220,6 +219,10 @@ class Font():
         if not flag:
             if Font.scrambleTimeLeft > -1:
                 Font.SCRAMBLED = True
+
+    def endScramble():
+        Font.SCRAMBLED = False
+        Font.scrambleTimeLeft = -1
             
     def timerhelper():
         if Font.scrambleTimeLeft >= 0:
