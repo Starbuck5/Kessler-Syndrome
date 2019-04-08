@@ -33,19 +33,32 @@ class Images:
         return Images.storage[name][var]
 
     #method used to get hitbox by looking at the image stored in Images class
-    #when calling use scale parameter, centered parameter must be explicitly set
-    def getHitbox(xpos, ypos, name, rotation, centered=True, scale=1):
+    #when calling use later parameters, default parameters must be explicitly set
+    #beFancy - True = use bounding rects of data ------ False = use image size alone
+    def getHitbox(xpos, ypos, name, rotation, centered=True, beFancy=True, realRotation=False):
         if isinstance(rotation, str):
             image = Images.get(name)
+        elif realRotation:
+            image = rotatePixelArt(Images.get(name), rotation)
         else:
             image = Images.get(name, rotation)
+        if beFancy:
+            bound = image.get_bounding_rect()
+        else:
+            bound = image.get_rect()
         if centered:
-            return [xpos-0.5*image.get_width()*scale, ypos-0.5*image.get_height()*scale, image.get_width()*scale, 
-                      image.get_height()*scale]
-        return [xpos, ypos, image.get_width()*scale, image.get_height()*scale]
+            return bound.move(xpos-0.5*image.get_width(), ypos-0.5*image.get_height())
+        return bound.move(xpos, ypos)
+
+    #inflates a centered hitbox outwards using a scalar
+    def scaleHitbox(hitBox, scale):
+        hitBox[0] -= hitBox[2]*0.5*scale
+        hitBox[1] -= hitBox[3]*0.5*scale
+        hitBox[2] *= scale
+        hitBox[3] *= scale
 
 #must be called after scaling is fully set up, not before
-#starts image caching of rotated images, right now just asteroids
+#starts image caching of rotated images
 def init(d_asteroids, d_parts, d_sats, graphlist):
     for i in range(len(d_asteroids)):
         surf = Asteroid.getImage(d_asteroids[i])
@@ -130,7 +143,8 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         scale = 1 + (.1 * (300 - decayLife))
         image = scaleImage(Images.get(9), scale)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 9, rotation, False, scale)
+        colliderect = Images.getHitbox(xpos, ypos, 9, rotation)
+        Images.scaleHitbox(colliderect, scale)  
         
     if 9 < object_number < 40: #draws satellites
         image = Images.get(object_number, rotation)

@@ -17,7 +17,7 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
     
     hitBox = [xpos, ypos, 0,0]
     if objectID == 1 or objectID == 5: #main ship
-        hitBox = [xpos-15*scalar3, ypos-15*scalar3, 30*scalar3, 30*scalar3]
+        hitBox = graphics.Images.getHitbox(xpos, ypos, 1, -rotation, True, True, True)
     elif objectID == 2 or objectID == 8: #shots
         hitBox = [xpos-2, ypos-2, 4, 4]
     elif objectID == 6: #aliens
@@ -30,8 +30,8 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 9: #mine explosion
         scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
-        image = scaleImage(graphics.Images.get(9), scale)
-        hitBox = graphics.Images.getHitbox(int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), objectID, rotation, False, scale)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        graphics.Images.scaleHitbox(hitBox, scale)     
     elif 69 < objectID < 100: #asteroids
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     return hitBox
@@ -48,9 +48,9 @@ def collinfo(object_number1, object_number2, object_list, scalar3, graphlist, DE
         # shows all the hitboxes
         if DEVMODE:
             if hitBox1[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox1, 3)
+                pygame.draw.rect(screen, (255,255,255), hitBox1, 1)
             if hitBox2[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox2, 3)
+                pygame.draw.rect(screen, (255,255,255), hitBox2, 1)
         
         if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
             if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
