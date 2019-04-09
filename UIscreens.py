@@ -331,28 +331,33 @@ def marketUI(screen, inventory, mode):
 
     ableToSell = isoverfull(metalbox, inventory[0]) and isoverfull(gasbox, inventory[1]) and isoverfull(circuitbox, inventory[2])
     sellvalue = metalbox.getIntText()*SELLVALUE[0] + gasbox.getIntText() * SELLVALUE[1] + circuitbox.getIntText() * SELLVALUE[2]
-    if not ableToSell:
-        Texthelper.write(screen, [("center", 670), "you cannot sell what you do not have", 1])
-        Texthelper.writeBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(178,34,34))
-    elif Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3]):
-        inventory[0] -= metalbox.getIntText()
-        inventory[1] -= gasbox.getIntText()
-        inventory[2] -= circuitbox.getIntText()
-        inventory[3] += sellvalue
-        marketStorage()
-
-    timedFlip(mode)
-
     buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *BUYVALUE[2]
-    if buyvalue > inventory[3]:
-        Texthelper.write(screen, [("center", 745), "you cannot afford this", 1])
-        Texthelper.writeBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(178,34,34))
-    elif Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3]):
-        inventory[0] += metalbox.getIntText()
-        inventory[1] += gasbox.getIntText()
-        inventory[2] += circuitbox.getIntText()
-        inventory[3] -= buyvalue
-        marketStorage()
+    if (sellvalue > 0):
+        if not ableToSell:
+            Texthelper.write(screen, [("center", 670), "you cannot sell what you do not have", 1])
+            Texthelper.writeBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(178,34,34))
+        elif Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(34, 178, 34)):
+            inventory[0] -= metalbox.getIntText()
+            inventory[1] -= gasbox.getIntText()
+            inventory[2] -= circuitbox.getIntText()
+            inventory[3] += sellvalue
+            marketStorage()
+
+        timedFlip(mode)
+
+        if buyvalue > inventory[3]:
+            Texthelper.write(screen, [("center", 745), "you cannot afford this", 1])
+            Texthelper.writeBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(178,34,34))
+        elif Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(34, 178, 34)):
+            inventory[0] += metalbox.getIntText()
+            inventory[1] += gasbox.getIntText()
+            inventory[2] += circuitbox.getIntText()
+            inventory[3] -= buyvalue
+            marketStorage()
+    else: #text is blue if all inputs are zero
+        Texthelper.writeBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(34, 34, 178))
+        timedFlip(mode)
+        Texthelper.writeBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(34, 34, 178))
         
     timedFlip(mode)
 
