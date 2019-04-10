@@ -74,7 +74,7 @@ class Images:
 
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images
-def init(d_asteroids, d_parts, d_sats, graphlist):
+def init(d_asteroids, d_parts, d_sats, graphlist, scalar3):
     for i in range(len(d_asteroids)):
         surf = Asteroid.getImage(d_asteroids[i])
         Images.addRotate(d_asteroids[i], surf)
@@ -91,6 +91,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist):
     Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
     shipImage = loadImage("Assets\\images\ship.png")
     shipImage.set_colorkey((255,255,255))
+    shipImage = scaleImage(shipImage, scalar3)
     Images.add(1, shipImage)
     image = loadImage("Assets\\images\\derelict.gif")
     image.set_colorkey((255,255,255))
