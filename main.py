@@ -17,7 +17,8 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
     
     hitBox = [xpos, ypos, 0,0]
     if objectID == 1 or objectID == 5: #main ship
-        hitBox = graphics.Images.getHitbox(xpos, ypos, 1, -rotation, True, True, True)
+        #objectID as 1.1 because thats full health ship and ship size doesn't change between states
+        hitBox = graphics.Images.getHitbox(xpos, ypos, 1.1, -rotation, True, True, True)
     elif objectID == 2 or objectID == 8: #shots
         hitBox = [xpos-2, ypos-2, 4, 4]
     elif objectID == 6: #aliens
@@ -761,6 +762,17 @@ def main():
 
             #physics!
             doPhysics(object_list, width, height, max_speed, drag, step_drag)
+
+            #ship durability state
+            armorPercent = currentarmor / totalarmor * 100
+            if armorPercent <= 30:
+                graphics.SHIPSTATE = 4
+            elif armorPercent <= 60:
+                graphics.SHIPSTATE = 3
+            elif armorPercent <= 90:
+                graphics.SHIPSTATE = 2
+            else:
+                graphics.SHIPSTATE = 1
 
             # printer
             graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)

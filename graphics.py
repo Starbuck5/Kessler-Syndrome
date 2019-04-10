@@ -5,6 +5,7 @@ from game import Asteroid
 from pgx import scaleImage
 from pgx import Texthelper
 from pgx import loadImage
+from pgx import spriteSheetBreaker
 
 import pygame
 from pygame import gfxdraw
@@ -75,24 +76,40 @@ class Images:
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images
 def init(d_asteroids, d_parts, d_sats, graphlist, scalar3):
+    #adding all asteroid images/rotations
     for i in range(len(d_asteroids)):
         surf = Asteroid.getImage(d_asteroids[i])
         Images.addRotate(d_asteroids[i], surf)
+        
+    #adding all satellites and parts images/rotations
     pixelStuff = d_parts + d_sats
     for i in range(len(pixelStuff)):
         surf = graphlist[pixelStuff[i] - 10]
         Images.addRotate(pixelStuff[i], surf)
+
+    #adding images for info bars
     Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
     Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
+    Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
+
+    #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
     Images.add(100, loadImage("Assets\\images\\star.tif"))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
-    Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
-    shipImage = loadImage("Assets\\images\ship.png")
-    shipImage.set_colorkey((255,255,255))
-    shipImage = scaleImage(shipImage, scalar3)
-    Images.add(1, shipImage)
+
+    #adding ship, no rotation because it rotates in real time
+    #loads up spritesheet and loads them all up under separate IDs
+    image = loadImage("Assets\\images\\ships.png")
+    imageList = spriteSheetBreaker(image, 24, 60, 0, 0, 1, 4)
+    for i in range(len(imageList)):
+        imageList[i].set_colorkey((255,255,255))
+    Images.add(1.1, imageList[0])
+    Images.add(1.2, imageList[1])
+    Images.add(1.3, imageList[2])
+    Images.add(1.4, imageList[3])
+
+    #adding derelict ship, no rotation because it's always in the same orientation
     image = loadImage("Assets\\images\\derelict.gif")
     image.set_colorkey((255,255,255))
     change_color(image, (0,0,0,255), (25,25,25,255))
@@ -114,6 +131,8 @@ def reorderObjectList(object_list):
                 newObject_list += object_list[j:j+8]
     return newObject_list
 
+SHIPSTATE = 1 #set in main, controls which of the durability stages of the ship prints (not always 1)
+
 #the nuts and bolts of printing the things    
 def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame): 
     colliderect = ""
@@ -126,7 +145,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         screen.blit(image, (xpos, ypos))
             
     if object_number == 1 or object_number == 5: #draws main ship
-        image = rotatePixelArt(Images.get(1), -rotation)
+        image = rotatePixelArt(Images.get(1+SHIPSTATE/10), -rotation)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
