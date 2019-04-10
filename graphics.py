@@ -10,6 +10,21 @@ import pygame
 from pygame import gfxdraw
 from pygame import Surface
 
+#accepts a surface that supports palettes (gifs) and changes the color palette based on preference
+#current and new colors are tuples of rgba (r, g, b, a)
+def change_color(image, currentColor, newColor):
+    palette = image.get_palette()
+    palette = list(palette)
+    index = -1
+    for i in range(255):
+        if palette[i] == currentColor:
+            index = i
+            break
+    if index == -1:
+        raise Exception("no such currentColor found in image")
+    palette[index] = newColor
+    image.set_palette(palette)
+
 class Images:
     storage = {}
     def add(name, image): #or (ID, dictionary of rotations) 
@@ -77,6 +92,10 @@ def init(d_asteroids, d_parts, d_sats, graphlist):
     shipImage = loadImage("Assets\\images\ship.png")
     shipImage.set_colorkey((255,255,255))
     Images.add(1, shipImage)
+    image = loadImage("Assets\\images\\derelict.gif")
+    image.set_colorkey((255,255,255))
+    change_color(image, (0,0,0,255), (25,25,25,255))
+    Images.add(110, image)
 
 #reorders the list so it will print in the correct order
 background = [100]
@@ -156,6 +175,11 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         image = Images.get(object_number, rotation)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = Asteroid.getHitbox(xpos, ypos, object_number)
+
+    if object_number == 110: #draws derelict ship
+        image = Images.get(110)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = Images.getHitbox(xpos, ypos, 110, rotation)
 
     return colliderect
 

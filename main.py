@@ -34,6 +34,8 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         graphics.Images.scaleHitbox(hitBox, scale)     
     elif 69 < objectID < 100: #asteroids
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+    elif objectID == 110: #derelict ship
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     return hitBox
 
 #returns true if there is a collision between two objects, returns false otherwise
