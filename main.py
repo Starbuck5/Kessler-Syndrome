@@ -432,6 +432,8 @@ def main():
 
         if status == "gameinit":       
             # changing variable setup
+            sectornum = 1 #spawns you back in home sector every time game is re-initialized
+            #- maybe not the best approach but it works for now
             object_list = getObjects(sectornum, width, height)
             previous_tick = 0
             previous_tick2 = 0
