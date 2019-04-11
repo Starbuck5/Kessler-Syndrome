@@ -275,32 +275,3 @@ def dock(xpos, ypos, image):
     xmom = 0
     ymom = -0.5
     return (newXpos, newYpos, xmom, ymom, rotation)
-      
-class Asteroid():
-    asteroidlist = "not yet a thing"
-    scalar2 = -1
-    def __init__ (self, scalar2):
-        small = loadImage("Assets\\images\\smallasteroids.gif")
-        small.set_colorkey((255,255,255))
-        small = spriteSheetBreaker(small, 40, 40, 0, 0, 1, 4)
-        medium = loadImage("Assets\\images\\mediumasteroids.gif")
-        medium.set_colorkey((255,255,255))
-        medium = spriteSheetBreaker(medium, 50, 50, 0, 0, 1, 4)
-        large = loadImage("Assets\\images\\largeasteroids.gif")
-        large.set_colorkey((255,255,255))
-        large = spriteSheetBreaker(large, 80, 80, 0, 0, 2, 4)
-        fillerlist = ["4", "5", "6", "7", "8", "9"]
-        asteroidlist = small + fillerlist + medium + fillerlist + large + ["2", "3"]
-        for i in range(len(asteroidlist)):
-            if not isinstance(asteroidlist[i], str):
-                asteroidlist[i] = scaleImage(asteroidlist[i], scalar2)
-        Asteroid.asteroidlist = asteroidlist
-        Asteroid.scalar2 = scalar2
-
-    def getImage(objectID):
-        return Asteroid.asteroidlist[objectID - 70]
-
-    def getHitbox(xpos, ypos, objectID): # in rect format
-        image = Asteroid.getImage(objectID)
-        return image.get_rect().move(int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()))
-        

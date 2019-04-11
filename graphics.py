@@ -1,7 +1,6 @@
 from pgx import pointsToRect
 from game import Rotate
 from pgx import rotatePixelArt
-from game import Asteroid
 from pgx import scaleImage
 from pgx import Texthelper
 from pgx import loadImage
@@ -98,11 +97,29 @@ class Images:
 
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images
-def init(d_asteroids, d_parts, d_sats, graphlist, scalar3):
+def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     #adding all asteroid images/rotations
-    for i in range(len(d_asteroids)):
-        surf = Asteroid.getImage(d_asteroids[i])
-        Images.addRotate(d_asteroids[i], surf)
+    small = loadImage("Assets\\images\\smallasteroids.gif")
+    small.set_colorkey((255,255,255))
+    small = spriteSheetBreaker(small, 40, 40, 0, 0, 1, 4)
+    for i in range(len(small)):
+        small[i] = scaleImage(small[i], scalar2)
+    for i in range(len(small)):
+        Images.addRotate(70+i, small[i])
+    medium = loadImage("Assets\\images\\mediumasteroids.gif")
+    medium.set_colorkey((255,255,255))
+    medium = spriteSheetBreaker(medium, 50, 50, 0, 0, 1, 4)
+    for i in range(len(small)):
+        medium[i] = scaleImage(medium[i], scalar2)
+    for i in range(len(medium)):
+        Images.addRotate(80+i, medium[i])
+    large = loadImage("Assets\\images\\largeasteroids.gif")
+    large.set_colorkey((255,255,255))
+    large = spriteSheetBreaker(large, 80, 80, 0, 0, 2, 4)
+    for i in range(len(large)):
+        large[i] = scaleImage(large[i], scalar2)
+    for i in range(len(large)):
+        Images.addRotate(90+i, large[i])
         
     #adding all satellites and parts images/rotations
     pixelStuff = d_parts + d_sats
@@ -220,7 +237,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
     if 69 < object_number < 100: #draws asteroids
         image = Images.get(object_number, rotation)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Asteroid.getHitbox(xpos, ypos, object_number)
+        colliderect = Images.getHitbox(xpos, ypos, object_number, rotation)
 
     if object_number == 110: #draws derelict ship
         image = Images.get(110)

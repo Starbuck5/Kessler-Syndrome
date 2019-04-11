@@ -225,7 +225,6 @@ def main():
                               (1055, 250), (840, 245), (965, 415), (870, 105), (1030, 90)]
 
     # class setup
-    Asteroid(scalar2) #sets up Asteroid class to return lists of the appropriate scale
     Screenhelper(width,height)
     #texthelper setup for scaling
     Texthelper.scalar = scalarscalar
@@ -236,7 +235,7 @@ def main():
     AnnouncementBox.height = height
 
     #graphics setup
-    graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar3)
+    graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3)
     
     
     running = True
