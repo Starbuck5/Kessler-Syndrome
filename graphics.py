@@ -28,14 +28,20 @@ def change_color(image, currentColor, newColor):
 
 class Images:
     storage = {}
+    bounding_rects = {}
     def add(name, image): #or (ID, dictionary of rotations) 
         Images.storage[name] = image
+        Images.bounding_rects[name] = image.get_bounding_rect()
 
     def addRotate(ID, image): #takes an ID and a surface and adds the dictionary of its rotations to Images storage 
         rotatedict = {}
+        rectdict = {}
         for j in range(36):
-            rotatedict[j*10] = rotatePixelArt(image, j*10)
-        Images.add(ID, rotatedict)        
+            rotatedImage = rotatePixelArt(image, j*10)
+            rotatedict[j*10] = rotatedImage
+            rectdict[j*10] =  rotatedImage.get_bounding_rect()
+        Images.storage[ID] = rotatedict
+        Images.bounding_rects[ID] = rectdict
     
     def get(name, *args): #arg = rotation value
         if not args:
@@ -48,6 +54,17 @@ class Images:
         var %= 360
         return Images.storage[name][var]
 
+    def getRect(name, *args):
+        if not args:
+            return Images.bounding_rects[name]
+        var = args[0]
+        var /= 10
+        var = round(var)
+        var *= 10
+        var = int(var)
+        var %= 360
+        return Images.bounding_rects[name][var]
+
     #method used to get hitbox by looking at the image stored in Images class
     #when calling use later parameters, default parameters must be explicitly set
     #beFancy - True = use bounding rects of data ------ False = use image size alone
@@ -59,7 +76,13 @@ class Images:
         else:
             image = Images.get(name, rotation)
         if beFancy:
-            bound = image.get_bounding_rect()
+            if isinstance(rotation, str):
+                bound = Images.getRect(name)
+            elif realRotation:
+                image = rotatePixelArt(Images.get(name), rotation)
+                bound = image.get_bounding_rect()
+            else:
+                bound = Images.getRect(name, rotation)
         else:
             bound = image.get_rect()
         if centered:
