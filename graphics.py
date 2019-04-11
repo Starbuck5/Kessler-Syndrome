@@ -113,7 +113,10 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar3):
     #adding images for info bars
     Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
     Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
-    Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
+    #Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
+    image = loadImage("Assets\\images\\missile.png")
+    image.set_colorkey((255,255,255))
+    Images.add("shotpic", image)
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
