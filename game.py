@@ -288,9 +288,9 @@ class Asteroid():
         medium = spriteSheetBreaker(medium, 50, 50, 0, 0, 1, 4)
         large = loadImage("Assets\\images\\largeasteroids.gif")
         large.set_colorkey((255,255,255))
-        large = spriteSheetBreaker(large, 80, 80, 0, 0, 1, 4)
+        large = spriteSheetBreaker(large, 80, 80, 0, 0, 2, 4)
         fillerlist = ["4", "5", "6", "7", "8", "9"]
-        asteroidlist = small + fillerlist + medium + fillerlist + large + fillerlist
+        asteroidlist = small + fillerlist + medium + fillerlist + large + ["2", "3"]
         for i in range(len(asteroidlist)):
             if not isinstance(asteroidlist[i], str):
                 asteroidlist[i] = scaleImage(asteroidlist[i], scalar2)

@@ -202,7 +202,7 @@ def main():
     playerinfo = filehelper.get(1)
     d_parts = [30]
     d_sats = [10, 11, 12, 13]
-    d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93]
+    d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     ship_id = [1, 5]
     status = "menuinit"
     flame = False
