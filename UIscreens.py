@@ -280,9 +280,9 @@ def plusminusrow(screen, inputgetter, height):
             incrementBox(inputgetter, -1 * inputgetter.getIntText())
     if Texthelper.writeButtonBox(screen, [(975, height), "-1", 3]) and inputgetter.getIntText() > 0:
         incrementBox(inputgetter, -1)
-    if Texthelper.writeButtonBox(screen, [(1250, height), "+1", 3]):
+    if Texthelper.writeButtonBox(screen, [(1200, height), "+1", 3]):
         incrementBox(inputgetter, 1)
-    if Texthelper.writeButtonBox(screen, [(1345, height), "+10", 3]):
+    if Texthelper.writeButtonBox(screen, [(1295, height), "+10", 3]):
         incrementBox(inputgetter, 10)
 
 def isoverfull(inputgetter, cap):
@@ -299,9 +299,9 @@ class marketStorage():
     gas = ""
     circuits = ""
     def __init__(self):
-        marketStorage.metal = InputGetter([(1090, 430), "0", 3], "int")
-        marketStorage.gas = InputGetter([(1090, 485), "0", 3], "int")
-        marketStorage.circuits = InputGetter([(1090, 540), "0", 3], "int")
+        marketStorage.metal = InputGetter([("center.1125", 430), "0", 3], "int")
+        marketStorage.gas = InputGetter([("center.1125", 485), "0", 3], "int")
+        marketStorage.circuits = InputGetter([("center.1125", 540), "0", 3], "int")
 
 #the currency to resource market of the galaxy, or at least this chunk of LEO      
 def marketUI(screen, inventory, mode):
