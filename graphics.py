@@ -95,31 +95,24 @@ class Images:
         hitBox[2] *= scale
         hitBox[3] *= scale
 
+#helps with caching of rotated asteroid images
+def rotationCachingHelper(filepath, spritesheetWidth, spritesheetHeight, spritesheetRows, spritesheetColumns, idIntercept, scalar2):
+    asteroids = loadImage(filepath)
+    asteroids.set_colorkey((255,255,255))
+    asteroids = spriteSheetBreaker(asteroids, spritesheetWidth, spritesheetHeight, 0, 0, spritesheetRows, spritesheetColumns)
+    for i in range(len(asteroids)):
+        asteroids[i] = scaleImage(asteroids[i], scalar2)
+    for i in range(len(asteroids)):
+        Images.addRotate(idIntercept + i, asteroids[i])
+
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images
 def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     #adding all asteroid images/rotations
-    small = loadImage("Assets\\images\\smallasteroids.gif")
-    small.set_colorkey((255,255,255))
-    small = spriteSheetBreaker(small, 40, 40, 0, 0, 1, 4)
-    for i in range(len(small)):
-        small[i] = scaleImage(small[i], scalar2)
-    for i in range(len(small)):
-        Images.addRotate(70+i, small[i])
-    medium = loadImage("Assets\\images\\mediumasteroids.gif")
-    medium.set_colorkey((255,255,255))
-    medium = spriteSheetBreaker(medium, 50, 50, 0, 0, 1, 4)
-    for i in range(len(small)):
-        medium[i] = scaleImage(medium[i], scalar2)
-    for i in range(len(medium)):
-        Images.addRotate(80+i, medium[i])
-    large = loadImage("Assets\\images\\largeasteroids.gif")
-    large.set_colorkey((255,255,255))
-    large = spriteSheetBreaker(large, 80, 80, 0, 0, 2, 4)
-    for i in range(len(large)):
-        large[i] = scaleImage(large[i], scalar2)
-    for i in range(len(large)):
-        Images.addRotate(90+i, large[i])
+    rotationCachingHelper("Assets\\images\\smallasteroids.gif", 40, 40, 1, 4, 70, scalar2)
+    rotationCachingHelper("Assets\\images\\mediumasteroids.gif", 50, 50, 1, 4, 80, scalar2)
+    rotationCachingHelper("Assets\\images\\largeasteroids.gif", 80, 80, 2, 4, 90, scalar2)
+
         
     #adding all satellites and parts images/rotations
     pixelStuff = d_parts + d_sats
