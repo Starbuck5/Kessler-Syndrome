@@ -686,9 +686,6 @@ def main():
                                                 pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
                                                 ("If you would give me some gas to get back to station I would be "
                                                  "eternally grateful"))
-                                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "Just go back to station and find the button to send me some fuel")
                                 discoverSector[10] = True
                                 file_settings[3] = 3
                                 filehelper.set(file_settings, 0)
@@ -716,7 +713,7 @@ def main():
                 if object_list[i+4] not in [0, 100, 1, 2, 8, 6, 4, 5]:
                     numdebris += 1
             if numdebris == 0 and lastnumdebris > 0:
-                shipInventory[3] += 50 #adds 50 credits to ship inventory
+                shipInventory[3] += 100 #adds 100 credits to ship inventory
                 SoundVault.play('money')
                 if not playerinfo[1]:
                     playerinfo[1] = True
