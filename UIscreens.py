@@ -148,6 +148,17 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
+
+    #Quests
+    #refueling the airmans ship
+    if filehelper.get(0)[3] == 3:
+        if homeInventory[1] >= 20:
+            if Texthelper.writeButtonBox(screen, [("center", 540+220), "send 20 gas to the airman", 3], color=(34,178,34)):
+                homeInventory[1] -= 20
+                filehelper.setElement(4, 0, 3)
+        else:
+            Texthelper.writeBox(screen, [("center", 540+220), "send 20 gas to the airman", 3], color=(178,34,34))
+    
     return status
 
 
