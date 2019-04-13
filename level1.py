@@ -3,18 +3,18 @@ def level1(screen, width, height):
     import pygame
     import random
     clock = pygame.time.Clock()
-    soyuz = loadImage("Assets\\soyuz2.tif")  
+    soyuz = loadImage("Assets\\images\\soyuz2.tif")  
     soyuzscalar = 1
     soyuz = scaleImage(soyuz, soyuzscalar)
     soyuzsize = soyuz.get_size()
     pygame.mouse.set_visible(True)
 
-    mountains = loadImage("Assets\\cutsceneback.tif")
+    mountains = loadImage("Assets\\images\\cutsceneback.tif")
     mountainsize = mountains.get_size()
     mountains = pygame.transform.scale(mountains, (width, int(width/mountainsize[0]*mountainsize[1])))
     mountainsize = mountains.get_size()
 
-    flamesheet = loadImage("Assets\\flames.tif")
+    flamesheet = loadImage("Assets\\images\\flames.tif")
     all_flames = spriteSheetBreaker(flamesheet, 8, 15, 0, 0, 2, 4)
     for i in range(len(all_flames)):
         all_flames[i] = scaleImage(all_flames[i], soyuzscalar*2)
@@ -28,7 +28,7 @@ def level1(screen, width, height):
         else:
             return startflamelist[random.randint(0, len(startflamelist)-1)]
 
-    opening_crawl = [line.rstrip('\n') for line in open("assets\\opening_crawl.txt")]
+    opening_crawl = [line.rstrip('\n') for line in open("assets\\data\\opening_crawl.txt")]
     line_spacing = 80
     
     xpos = width/2 - soyuzsize[0]/2

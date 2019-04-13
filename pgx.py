@@ -169,7 +169,7 @@ class Font():
     missingTexture = 1 #1 is placeholder for image
     
     def getReady(): #'poor mans __init__'
-        Font.fontsheet = loadImage("Assets\\images\\font.gif")
+        Font.fontsheet = loadImage("Assets\\fonts\\font.gif")
         fontsheet = Font.fontsheet
         Font.splitSheet(fontsheet)
         Font.missingTexture = Font._makeMissingTexture()
@@ -641,4 +641,4 @@ class Filehelper():
         Filehelper.set(self, lineData, line)
 
 
-filehelper = Filehelper("Assets\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
+filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class

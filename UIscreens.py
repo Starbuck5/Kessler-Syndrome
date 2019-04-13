@@ -3,7 +3,7 @@ import graphics
 import game
 waitTime = 175
 maxLevel = 20
-upgrades = Filehelper("assets\\upgrades.txt")
+upgrades = Filehelper("assets\\data\\upgrades.txt")
 
 def drawInventory(screen, inventory):
     writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])

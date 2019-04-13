@@ -390,7 +390,7 @@ def main():
             shipInventory = [0,0,0,0]
 
             #fuel and armor and ammunition
-            upgrades = Filehelper("assets\\upgrades.txt")
+            upgrades = Filehelper("assets\\data\\upgrades.txt")
             ShipLv = filehelper.get(3)
             fuelHelp = upgrades.get(ShipLv[1]+20)
             totalfuel = fuelHelp[4]
