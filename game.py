@@ -3,6 +3,7 @@ import math
 from pgx import loadImage
 from pgx import spriteSheetBreaker
 from pgx import scaleImage
+from pgx import filehelper
 
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -275,3 +276,65 @@ def dock(xpos, ypos, image):
     xmom = 0
     ymom = -0.5
     return (newXpos, newYpos, xmom, ymom, rotation)
+
+#wrapper for saveObjects that determines how to save a level
+def saveGame(sectornum, object_list, width, height):
+    if sectorGeneration(sectornum):
+        saveObjects(sectornum, [-1], width, height)
+    else:
+        saveObjects(sectornum, object_list[:], width, height)
+
+#saves objectlist to file by breaking it into a maximum of 5 lines
+def saveObjects(sectornum, save_list, width, height):
+    for i in range(len(save_list)):
+        if isinstance(save_list[i], float):
+            save_list[i] = round(save_list[i], 1)
+        if len(save_list) >= 8:
+            # turning x and y coords into float percentages
+            if i % 8 == 0:
+                save_list[i] = round(save_list[i]/width, 3)
+            if i % 8 == 1:
+                save_list[i] = round(save_list[i]/height, 3)
+                        
+    if len(save_list) >= 1000:
+        save_list = save_list[:1000]
+        print("Error: overflow in Main/saveObjects")
+    savelist = []
+    listhelper = int(len(save_list)/200) #200 = entities per level
+    for i in range(listhelper):
+        savelist.append(save_list[:200])
+        save_list = save_list[200:]
+    savelist.append(save_list)    
+    listhelper = 5- len(savelist)
+    for i in range(listhelper):
+        savelist.append([])    
+    for i in range(5):
+        filehelper.set(savelist[i], sectornum*5+i)
+
+#extracts the list saveObjects saved to file
+def getObjects(sectornum, width, height):
+    object_list = []
+    for i in range(5):
+        object_list += filehelper.get(sectornum*5+i)
+    if object_list != []:
+        while object_list[-1] == '':
+            object_list.pop()
+    # turning x and y float percentages back into coords
+    if len(object_list) >= 8:
+        for i in range(len(object_list)):
+            if i % 8 == 0:
+                object_list[i] = round(object_list[i]*width)     
+            if i % 8 == 1:
+                object_list[i] = round(object_list[i]*height)
+    for i in range(int(len(object_list)/8)):
+        if object_list[4+i*8] == 2 or object_list[4+i*8] == 8:
+            object_list[6+i*8] = -10 #gets rid of shots and alien shots when entering a sector
+    return object_list
+
+#deletes everyinstance of toDelete type in the delSector - only changes the file doesn't change anything in play
+def deleteObject(toDelete, delSector, width, height):
+    object_list = getObjects(delSector, width, height)
+    for i in range(0, len(object_list), 8):
+        if object_list[i+4] == toDelete:
+            del object_list[i:i+8]
+    saveGame(delSector, object_list, width, height)

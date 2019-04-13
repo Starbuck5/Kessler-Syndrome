@@ -1,5 +1,6 @@
 from pgx import *
 import graphics
+import game
 waitTime = 175
 maxLevel = 20
 upgrades = Filehelper("assets\\upgrades.txt")
@@ -156,6 +157,7 @@ def homeUI(screen, shipInventory, homeInventory):
             if Texthelper.writeButtonBox(screen, [("center", 540+220), "send 20 gas to the airman", 3], color=(34,178,34)):
                 homeInventory[1] -= 20
                 filehelper.setElement(4, 0, 3)
+                game.deleteObject(110, 11, screen.get_width(), screen.get_height())   
         else:
             Texthelper.writeBox(screen, [("center", 540+220), "send 20 gas to the airman", 3], color=(178,34,34))
 
