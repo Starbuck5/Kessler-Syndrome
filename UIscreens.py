@@ -5,11 +5,6 @@ waitTime = 175
 maxLevel = 20
 upgrades = Filehelper("assets\\data\\upgrades.txt")
 
-def drawInventory(screen, inventory):
-    writestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
-    Texthelper.write(screen, [(0, 0), writestring,3])
-
-
 def timedFlip(mode):
     if mode:
         pygame.display.flip()
@@ -101,7 +96,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
 
 def homeinitUI(screen, inventory):
     pygame.mouse.set_visible(True)
-    drawInventory(screen, inventory)
+    graphics.drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
     pygame.display.flip()
     
@@ -127,7 +122,7 @@ def homeinitUI(screen, inventory):
 
 def homeUI(screen, shipInventory, homeInventory):
     status = "home"
-    drawInventory(screen, homeInventory)
+    graphics.drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
     if Texthelper.writeButton(screen, [("center", 540-55), "upgrade shop", 3]):
         status = "garageinit"
@@ -246,7 +241,7 @@ def buttonRow(screen, index, x, y, currentStats, totalStats, homeInventory):
     Texthelper.write(screen, [(x+1050, y+45), repair2Str, 1])
 
 def drawRepairScreen(screen, ShipLv, currentStats, totalStats, homeInventory, mode):   
-    drawInventory(screen, homeInventory)
+    graphics.drawInventory(screen, homeInventory)
 
     #draws fuel and armor and shots
     currentarmor, currentfuel, ammunition = currentStats
@@ -324,7 +319,7 @@ def marketUI(screen, inventory, mode):
     gasbox = marketStorage.gas
     circuitbox = marketStorage.circuits
     
-    drawInventory(screen, inventory)
+    graphics.drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-235), "market", 6])
     timedFlip(mode)
 

@@ -335,3 +335,10 @@ def drawSector(screen, location, number, currentsector):
         pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
         Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
     Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2])
+
+#used in UIscreens and the main game loop to display the inventory
+def drawInventory(screen, shipInventory):
+    inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
+    inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
+    Texthelper.write(screen, [(0, 0), inventory_string,3])
+    
