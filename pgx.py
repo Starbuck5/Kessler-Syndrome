@@ -369,6 +369,7 @@ class AnnouncementBox():
                                       "Press Enter to Continue", 1.5])
             inputvar = keyboard()
             if "enter" in inputvar:
+                AnnouncementBox.upcoming[0].sound.stop()
                 del AnnouncementBox.upcoming[0]
 
     def _timehelper(self):

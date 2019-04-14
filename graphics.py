@@ -327,7 +327,7 @@ class InfoBars:
         Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
 
 #used by the map to actually draw out the sectors
-def drawSector(location, number, currentsector):
+def drawSector(screen, location, number, currentsector):
     secsize = 80 #side length of the cubes
     if number != currentsector:
         pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)

@@ -244,7 +244,7 @@ def main():
             line_color = (255, 255, 255)
 
             for i in range(len(sector_map_coordinates)):
-                graphics.drawSector(sector_map_coordinates[i], i + 1, sectornum)
+                graphics.drawSector(screen, sector_map_coordinates[i], i + 1, sectornum)
                 if sectorGeneration(i + 1): #draws infinity signs on map if regenerating sector
                     screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
                 #draws all links between sectors
