@@ -3,8 +3,7 @@ from pgx import Texthelper
 from pgx import InputGetter
 from pgx import collect_inputs
 from pgx import AllEvents
-from pgx import Filehelper
-filehelper = Filehelper("Assets\\gamedata.txt")
+from pgx import filehelper
 
 def setup():
     pygame.init()
