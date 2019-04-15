@@ -12,7 +12,7 @@ from pygame import Surface
 
 #accepts a surface that supports palettes (gifs) and changes the color palette based on preference
 #current and new colors are tuples of rgba (r, g, b, a)
-def change_color(image, currentColor, newColor):
+def change_color(image, currentColor, newColor, toReturn = False):
     palette = image.get_palette()
     palette = list(palette)
     index = -1
@@ -23,6 +23,10 @@ def change_color(image, currentColor, newColor):
     if index == -1:
         raise Exception("no such currentColor found in image")
     palette[index] = newColor
+    if toReturn:
+        newImage = image.copy()
+        newImage.set_palette(palette)
+        return newImage
     image.set_palette(palette)
 
 class Images:
@@ -112,7 +116,6 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     rotationCachingHelper("Assets\\images\\smallasteroids.gif", 40, 40, 1, 4, 70, scalar2)
     rotationCachingHelper("Assets\\images\\mediumasteroids.gif", 50, 50, 1, 4, 80, scalar2)
     rotationCachingHelper("Assets\\images\\largeasteroids.gif", 80, 80, 2, 4, 90, scalar2)
-
         
     #adding all satellites and parts images/rotations
     pixelStuff = d_parts + d_sats
@@ -130,9 +133,14 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
-    Images.add(100, loadImage("Assets\\images\\star.tif"))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
+
+    #adding different types of stars
+    base_star = loadImage("Assets\\images\\star.gif")
+    Images.add(100, base_star)    
+    Images.add(101, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
+    Images.add(102, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
 
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
@@ -152,7 +160,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(110, image)
 
 #reorders the list so it will print in the correct order
-background = [100]
+background = [100, 101, 102]
 ship = [1,5]
 def reorderObjectList(object_list):
     newObject_list = []
@@ -172,8 +180,8 @@ SHIPSTATE = 1 #set in main, controls which of the durability stages of the ship 
 #the nuts and bolts of printing the things    
 def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame): 
     colliderect = ""
-    if object_number == 100: #draws star
-        image = Images.get(100)
+    if 99 < object_number < 110: #draws stars
+        image = Images.get(object_number)
         screen.blit(image, (xpos, ypos))
         
     if object_number == 0: #draws zvezda

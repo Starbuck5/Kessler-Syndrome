@@ -607,49 +607,49 @@ def main():
                                                       d_sats, d_parts, d_asteroids, sectornum)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
-                            #updates list of undiscovered/discovered regardless of whether it triggers an event or not    
-                            discoverSector[sectornum-1] = True 
                             #recordings needed
-                            if sectornum == 4 and discoverSector[3] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "Took you long enough to get here. Now clear this sector.")
-                            if sectornum == 6 and discoverSector[5] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "I see you finally decided to travel further. Better pray before you die.")
-                            if sectornum == 9 and discoverSector[8] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                ("Congrats, you finally made it to the land of explosives. Have fun out"
-                                                 " there."))
-                            if sectornum == 11 and discoverSector[10] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "Is someone out there? I've been stuck out here for so long")
-                                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                ("If you would give me some gas to get back to station I would be "
-                                                 "eternally grateful"))
-                                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "Just go back to station and find the button to send me some fuel")
-                                file_settings[3] = 3
-                                filehelper.set(file_settings, 0)
-                            if sectornum == 12 and discoverSector[11] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                ("Wow, you are so slow. Just clean this mess up before i get bored and "
-                                                 "launch rockets at you."))
-                            if sectornum == 17 and discoverSector[16] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                "I see you found some more debris to clean up, make it quick.")
-                            if sectornum == 19 and discoverSector[18] == False:
-                                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
-                                                ("Take a look at this, this is the edge of your cleaning zone. Nothing"
-                                                 " more to do other than to keep cleaning for the rest of your life."))
+                            if discoverSector[sectornum-1] == False:
+                                if sectornum == 4:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    "Took you long enough to get here. Now clear this sector.")
+                                if sectornum == 6:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    "I see you finally decided to travel further. Better pray before you die.")
+                                if sectornum == 9:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    ("Congrats, you finally made it to the land of explosives. Have fun out"
+                                                     " there."))
+                                if sectornum == 11:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    "Is someone out there? I've been stuck out here for so long")
+                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    ("If you would give me some gas to get back to station I would be "
+                                                     "eternally grateful"))
+                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    "Just go back to station and find the button to send me some fuel")
+                                    file_settings[3] = 3
+                                    filehelper.set(file_settings, 0)
+                                if sectornum == 12:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    ("Wow, you are so slow. Just clean this mess up before i get bored and "
+                                                     "launch rockets at you."))
+                                if sectornum == 17:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    "I see you found some more debris to clean up, make it quick.")
+                                if sectornum == 19:
+                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                                    pygame.mixer.Sound(file="Assets\\announcements\\prototype.wav"),
+                                                    ("Take a look at this, this is the edge of your cleaning zone. Nothing"
+                                                     " more to do other than to keep cleaning for the rest of your life."))
+                                discoverSector[sectornum-1] = True
 
             # reward for killing a sector
             numdebris = 0
