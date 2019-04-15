@@ -138,6 +138,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
 
     #adding different types of stars
     base_star = loadImage("Assets\\images\\star.gif")
+    base_star.set_colorkey((255,255,255))
     Images.add(100, base_star)    
     Images.add(101, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
     Images.add(102, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
