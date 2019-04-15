@@ -40,26 +40,28 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     return hitBox
 
-#returns true if there is a collision between two objects, returns false otherwise
-def collinfo(object_number1, object_number2, object_list, scalar3, graphlist, DEVMODE):
-    intersection = False
-    if object_number1 != object_number2: #exempts object intersecting itself
-        #hitBox = [xpos, ypos, width, height]
+#helps out the collision detection section of main
+class CollisionInfo:
+    everyHitbox = []
 
-        hitBox1 = getHitbox(object_list, object_number1, scalar3, graphlist)
-        hitBox2 = getHitbox(object_list, object_number2, scalar3, graphlist)
+    #called once per tick, gets all the hitboxes ready for examination
+    def prime(object_list, scalar3, graphlist, DEVMODE):
+        CollisionInfo.everyHitbox = []
+        for i in range(int(len(object_list)/8)):
+            hitbox = getHitbox(object_list, i, scalar3, graphlist)
+            CollisionInfo.everyHitbox.append(hitbox)
+            if DEVMODE:
+               pygame.draw.rect(screen, (255,255,255), hitbox, 1)
 
-        # shows all the hitboxes
-        if DEVMODE:
-            if hitBox1[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox1, 1)
-            if hitBox2[2] != 0 and hitBox1[3] != 0:
-                pygame.draw.rect(screen, (255,255,255), hitBox2, 1)
-        
-        if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
-            if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
-                intersection = True
-    return intersection
+    #tests if two objects collide by location in the object list and returns a boolean
+    def doCollide(object_number1, object_number2, object_list):
+        if object_number1 != object_number2: #exempts object intersecting itself
+            hitBox1 = CollisionInfo.everyHitbox[object_number1]
+            hitBox2 = CollisionInfo.everyHitbox[object_number2]
+            if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
+                if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
+                    return True
+        return False
 
 #sound effects for collision        
 def explosion_sounds():
@@ -504,11 +506,13 @@ def main():
                 filehelper.setElement(5, 0, 3)
             # quest handling
 
-            # collision detection                         
-            for i in range(int(len(object_list)/8)):
+            # collision detection
+            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE)
+            numExaminations = int(len(object_list)/8)
+            for i in range(numExaminations):
                 i2 = i + 1
-                while i2 < int(len(object_list)/8):                   
-                    if collinfo(i,i2,object_list, scalar3, graphlist, DEVMODE) == True:
+                while i2 < numExaminations:                   
+                    if CollisionInfo.doCollide(i, i2, object_list):
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
                         if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
@@ -672,7 +676,7 @@ def main():
             object_list = deaderizer(object_list)
             
             # fuel consumption
-            if flame == True:
+            if flame:
                 currentfuel -= 1
 
             #HACKZ
