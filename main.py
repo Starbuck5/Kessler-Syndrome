@@ -244,32 +244,34 @@ def main():
             Screenhelper.greyOut(screen)
            
             line_color = (255, 255, 255)
+            sectorKnowledge = str(filehelper.get(1)[2])
 
             for i in range(len(sector_map_coordinates)):
-                graphics.drawSector(screen, sector_map_coordinates[i], i + 1, sectornum)
-                if sectorGeneration(i + 1): #draws infinity signs on map if regenerating sector
-                    screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
-                #draws all links between sectors
-                connections = sectorDestinations(i + 1)
-                for j in range(4):
-                    if connections[j] != -1:
-                        if j == 0:
-                            line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] + 40,
-                                        sector_map_coordinates[connections[j] - 1][1])
-                        elif j == 1:
-                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0],
-                                        sector_map_coordinates[connections[j] - 1][1] + 40)
-                        elif j == 2:
-                            line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] - 40,
-                                        sector_map_coordinates[connections[j] - 1][1])
-                        elif j == 3:
-                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0],
-                                        sector_map_coordinates[connections[j] - 1][1] - 40)
-                        pygame.draw.aaline(screen, line_color, line_start, line_end)
+                if (sectorKnowledge[i] == "1") or DEVMODE: #only visited sectors are drawn
+                    graphics.drawSector(screen, sector_map_coordinates[i], i + 1, sectornum)
+                    if sectorGeneration(i + 1): #draws infinity signs on map if regenerating sector
+                        screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
+                    #draws all links between sectors
+                    connections = sectorDestinations(i + 1)
+                    for j in range(4):
+                        if connections[j] != -1:
+                            if j == 0:
+                                line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
+                                line_end = (sector_map_coordinates[connections[j] - 1][0] + 40,
+                                            sector_map_coordinates[connections[j] - 1][1])
+                            elif j == 1:
+                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
+                                line_end = (sector_map_coordinates[connections[j] - 1][0],
+                                            sector_map_coordinates[connections[j] - 1][1] + 40)
+                            elif j == 2:
+                                line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
+                                line_end = (sector_map_coordinates[connections[j] - 1][0] - 40,
+                                            sector_map_coordinates[connections[j] - 1][1])
+                            elif j == 3:
+                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
+                                line_end = (sector_map_coordinates[connections[j] - 1][0],
+                                            sector_map_coordinates[connections[j] - 1][1] - 40)
+                            pygame.draw.aaline(screen, line_color, line_start, line_end)
 
             status = mapscreenUI(screen)            
             pygame.display.flip()
@@ -283,21 +285,6 @@ def main():
                 timer_popupmenu = 0
 
             if DEVMODE:
-                if Texthelper.writeButton(screen, [(180, 600), "[teleport home]", 2.5]):
-                    saveGame(sectornum, object_list, width, height)
-                    sectornum = 1
-                    lasttransit = 0
-                    new_objects = getObjects(sectornum, width, height)
-                    lastnumdebris = 0
-                    if new_objects[0] == -1 and len(new_objects)<8:
-                        object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                            d_sats, d_parts, d_asteroids)
-                    else:
-                        object_list = object_list[:8] + new_objects[8:]
-                    object_list[2] = 0  #kills momentum
-                    object_list[3] = 0
-                    status = "game"
-
                 for i in range(len(sector_map_coordinates)):
                     if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i + 1)) * 10,
                                                         sector_map_coordinates[i][1] - 15), str(i + 1), 2]):
