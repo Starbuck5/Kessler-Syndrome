@@ -482,7 +482,7 @@ def main():
                         timer_popupmenu = 0
                         status = "pauseinit"
                 lasttransit += 1
-                if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360:
+                if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360 and file_settings[4]:
                     DEVMODE = not DEVMODE #switches booleans
                     previous_tick2 = ticks
                 if "shift" in inputvar and "f" in inputvar and (ticks - previous_tick2) > 360:

@@ -1,4 +1,4 @@
-[?, 1080, True, 0]#game info: width, height, fullscreen, gamestate
+[?, 1080, True, 0, False]#game info: width, height, fullscreen, gamestate, cheats
 [placeholder, False, 8888888888888888888]#player info: name, cleared first sector, sector visitation
 [0, 30, 0, 0]#inventory: metal, gas, circuits, credits
 [1, 1, 1, 0]#level info: armor lv, fuel tank lv, torpedo lv
