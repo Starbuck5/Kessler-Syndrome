@@ -658,7 +658,7 @@ def main():
             # reward for killing a sector
             numdebris = 0
             for i in range(0, len(object_list), 8):
-                if object_list[i+4] not in [0, 100, 1, 2, 8, 6, 4, 5]:
+                if object_list[i+4] in d_asteroids + d_parts + d_sats:
                     numdebris += 1
             if numdebris == 0 and lastnumdebris > 0:
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
