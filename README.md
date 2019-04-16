@@ -12,7 +12,10 @@ Q W E (left rotate) (forward) (right rotate)
 SPACE to fire  
 M to go to map screen  
 P to pause  
-T to activate portals  
+T to activate portals
+
+SHIFT-D for cheats if enabled
+SHIFT-C for a new random background color
 
 Extra Notes:
 The setupper asks for a resolution to run the game at, but right now it only supports 1920x1080
