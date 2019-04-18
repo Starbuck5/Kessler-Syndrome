@@ -142,7 +142,11 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(100, base_star)    
     Images.add(101, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
     Images.add(102, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
-
+    base_star = scaleImage(base_star, 2)
+    Images.add(103, base_star)
+    Images.add(104, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
+    Images.add(105, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
+    
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
     image = loadImage("Assets\\images\\ships.png")
@@ -161,7 +165,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(110, image)
 
 #reorders the list so it will print in the correct order
-background = [100, 101, 102]
+background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
 ship = [1,5]
 def reorderObjectList(object_list):
     newObject_list = []
