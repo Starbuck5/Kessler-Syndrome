@@ -239,6 +239,7 @@ def main():
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
+            Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
            
             line_color = (255, 255, 255)
@@ -304,8 +305,9 @@ def main():
                         object_list[3] = 0
                         status = "game"
 
-            if status == "game":
+            if status != "mapscreen":
                 pygame.mouse.set_visible(False)
+                Font.set_scramble_paused(False) #resumes any scrambling going on
 
             pygame.display.flip()
 
