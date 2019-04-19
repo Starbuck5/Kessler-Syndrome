@@ -7,6 +7,8 @@ from pgx import loadImage
 from pgx import spriteSheetBreaker
 
 import pygame
+import pgx
+
 from pygame import gfxdraw
 from pygame import Surface
 
@@ -343,9 +345,9 @@ class InfoBars:
 def drawSector(screen, location, number, currentsector):
     secsize = 80 #side length of the cubes
     if number != currentsector:
-        pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+        pgx.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
     if number == currentsector:
-        pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+        pgx.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
         Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
     Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2])
 
