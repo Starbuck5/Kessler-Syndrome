@@ -100,7 +100,7 @@ def asteroidspeedmaker(max_asteroid_spd):
 def generateStars(width, height):
     stars_list = []
     # number of occurerences refers to relative probability of it showing up
-    possible_IDs = [100, 100, 100, 101, 101, 102, 102]
+    possible_IDs = [100, 100, 100, 101, 101, 102, 102, 103, 104, 105]
     for i in range(24):
         ID = possible_IDs[random.randint(0, len(possible_IDs)-1)]
         stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, "NA", "NA", 1]

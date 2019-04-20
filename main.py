@@ -158,9 +158,9 @@ def main():
     portal_toggle = False
     timer_portal_toggle = 0
     #locations for all sector icons on map screen, in order
-    sector_map_coordinates = [(960, 990), (820, 970), (1110, 980), (810, 840), (970, 830), (965, 690), (1115, 680),
-                              (830, 675), (1060, 525), (865, 535), (830, 400), (700, 630), (690, 455), (1095, 385),
-                              (1055, 250), (840, 245), (965, 415), (870, 105), (1030, 90)]
+    sector_map_coordinates = {1: (960, 990), 2: (820, 970), 3: (1110, 980), 4: (810, 840), 5: (970, 830), 6: (965, 690), 7: (1115, 680),
+                              8: (830, 675), 9: (1060, 525), 10: (865, 535), 11: (830, 400), 12: (700, 630), 13: (690, 455), 14: (1095, 385),
+                              15: (1055, 250), 16: (840, 245), 17: (965, 415), 18: (870, 105), 19: (1030, 90)}
 
     # class setup
     Screenhelper(width,height)
@@ -216,13 +216,11 @@ def main():
             
             #saving objectlist, sector achievements data
             saveGame(sectornum, object_list[:], width, height)
-            discovery = ""
-            for i in range(len(discoverSector)):
-                if discoverSector[i] == False:
-                    discovery += "8"
-                else:
-                    discovery += "1"
-            filehelper.setElement(discovery, 1, 2)
+            discovery = list("8" * len(sector_map_coordinates))
+            for i in discoverSector.keys():
+                if discoverSector[i]:
+                    discovery[i - 1] = "1"
+            filehelper.setElement("".join(discovery), 1, 2)
             
             status = "paused"
 
@@ -241,35 +239,42 @@ def main():
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
+            Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
            
             line_color = (255, 255, 255)
 
-            for i in range(len(sector_map_coordinates)):
-                graphics.drawSector(screen, sector_map_coordinates[i], i + 1, sectornum)
-                if sectorGeneration(i + 1): #draws infinity signs on map if regenerating sector
-                    screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
-                #draws all links between sectors
-                connections = sectorDestinations(i + 1)
-                for j in range(4):
-                    if connections[j] != -1:
-                        if j == 0:
-                            line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] + 40,
-                                        sector_map_coordinates[connections[j] - 1][1])
-                        elif j == 1:
-                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0],
-                                        sector_map_coordinates[connections[j] - 1][1] + 40)
-                        elif j == 2:
-                            line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
-                            line_end = (sector_map_coordinates[connections[j] - 1][0] - 40,
-                                        sector_map_coordinates[connections[j] - 1][1])
-                        elif j == 3:
-                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
-                            line_end = (sector_map_coordinates[connections[j] - 1][0],
-                                        sector_map_coordinates[connections[j] - 1][1] - 40)
-                        pygame.draw.aaline(screen, line_color, line_start, line_end)
+            for i in sector_map_coordinates.keys():
+                if discoverSector[i] or DEVMODE: #only visited sectors are drawn
+                    graphics.drawSector(screen, sector_map_coordinates[i], i, sectornum)
+                    if sectorGeneration(i): #draws infinity signs on map if regenerating sector
+                        screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
+                    #draws all links between sectors
+                    connections = sectorDestinations(i)
+                    for j in range(4):
+                        adjacentSector = connections[j]
+                        if adjacentSector != -1:
+                            if j == 0:
+                                line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
+                                line_end = (sector_map_coordinates[adjacentSector][0] + 40,
+                                            sector_map_coordinates[adjacentSector][1])
+                            elif j == 1:
+                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
+                                line_end = (sector_map_coordinates[adjacentSector][0],
+                                            sector_map_coordinates[adjacentSector][1] + 40)
+                            elif j == 2:
+                                line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
+                                line_end = (sector_map_coordinates[adjacentSector][0] - 40,
+                                            sector_map_coordinates[adjacentSector][1])
+                            elif j == 3:
+                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
+                                line_end = (sector_map_coordinates[adjacentSector][0],
+                                            sector_map_coordinates[adjacentSector][1] - 40)
+                            pygame.draw.aaline(screen, line_color, line_start, line_end)
+
+                            #if an adjacent sector has not been visited, it is drawn with a ?
+                            if (not discoverSector[adjacentSector]) and (not DEVMODE):
+                                graphics.drawSector(screen, sector_map_coordinates[adjacentSector], "?", sectornum)
 
             status = mapscreenUI(screen)            
             pygame.display.flip()
@@ -283,26 +288,11 @@ def main():
                 timer_popupmenu = 0
 
             if DEVMODE:
-                if Texthelper.writeButton(screen, [(180, 600), "[teleport home]", 2.5]):
-                    saveGame(sectornum, object_list, width, height)
-                    sectornum = 1
-                    lasttransit = 0
-                    new_objects = getObjects(sectornum, width, height)
-                    lastnumdebris = 0
-                    if new_objects[0] == -1 and len(new_objects)<8:
-                        object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                            d_sats, d_parts, d_asteroids)
-                    else:
-                        object_list = object_list[:8] + new_objects[8:]
-                    object_list[2] = 0  #kills momentum
-                    object_list[3] = 0
-                    status = "game"
-
-                for i in range(len(sector_map_coordinates)):
-                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i + 1)) * 10,
-                                                        sector_map_coordinates[i][1] - 15), str(i + 1), 2]):
+                for i in sector_map_coordinates.keys():
+                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
+                                                        sector_map_coordinates[i][1] - 15), str(i), 2]):
                         saveGame(sectornum, object_list, width, height)
-                        sectornum = i + 1
+                        sectornum = i
                         lasttransit = 0
                         new_objects = getObjects(sectornum, width, height)
                         lastnumdebris = 0
@@ -315,8 +305,9 @@ def main():
                         object_list[3] = 0
                         status = "game"
 
-            if status == "game":
+            if status != "mapscreen":
                 pygame.mouse.set_visible(False)
+                Font.set_scramble_paused(False) #resumes any scrambling going on
 
             pygame.display.flip()
 
@@ -415,10 +406,10 @@ def main():
                                     object_list[i2+5] = dockPosition[4]
             
             #game progression
-            discoverSector = filehelper.get(1)[2]
-            discoverSector = list(str(discoverSector))
-            for i in range(len(discoverSector)):
-                if discoverSector[i] == "8":
+            discovery = str(filehelper.get(1)[2])
+            discoverSector = {}
+            for i in sector_map_coordinates.keys():
+                if discovery[i - 1] == "8":
                     discoverSector[i] = False
                 else:
                     discoverSector[i] = True
@@ -612,7 +603,7 @@ def main():
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
                             #recordings needed
-                            if discoverSector[sectornum-1] == False:
+                            if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                                     pygame.mixer.Sound(file="Assets\\announcements\\3r.ogg"),
@@ -654,7 +645,8 @@ def main():
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
                                                      " cleaning zone. But wait… there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
-                                discoverSector[sectornum-1] = True
+                                discoverSector[sectornum] = True
+
 
             # reward for killing a sector
             numdebris = 0

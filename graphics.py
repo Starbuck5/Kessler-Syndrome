@@ -7,6 +7,8 @@ from pgx import loadImage
 from pgx import spriteSheetBreaker
 
 import pygame
+import pgx
+
 from pygame import gfxdraw
 from pygame import Surface
 
@@ -142,7 +144,11 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(100, base_star)    
     Images.add(101, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
     Images.add(102, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
-
+    base_star = scaleImage(base_star, 2)
+    Images.add(103, base_star)
+    Images.add(104, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True))    
+    Images.add(105, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True))
+    
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
     image = loadImage("Assets\\images\\ships.png")
@@ -161,7 +167,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(110, image)
 
 #reorders the list so it will print in the correct order
-background = [100, 101, 102]
+background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
 ship = [1,5]
 def reorderObjectList(object_list):
     newObject_list = []
@@ -339,9 +345,9 @@ class InfoBars:
 def drawSector(screen, location, number, currentsector):
     secsize = 80 #side length of the cubes
     if number != currentsector:
-        pygame.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+        pgx.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
     if number == currentsector:
-        pygame.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+        pgx.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
         Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
     Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2])
 

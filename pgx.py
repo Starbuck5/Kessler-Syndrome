@@ -644,3 +644,15 @@ class Filehelper():
 
 
 filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
+
+class draw:
+    def rect(Surface, color, Rect, width = 0):
+        try:
+            for i in range(4):
+                Rect[i] = round(Rect[i]*Texthelper.scalar)
+        except:
+            Rect = list(Rect)
+            for i in range(4):
+                Rect[i] = round(Rect[i]*Texthelper.scalar)
+        width = round(width*Texthelper.scalar)
+        pygame.draw.rect(Surface, color, Rect, width)

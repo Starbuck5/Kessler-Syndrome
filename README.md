@@ -14,7 +14,7 @@ M to go to map screen
 P to pause  
 T to activate portals
 
-SHIFT-D for cheats if enabled
+SHIFT-D for cheats if enabled  
 SHIFT-C for a new random background color
 
 Extra Notes:
