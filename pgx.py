@@ -312,6 +312,7 @@ class AnnouncementBox():
     #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
         self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
+        sound.set_volume(0.75)
         self.sound = sound
         self.text = text
         self.linedtext = wrap(text, AnnouncementBox.BREAKPOS)
