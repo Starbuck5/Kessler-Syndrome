@@ -656,3 +656,12 @@ class draw:
                 Rect[i] = round(Rect[i]*Texthelper.scalar)
         width = round(width*Texthelper.scalar)
         pygame.draw.rect(Surface, color, Rect, width)
+
+    def aaline(Surface, color, startpos, endpos, blend=1):
+        startpos = list(startpos)
+        endpos = list(endpos)
+        for i in range(2):
+            startpos[i] *= Texthelper.scalar
+            endpos[i] *= Texthelper.scalar
+        pygame.draw.aaline(Surface, color, startpos, endpos, blend)
+        

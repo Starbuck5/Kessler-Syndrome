@@ -3,6 +3,7 @@ import random
 import pygame
 
 from pgx import *
+import pgx
 from level1 import *
 from game import *
 import game
@@ -270,7 +271,7 @@ def main():
                                 line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
                                 line_end = (sector_map_coordinates[adjacentSector][0],
                                             sector_map_coordinates[adjacentSector][1] - 40)
-                            pygame.draw.aaline(screen, line_color, line_start, line_end)
+                            pgx.draw.aaline(screen, line_color, line_start, line_end)
 
                             #if an adjacent sector has not been visited, it is drawn with a ?
                             if (not discoverSector[adjacentSector]) and (not DEVMODE):
