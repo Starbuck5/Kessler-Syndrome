@@ -648,6 +648,7 @@ filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelp
 class draw:
     def rect(Surface, color, Rect, width = 0):
         try:
+            Rect = Rect.copy() #works for lists of coords and rects
             for i in range(4):
                 Rect[i] = round(Rect[i]*Texthelper.scalar)
         except:

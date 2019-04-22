@@ -310,7 +310,7 @@ class FlashyBox:
                 self.timer = 0
 
         if self.displaying: #draws the rectangle
-            pygame.draw.rect(screen, self.color, self.rect, 0)
+            pgx.draw.rect(screen, self.color, self.rect, 0)
 
 #controls the fuel, armor, and ammunition readout in bottom right
 class InfoBars:
@@ -328,14 +328,14 @@ class InfoBars:
         #fuel
         InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
         screen.blit(fuelpic, (1600, 1000))
-        pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-        pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+        pgx.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
+        pgx.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
         #Texthelper.write(screen, [(1665, 1005), str(currentfuel), 3])
         #armor
         InfoBars.armoralert.update(screen, currentarmor/totalarmor)
         screen.blit(armorpic, (1600, 930))
-        pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-        pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
+        pgx.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
+        pgx.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
         #Texthelper.write(screen, [(1665, 935), str(currentarmor), 3])
         #ammunition
         screen.blit(shotpic, (1600, 860))
