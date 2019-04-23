@@ -39,6 +39,8 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 110: #derelict ship
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+    elif objectID == 120: #alien drone
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation) 
     return hitBox
 
 #helps out the collision detection section of main
