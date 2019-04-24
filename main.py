@@ -496,6 +496,14 @@ def main():
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                ("So fellow traveler, what did you do to get banished up here? You've got dirt on the "
+                                 "president of the world you say? That's splendid!"))
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
+                                 "and the president would really be pissed then!"))
                 shipInventory[3] += 100
                 filehelper.setElement(5, 0, 3)
             # quest handling
