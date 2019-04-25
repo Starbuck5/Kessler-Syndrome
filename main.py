@@ -222,7 +222,11 @@ def main():
                 if discoverSector[i]:
                     discovery[i - 1] = "1"
             filehelper.setElement("".join(discovery), 1, 2)
-            
+            cleared = list(cleared) 
+            for i in range(19):
+                if clearedSector[i]:
+                    cleared[i - 1] = "1"
+            filehelper.setElement("".join(cleared), 1, 1)
             status = "paused"
 
         if status == "paused":
@@ -414,7 +418,15 @@ def main():
                     discoverSector[i] = False
                 else:
                     discoverSector[i] = True
-                
+                    
+            cleared = str(filehelper.get(1)[1])
+            clearedSector = {}
+            for i in range(19):
+                if cleared[i - 1] == "8":
+                    clearedSector[i] = False
+                else:
+                    clearedSector[i] = True
+                    
             if file_settings[3] == 0:
                 level1(screen, width, height)
                 file_settings[3] = 1
@@ -654,18 +666,17 @@ def main():
             for i in range(0, len(object_list), 8):
                 if object_list[i+4] in d_asteroids + d_parts + d_sats:
                     numdebris += 1
-            if numdebris == 0 and lastnumdebris > 0:
+            if numdebris == 0 and clearedSector[sectornum] == False:
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
                 SoundVault.play('money')
-                if not playerinfo[1]:
-                    playerinfo[1] = True
+                print(sectornum)
+                print(clearedSector)
+                clearedSector[sectornum] = True
+                if sectornum == 1:
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                     pygame.mixer.Sound(file="Assets\\announcements\\2r.ogg"),                             
                                     ("Finally! You've cleared the first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
-                    filehelper.set(playerinfo, 1)
-
-            lastnumdebris = numdebris
 
             # deaderizer
             object_list = deaderizer(object_list)
