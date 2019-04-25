@@ -137,6 +137,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
+    image = loadImage("Assets\\images\\aliendrone.gif")
+    image.set_colorkey((255,255,255))
+    Images.addRotate(120, scaleImage(image, 1.5))
 
     #adding different types of stars
     base_star = loadImage("Assets\\images\\star.gif")
@@ -252,6 +255,11 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = Images.getHitbox(xpos, ypos, 110, rotation)
 
+    if object_number == 120: #draws alien drone
+        image = Images.get(120, rotation)
+        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+        colliderect = Images.getHitbox(xpos, ypos, 120, rotation)
+
     return colliderect
 
 #takes care of the printing logic
@@ -310,7 +318,7 @@ class FlashyBox:
                 self.timer = 0
 
         if self.displaying: #draws the rectangle
-            pygame.draw.rect(screen, self.color, self.rect, 0)
+            pgx.draw.rect(screen, self.color, self.rect, 0)
 
 #controls the fuel, armor, and ammunition readout in bottom right
 class InfoBars:
@@ -328,14 +336,14 @@ class InfoBars:
         #fuel
         InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
         screen.blit(fuelpic, (1600, 1000))
-        pygame.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-        pygame.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+        pgx.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
+        pgx.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
         #Texthelper.write(screen, [(1665, 1005), str(currentfuel), 3])
         #armor
         InfoBars.armoralert.update(screen, currentarmor/totalarmor)
         screen.blit(armorpic, (1600, 930))
-        pygame.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-        pygame.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
+        pgx.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
+        pgx.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
         #Texthelper.write(screen, [(1665, 935), str(currentarmor), 3])
         #ammunition
         screen.blit(shotpic, (1600, 860))
