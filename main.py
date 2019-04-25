@@ -39,8 +39,6 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
     elif objectID == 110: #derelict ship
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
-    elif objectID == 120: #alien drone
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation) 
     return hitBox
 
 #helps out the collision detection section of main
@@ -132,12 +130,12 @@ def main():
     clock = pygame.time.Clock()
 
     #sound setup
-    SoundVault("explosion1", "Assets\\sounds\\Bomb1.wav", volume=0.1)
-    SoundVault("explosion2", "Assets\\sounds\\Bomb2.wav", volume=0.1)
-    SoundVault("money", "Assets\\sounds\\clink.wav")
-    SoundVault("death", "Assets\\sounds\\powerfailure.wav", volume=0.2)
-    SoundVault("portal", "Assets\\sounds\\electric.wav", volume=0.15)
-    SoundVault("shot", "Assets\\sounds\\shot.wav", volume=0.25)
+    SoundVault("explosion1", "Assets\\sounds\\Bomb1.ogg", volume=0.1)
+    SoundVault("explosion2", "Assets\\sounds\\Bomb2.ogg", volume=0.1)
+    SoundVault("money", "Assets\\sounds\\clink.ogg")
+    SoundVault("death", "Assets\\sounds\\powerfailure.ogg", volume=0.2)
+    SoundVault("portal", "Assets\\sounds\\electric.ogg", volume=0.15)
+    SoundVault("shot", "Assets\\sounds\\shot.ogg", volume=0.25)
 
     # variable setup
     playerinfo = filehelper.get(1)
@@ -224,11 +222,7 @@ def main():
                 if discoverSector[i]:
                     discovery[i - 1] = "1"
             filehelper.setElement("".join(discovery), 1, 2)
-            cleared = list(cleared) 
-            for i in range(19):
-                if clearedSector[i]:
-                    cleared[i - 1] = "1"
-            filehelper.setElement("".join(cleared), 1, 1)
+            
             status = "paused"
 
         if status == "paused":
@@ -420,15 +414,7 @@ def main():
                     discoverSector[i] = False
                 else:
                     discoverSector[i] = True
-                    
-            cleared = str(filehelper.get(1)[1])
-            clearedSector = {}
-            for i in range(19):
-                if cleared[i - 1] == "8":
-                    clearedSector[i] = False
-                else:
-                    clearedSector[i] = True
-                    
+                
             if file_settings[3] == 0:
                 level1(screen, width, height)
                 file_settings[3] = 1
@@ -506,16 +492,8 @@ def main():
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, "NA", "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
-                                ("So fellow traveler, what did you do to get banished up here? You've got dirt on the "
-                                 "president of the world you say? That's splendid!"))
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
-                                ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
-                                 "and the president would really be pissed then!"))
                 shipInventory[3] += 100
                 filehelper.setElement(5, 0, 3)
             # quest handling
@@ -642,14 +620,14 @@ def main():
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     "Is someone out there? I've been stuck out here for so long")
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
                                                      "eternally grateful"))
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
                                     file_settings[3] = 3
                                     filehelper.set(file_settings, 0)
@@ -676,17 +654,18 @@ def main():
             for i in range(0, len(object_list), 8):
                 if object_list[i+4] in d_asteroids + d_parts + d_sats:
                     numdebris += 1
-            if numdebris == 0 and clearedSector[sectornum] == False:
+            if numdebris == 0 and lastnumdebris > 0:
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
                 SoundVault.play('money')
-                print(sectornum)
-                print(clearedSector)
-                clearedSector[sectornum] = True
-                if sectornum == 1:
+                if not playerinfo[1]:
+                    playerinfo[1] = True
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                     pygame.mixer.Sound(file="Assets\\announcements\\2r.ogg"),                             
                                     ("Finally! You've cleared the first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
+                    filehelper.set(playerinfo, 1)
+
+            lastnumdebris = numdebris
 
             # deaderizer
             object_list = deaderizer(object_list)
