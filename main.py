@@ -239,6 +239,24 @@ def main():
             if status == "menuinit":
                 Font.endScramble()
 
+        if status == "optionsinit":
+            optionsUIinit(screen, file_settings)
+            status = "options"
+
+        if status == "options":
+            data = optionsUI(screen, 50, file_settings) 
+            status = data[0]
+            file_settings = data[1]
+
+            inputvar = keyboard()
+            if "escape" in inputvar or status != "options":
+                status = "pauseinit"
+                timer_popupmenu = 0
+                filehelper.set(file_settings, 0)
+                if (not file_settings[4]):
+                    DEVMODE = False #if you disable cheats devmode is turned off
+
+            pygame.display.flip()
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
