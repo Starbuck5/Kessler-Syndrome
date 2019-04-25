@@ -548,13 +548,11 @@ def optionsUI(screen, spacing, file_settings):
 
     Texthelper.write(screen, [(600, 400), "Resolution:", 3])
 
-    widthInput = OptionsInput.width
-    heightInput = OptionsInput.height
-    widthInput.update(screen)
-    heightInput.update(screen)
+    OptionsInput.width.update(screen)
+    OptionsInput.height.update(screen)
     Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
-    file_settings[0] = widthInput.getIntText()
-    file_settings[1] = heightInput.getIntText()
+    file_settings[0] = OptionsInput.width.getIntText()
+    file_settings[1] = OptionsInput.height.getIntText()
 
     Texthelper.write(screen, [(600, 400 + spacing), "Cheats:", 3])
     if (file_settings[4]):
@@ -568,5 +566,5 @@ def optionsUI(screen, spacing, file_settings):
         status = "pauseinit"
 
     pygame.display.flip()
-    return [status, file_settings]
+    return status
 

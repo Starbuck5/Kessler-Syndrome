@@ -248,9 +248,7 @@ def main():
             status = "options"
 
         if status == "options":
-            data = optionsUI(screen, 50, file_settings) 
-            status = data[0]
-            file_settings = data[1]
+            status = optionsUI(screen, 50, file_settings) 
 
             inputvar = keyboard()
             if "escape" in inputvar or status != "options":
@@ -320,7 +318,6 @@ def main():
                         sectornum = i
                         lasttransit = 0
                         new_objects = getObjects(sectornum, width, height)
-                        lastnumdebris = 0
                         if new_objects[0] == -1 and len(new_objects)<8:
                             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                 d_sats, d_parts, d_asteroids, sectornum)
@@ -392,7 +389,6 @@ def main():
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
-            lastnumdebris = 0
             pygame.mouse.set_visible(False)
             #inventory
             shipInventory = [0,0,0,0]
@@ -637,7 +633,6 @@ def main():
                             sectornum = destinations[i]
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
-                            lastnumdebris = 0
                             if new_objects[0] == -1 and len(new_objects)<8:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                                       d_sats, d_parts, d_asteroids, sectornum)
@@ -697,8 +692,6 @@ def main():
             if numdebris == 0 and clearedSector[sectornum] == False:
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
                 SoundVault.play('money')
-                print(sectornum)
-                print(clearedSector)
                 clearedSector[sectornum] = True
                 if sectornum == 1:
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
@@ -734,7 +727,6 @@ def main():
 
             if timer_shipdeath == 200:
                 sectornum = 1
-                lastnumdebris = 0
                 object_list = getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2
