@@ -499,18 +499,23 @@ def home(screen):
 
 def drawPauseUI(screen, mode):
     status = "paused"
-    Texthelper.write(screen, [("center", 540-136), "Paused", 6])
+    Texthelper.write(screen, [("center", 400), "Paused", 6])
     timedFlip(mode)
         
-    if Texthelper.writeButton(screen, [("center", 540-55), "Resume", 2]):
+    spacing = 35
+    if Texthelper.writeButton(screen, [("center", 485), "Resume", 2]):
         status = "game"
     timedFlip(mode)
 
-    if Texthelper.writeButton(screen, [("center", 540-20), "Quit to menu", 2]):
+    if Texthelper.writeButton(screen, [("center", 485 + spacing), "Options", 2]):
+        status = "optionsinit"
+    timedFlip(mode)
+
+    if Texthelper.writeButton(screen, [("center", 485 + spacing * 2), "Quit to menu", 2]):
         status = "menuinit"
     timedFlip(mode)
 
-    if Texthelper.writeButton(screen, [("center", 540+15), "Quit to desktop", 2]):
+    if Texthelper.writeButton(screen, [("center", 485 + spacing * 3), "Quit to desktop", 2]):
         status = "exiting"
     pygame.display.flip()
     return status
@@ -521,3 +526,47 @@ def mapscreenUI(screen):
         status = "game"
         pygame.mouse.set_visible(False)
     return status
+
+class OptionsInput():
+    width = ""
+    height = ""
+
+    def __init__(self, resolution):
+        OptionsInput.width = InputGetter([(1000, 400), str(resolution[0]), 3], "int")
+        OptionsInput.height = InputGetter([(1000 + 250, 400), str(resolution[1]), 3], "int")
+
+def optionsUIinit(screen, file_settings):
+    pygame.mouse.set_visible(True)
+    OptionsInput([file_settings[0], file_settings[1]])
+
+def optionsUI(screen, spacing, file_settings):
+    status = "options"
+
+    screen.fill((0, 0, 0))
+
+    Texthelper.write(screen, [("center", 200), "Options", 6])
+
+    Texthelper.write(screen, [(600, 400), "Resolution:", 3])
+
+    widthInput = OptionsInput.width
+    heightInput = OptionsInput.height
+    widthInput.update(screen)
+    heightInput.update(screen)
+    Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
+    file_settings[0] = widthInput.getIntText()
+    file_settings[1] = heightInput.getIntText()
+
+    Texthelper.write(screen, [(600, 400 + spacing), "Cheats:", 3])
+    if (file_settings[4]):
+        text = "Enabled"
+    else:
+        text = "Disabled"
+    if (Texthelper.writeButton(screen, [(1000, 400 + spacing), text, 3])):
+        file_settings[4] = not file_settings[4]
+
+    if Texthelper.writeButton(screen, [("center", 800), "Back", 2]):
+        status = "pauseinit"
+
+    pygame.display.flip()
+    return [status, file_settings]
+
