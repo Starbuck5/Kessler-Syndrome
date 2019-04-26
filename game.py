@@ -5,6 +5,48 @@ from pgx import spriteSheetBreaker
 from pgx import scaleImage
 from pgx import filehelper
 
+##future - make 'save string' internal to each class, with 'save key' being the letter associated with each class
+class ObjectSaver():
+    def toString(obj):
+        if isinstance(obj, RotationState):
+            return "0pR" + str(obj.getPos()) + "%" + str(obj.getMom())
+        else:
+            raise ValueError("unsupported class saving")
+    def fromString(dataString):
+        if dataString[0:1] != "0p":
+            raise ValueError("what did you just bring upon this holy land?")
+        else if dataString[2] == "R":
+            dataString = dataString[2:]
+            split = dataString.index("%")
+            return RotationState(int(dataString[:split]), int(dataString[split+1:]))
+
+class RotationState():
+    def __init__(self, rotationPos, rotationMom):
+        self.pos = rotationPos
+        self.mom = rotationMom
+        self.rotating = True
+        if rotationPos == -1 and rotationMom == -1:
+            self.rotating = False
+
+    def __str__(self):
+        return "RotationStateObj: rot: " + str(self.pos) + " mom: " + str(self.mom)
+
+    def getPos(self):
+        return self.pos
+
+    def getMom(self):
+        return self.mom
+
+    def getRotating(self):
+        return self.rotating
+
+    def rotate(self):
+        self.pos += self.mom/7 #the divided by moderates the speed of rotation
+        if self.pos >= 360:
+            self.pos -= 360
+        if self.pos <= -360:
+            self.pos += 360
+        
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
     # particle settings
@@ -80,8 +122,13 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
             if object_list[5+i] >= 360:
                 object_list[5+i] -= 360
             if object_list[5+i] <= -360:
-                object_list[5+i] += 360                
+                object_list[5+i] += 360
 
+        #rotation - now with objects!
+        #if object_list[5+i].getRotating():
+        #    object_list[5+i].rotate()
+        
+        
 #helps out by setting entities to reasonable speeds
 def asteroidspeedmaker(max_asteroid_spd):
     asteroid_speedset = []
