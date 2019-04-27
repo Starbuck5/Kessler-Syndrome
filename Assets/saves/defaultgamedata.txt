@@ -1,5 +1,5 @@
 [?, 1080, True, 0, False]#game info: width, height, fullscreen, gamestate, cheats
-[player, 1888888888888888888, 1888888888888888888]#player info: name, sector clearing, sector visitation
+[player, 8888888888888888888, 8888888888888888888]#player info: name, sector clearing, sector visitation
 [0, 30, 0, 0]#inventory: metal, gas, circuits, credits
 [1, 1, 1, 0]#level info: armor lv, fuel tank lv, torpedo lv
 [10, 1500, 3]#ship info: armor points, fuel points, torpedoes(able to use)
