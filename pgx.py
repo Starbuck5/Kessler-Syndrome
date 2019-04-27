@@ -2,6 +2,8 @@
 import pygame
 import random
 from textwrap import wrap
+import pickle
+import codecs
 OS = "windows" #other option = "mac"
 
 #keyboard for continuous keypresses
@@ -642,6 +644,26 @@ class Filehelper():
         lineData[column] = content
         Filehelper.set(self, lineData, line)
 
+    def saveObj(self, content, line):
+        saveline = codecs.encode(pickle.dumps(content), "base64").decode()
+        saveline = str(saveline)
+        file = open(self.info_file, "r")
+        lines = file.readlines()
+        file.close()
+        
+        lines[line] = saveline
+
+        file = open(self.info_file, "w")
+        print(lines)
+        file.writelines(lines)
+        file.close()
+                
+    def loadObj(self, line):
+        file = open(self.info_file, "r")
+        lines = file.readlines()
+        file.close()
+        pickled = lines[line]
+        return pickle.loads(codecs.decode(pickled.encode(), "base64"))
 
 filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
 
@@ -665,4 +687,4 @@ class draw:
             startpos[i] *= Texthelper.scalar
             endpos[i] *= Texthelper.scalar
         pygame.draw.aaline(Surface, color, startpos, endpos, blend)
-        
+   
