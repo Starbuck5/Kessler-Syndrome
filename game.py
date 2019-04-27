@@ -5,21 +5,6 @@ from pgx import spriteSheetBreaker
 from pgx import scaleImage
 from pgx import filehelper
 
-##future - make 'save string' internal to each class, with 'save key' being the letter associated with each class
-class ObjectSaver():
-    def toString(obj):
-        if isinstance(obj, RotationState):
-            return "0pR" + str(obj.getPos()) + "%" + str(obj.getMom())
-        else:
-            raise ValueError("unsupported class saving")
-    def fromString(dataString):
-        if dataString[0:1] != "0p":
-            raise ValueError("what did you just bring upon this holy land?")
-        else if dataString[2] == "R":
-            dataString = dataString[2:]
-            split = dataString.index("%")
-            return RotationState(int(dataString[:split]), int(dataString[split+1:]))
-
 class RotationState():
     def __init__(self, rotationPos, rotationMom):
         self.pos = rotationPos
