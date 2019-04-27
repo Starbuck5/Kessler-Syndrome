@@ -132,12 +132,12 @@ def main():
     clock = pygame.time.Clock()
 
     #sound setup
-    SoundVault("explosion1", "Assets\\sounds\\Bomb1.wav", volume=0.1)
-    SoundVault("explosion2", "Assets\\sounds\\Bomb2.wav", volume=0.1)
-    SoundVault("money", "Assets\\sounds\\clink.wav")
-    SoundVault("death", "Assets\\sounds\\powerfailure.wav", volume=0.2)
-    SoundVault("portal", "Assets\\sounds\\electric.wav", volume=0.15)
-    SoundVault("shot", "Assets\\sounds\\shot.wav", volume=0.25)
+    SoundVault("explosion1", "Assets\\sounds\\Bomb1.ogg", volume=0.1)
+    SoundVault("explosion2", "Assets\\sounds\\Bomb2.ogg", volume=0.1)
+    SoundVault("money", "Assets\\sounds\\clink.ogg")
+    SoundVault("death", "Assets\\sounds\\powerfailure.ogg", volume=0.2)
+    SoundVault("portal", "Assets\\sounds\\electric.ogg", volume=0.15)
+    SoundVault("shot", "Assets\\sounds\\shot.ogg", volume=0.25)
 
     # variable setup
     playerinfo = filehelper.get(1)
@@ -520,14 +520,14 @@ def main():
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, "NA", "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 ("So fellow traveler, what did you do to get banished up here? You've got dirt on the "
                                  "president of the world you say? That's splendid!"))
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
                 shipInventory[3] += 100
@@ -655,14 +655,14 @@ def main():
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     "Is someone out there? I've been stuck out here for so long")
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
                                                      "eternally grateful"))
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.wav"),
+                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
                                     file_settings[3] = 3
                                     filehelper.set(file_settings, 0)
