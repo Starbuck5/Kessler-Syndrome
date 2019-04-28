@@ -559,8 +559,15 @@ def optionsUI(screen, spacing, file_settings):
         text = "Enabled"
     else:
         text = "Disabled"
-    if (Texthelper.writeButton(screen, [(1000, 400 + spacing), text, 3])):
+    if Texthelper.writeButton(screen, [(1000, 400 + spacing), text, 3]):
         file_settings[4] = not file_settings[4]
+
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 3), "Reset Gamedata", 3], color = (178, 34, 34)):
+        status = "menuinit"
+        default = Filehelper("Assets\\saves\\defaultgamedata.txt")
+        default.copyTo(filehelper)
+
+        filehelper.setElement("2", 0, 3)
 
     if Texthelper.writeButton(screen, [("center", 800), "Back", 2]):
         status = "pauseinit"

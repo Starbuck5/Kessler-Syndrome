@@ -608,6 +608,13 @@ class Filehelper():
                 parse_line[i] = False
         return parse_line
 
+    #takes another filehelper and overwrites it with no processing or modification
+    def copyTo(self, other):
+        file = open(self.info_file, "r")
+        contents = file.read()
+        otherFile = open(other.info_file, "w")
+        otherFile.write(contents)
+
     #allows the program to set lines to whatever they want, within what I think they will           
     def set(self, content, line, **kwargs): #line is line # in file being written to
         file = open(self.info_file, "r")

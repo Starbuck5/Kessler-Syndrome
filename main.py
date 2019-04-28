@@ -251,8 +251,10 @@ def main():
             status = optionsUI(screen, 50, file_settings) 
 
             inputvar = keyboard()
-            if "escape" in inputvar or status != "options":
+            if "escape" in inputvar:
                 status = "pauseinit"
+
+            if status != "options":
                 timer_popupmenu = 0
                 filehelper.set(file_settings, 0)
                 if (not file_settings[4]):
