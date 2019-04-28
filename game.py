@@ -319,8 +319,7 @@ def saveGame(sectornum, object_list, width, height):
     else:
         saveObjects(sectornum, object_list[:], width, height)
 
-#saves objectlist to file by breaking it into a maximum of 5 lines
-def saveObjects(sectornum, save_list, width, height):
+def processListForSave(save_list, width, height):
     for i in range(len(save_list)):
         if isinstance(save_list[i], float):
             save_list[i] = round(save_list[i], 1)
@@ -330,30 +329,47 @@ def saveObjects(sectornum, save_list, width, height):
                 save_list[i] = round(save_list[i]/width, 3)
             if i % 8 == 1:
                 save_list[i] = round(save_list[i]/height, 3)
+    
+
+#saves objectlist to file by breaking it into a maximum of 5 lines
+def saveObjects(sectornum, save_list, width, height):
+    processListForSave(save_list, width, height)
                         
-    if len(save_list) >= 1000:
-        save_list = save_list[:1000]
-        print("Error: overflow in Main/saveObjects")
-    savelist = []
-    listhelper = int(len(save_list)/200) #200 = entities per level
-    for i in range(listhelper):
-        savelist.append(save_list[:200])
-        save_list = save_list[200:]
-    savelist.append(save_list)    
-    listhelper = 5- len(savelist)
-    for i in range(listhelper):
-        savelist.append([])    
-    for i in range(5):
-        filehelper.set(savelist[i], sectornum*5+i)
+##    if len(save_list) >= 1000:
+##        save_list = save_list[:1000]
+##        print("Error: overflow in Main/saveObjects")
+##    savelist = []
+##    listhelper = int(len(save_list)/200) #200 = entities per level
+##    for i in range(listhelper):
+##        savelist.append(save_list[:200])
+##        save_list = save_list[200:]
+##    savelist.append(save_list)    
+##    listhelper = 5- len(savelist)
+##    for i in range(listhelper):
+##        savelist.append([])    
+##    for i in range(5):
+##        filehelper.set(savelist[i], sectornum*5+i)
+
+    resave_list = filehelper.loadObj(5)
+    resave_list[sectornum-1] = save_list
+
+    filehelper.saveObj(resave_list, 5)
 
 #extracts the list saveObjects saved to file
-def getObjects(sectornum, width, height):
-    object_list = []
-    for i in range(5):
-        object_list += filehelper.get(sectornum*5+i)
-    if object_list != []:
-        while object_list[-1] == '':
-            object_list.pop()
+def getObjects(sectornum, width, height, **kwargs):
+    if 'old' in kwargs:
+        if kwargs['old']:
+            object_list = []
+            for i in range(5):
+                object_list += filehelper.get(sectornum*5+i)
+            if object_list != []:
+                while object_list[-1] == '':
+                    object_list.pop()
+        else:
+            object_list = filehelper.loadObj(5)[sectornum-1]
+    else:
+        object_list = filehelper.loadObj(5)[sectornum-1]
+            
     # turning x and y float percentages back into coords
     if len(object_list) >= 8:
         for i in range(len(object_list)):
@@ -373,3 +389,17 @@ def deleteObject(toDelete, delSector, width, height):
         if object_list[i+4] == toDelete:
             del object_list[i:i+8]
     saveGame(delSector, object_list, width, height)
+
+#converter from old save files to new
+##resave_list = []
+##for sectornum in range(1, 19):
+##    resave = getObjects(sectornum, 1920, 1080, old=True)
+##    resave_list.append(resave)
+##
+##print(resave_list)
+##for i in range(len(resave_list)):
+##    processListForSave(resave_list[i], 1920, 1080)
+##
+##filehelper.saveObj(resave_list, 5)
+
+

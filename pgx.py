@@ -644,6 +644,7 @@ class Filehelper():
         lineData[column] = content
         Filehelper.set(self, lineData, line)
 
+    #experimental - subject to future change
     def saveObj(self, content, line):
         saveline = codecs.encode(pickle.dumps(content), "base64").decode()
         saveline = str(saveline)
@@ -651,13 +652,14 @@ class Filehelper():
         lines = file.readlines()
         file.close()
         
+        saveline = "".join(saveline.splitlines())
         lines[line] = saveline
 
         file = open(self.info_file, "w")
-        print(lines)
         file.writelines(lines)
         file.close()
-                
+
+    #experimental - subject to future change            
     def loadObj(self, line):
         file = open(self.info_file, "r")
         lines = file.readlines()
