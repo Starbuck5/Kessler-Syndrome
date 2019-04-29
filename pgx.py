@@ -309,21 +309,26 @@ class InputGetter():
 class AnnouncementBox():
     width = 1
     height = 1
-    upcoming = []
+    upcoming = [] # upcoming anouncements that need to be displayed
     BREAKPOS = 32 #amount of chars before a linebreak
+    INTEXTSPEED = 4 # frames per character that it displayes at
+    OUTTEXTSPEED = 0.5
     #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
         self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
         sound.set_volume(0.75)
         self.sound = sound
         self.text = text
-        self.linedtext = wrap(text, AnnouncementBox.BREAKPOS)
+        print(text)
+        self.linedtext = wrap(text, AnnouncementBox.BREAKPOS) # wraps text by linebreak
         lineelements = []
         for i in range(len(self.linedtext)):
-            lineelements.append(len(self.linedtext[i].split()))
+            lineelements.append(len(self.linedtext[i]))
         self.lineelements = lineelements
         self.time = 0
-        self.ended = False
+        self.bounds = [0,0]
+        self.printing = True
+        self.ending = False
         AnnouncementBox.upcoming.append(self)
 
     def play(screen):
@@ -335,7 +340,7 @@ class AnnouncementBox():
             AnnouncementBox.upcoming[0]._timehelper()
 
     def _draw(self, screen):
-        screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1)))
+        screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1))) # placing image on scrreen
         boxheight = AnnouncementBox.height*0.1
         if len(self.linedtext) > 3:
             length = len(self.linedtext)
@@ -345,38 +350,38 @@ class AnnouncementBox():
                                                  round(AnnouncementBox.width*0.4-AnnouncementBox.height*0.1), boxheight), 4)
         pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
                                                  round(AnnouncementBox.height*0.1),round(AnnouncementBox.height*0.1)), 4)
-        words = int(self.time/20)
-        if words >= sum(self.lineelements):
-            self.ended = True
-            words = sum(self.lineelements)
-        line = 0
-        while words > 0:
-            if words >= self.lineelements[line]:
-                Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
-                                           round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
-                                          self.linedtext[line], 2])
-                words -= self.lineelements[line]
-                line += 1
-            if words > 0:
-                if words < self.lineelements[line]:
-                    text = self.linedtext[line].split()
-                    text = text[:words]
-                    text = " ".join(text)
-                    Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
-                                               round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
-                                              text, 2])
-                    words = 0
-                    line += 1                                
-        if self.ended:
+        
+        # trims text to self.bounds and prints it
+        total_chars = 0
+        for line in range(len(self.linedtext)):
+            start = max([0,self.bounds[0]-total_chars])
+            end = min([len(self.linedtext[line]),max([0,self.bounds[1]-total_chars])])
+            text = self.linedtext[line][start:end]
+            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
+                             round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
+                             text, 2])
+            total_chars += len(self.linedtext[line])
+        
+        if self.bounds[1] >= sum(self.lineelements):
+            self.printing = False
+        
+        if not self.printing:
             Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.11 + boxheight)),
                                       "Press Enter to Continue", 1.5])
             inputvar = keyboard()
             if "enter" in inputvar:
-                AnnouncementBox.upcoming[0].sound.stop()
-                del AnnouncementBox.upcoming[0]
+                self.ending = True
+                self.time = 1
 
     def _timehelper(self):
         self.time += 1
+        if self.printing:
+            self.bounds[1] = int(self.time/self.INTEXTSPEED)
+        if self.ending:
+            self.bounds[0] = int(self.time/self.OUTTEXTSPEED)
+            if self.bounds[0] >= self.bounds[1]:
+                AnnouncementBox.upcoming[0].sound.stop()
+                del AnnouncementBox.upcoming[0]
 
    
 class Texthelper():
@@ -435,7 +440,7 @@ class Texthelper():
                 screen.blit(text3, (horizontal_pos, text_location[1]))
                 horizontal_pos += 5 * scale                
             elif text[i] == " " and text[i-1] != " " and i != 0:
-                horizontal_pos += 3 * scale
+                horizontal_pos += 6 * scale
                 #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
             elif text[i] == " " and text[i-1] == " " and i != 0:
                 horizontal_pos += 11 * scale
@@ -447,7 +452,7 @@ class Texthelper():
         text_input = Texthelper._interpretcoords(text_input)        
         text_input[1] = text_input[1].lower()
         return text_input
-
+    
     #petitions the font to have the right color
     def _handlecolor(**kwargs):
         #order of precedence low to high:
@@ -482,7 +487,7 @@ class Texthelper():
             elif text[i] in Texthelper.HALFSIZERS:
                 x_range += 5 * scale                
             elif text[i] == " " and text[i-1] != " " and i != 0:
-                x_range += 3 * scale
+                x_range += 6 * scale
                 #would be 6 but each character automatically gives a 3 pixel * scale space until the next character
             elif text[i] == " " and text[i-1] == " " and i != 0:
                 x_range += 11 * scale
@@ -562,6 +567,8 @@ class Texthelper():
             return False        
 
     def textlength(text_input):
+        if len(text_input) < 3:
+            return len(text_input)
         text_input = Texthelper._sanitizeinput(text_input)
         return Texthelper._textlength(text_input)
 
