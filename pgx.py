@@ -353,13 +353,9 @@ class AnnouncementBox():
         
         # trims text to self.bounds and prints it
         total_chars = 0
-        if self.printing or self.ending:
-            print('--:')
         for line in range(len(self.linedtext)):
             start = max([0,self.bounds[0]-total_chars])
             end = min([len(self.linedtext[line]),max([0,self.bounds[1]-total_chars])])
-            if self.printing or self.ending:
-                print( start,end,total_chars)
             text = self.linedtext[line][start:end]
             Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
                              round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
