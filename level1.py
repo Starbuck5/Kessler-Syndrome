@@ -1,13 +1,28 @@
 from pgx import *
+from graphics import change_color
 def level1(screen, width, height):
     import pygame
     import random
+    from game import generateStars
     clock = pygame.time.Clock()
     soyuz = loadImage("Assets\\images\\soyuz2.tif")  
     soyuzscalar = 1
     soyuz = scaleImage(soyuz, soyuzscalar)
     soyuzsize = soyuz.get_size()
     pygame.mouse.set_visible(True)
+
+    #adding different types of stars
+    base_star = loadImage("Assets\\images\\star.gif")
+    base_star.set_colorkey((255,255,255))
+    stars = []
+    stars += [100, base_star]
+    stars += [101, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True)]    
+    stars += [102, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True)]
+    base_star = scaleImage(base_star, 2)
+    stars += [103, base_star]
+    stars += [104, change_color(base_star, (255,216,0,255), (255, 160, 0, 255), True)]    
+    stars += [105, change_color(base_star, (255,216,0,255), (255, 130, 0, 255), True)]
+    star_list = generateStars(width, height)
 
     mountains = loadImage("Assets\\images\\cutsceneback.tif")
     mountainsize = mountains.get_size()
@@ -38,7 +53,10 @@ def level1(screen, width, height):
     running = True
     while running:
         clock.tick(100)
-        screen.fill((0,191,255))
+        screen.fill((0,0,0))
+        star_listLength = int(len(star_list)/8)
+        for i in range(star_listLength):
+            screen.blit(stars[(100 - star_list[(i*8)+4])*2+1], (star_list[i*8], star_list[i*8+1]))
         screen.blit(mountains, (0, height-mountainsize[1]))
 
         for i in range(len(opening_crawl)):
