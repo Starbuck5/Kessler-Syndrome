@@ -20,27 +20,27 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
     hitBox = [xpos, ypos, 0,0]
     if objectID == 1 or objectID == 5: #main ship
         #objectID as 1.1 because thats full health ship and ship size doesn't change between states
-        hitBox = graphics.Images.getHitbox(xpos, ypos, 1.1, -rotation, True, True, True)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, 1.1, -rotation.getRotation(), True, True, True)
     elif objectID == 2 or objectID == 8: #shots
         hitBox = [xpos-2, ypos-2, 4, 4]
     elif objectID == 6: #aliens
         hitBox = [xpos, ypos, 60, 60]
     elif objectID == 0: #zvezda
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation, False)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation(), False)
     elif 9 < objectID < 40: #pixel things
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 7: #alien mines
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 9: #mine explosion
         scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
         graphics.Images.scaleHitbox(hitBox, scale)     
     elif 69 < objectID < 100: #asteroids
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 110: #derelict ship
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation)
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 120: #alien drone
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation) 
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation()) 
     return hitBox
 
 #helps out the collision detection section of main
@@ -470,25 +470,25 @@ def main():
             ticks = pygame.time.get_ticks()
             if inputvar:
                 if object_list[4] == 1:
-                    thrust_vector = (math.cos(math.radians(object_list[5]-90)),
-                                     math.sin(math.radians(object_list[5]+90)))
+                    thrust_vector = (math.cos(math.radians(object_list[5].getRotation()-90)),
+                                     math.sin(math.radians(object_list[5].getRotation()+90)))
                     if "w" in inputvar or "uparrow" in inputvar:
                         object_list[2] += step_x * thrust_vector[0]
                         object_list[3] += step_y * thrust_vector[1]
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        object_list[5] += step_r
+                        object_list[5].rotateBy(step_r)
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        object_list[5] -= step_r
+                        object_list[5].rotateBy(-step_r)
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         SoundVault.play('shot')
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
                         ymom_miss = object_list[3] + (thrust_vector[1] * missile_accel)
                         front_pointlist = RotatePoint(object_list[0], object_list[1],
-                                                      [object_list[0], object_list[1]-30*scalar3], object_list[5])
+                                                      [object_list[0], object_list[1]-30*scalar3], object_list[5].getRotation())
                         object_list_addition = [front_pointlist[0][0], front_pointlist[0][1], xmom_miss, ymom_miss, 2,
-                                                "NA", "NA", missile_lifespan]
+                                                RotationState(-1,-1), "NA", missile_lifespan]
                         object_list += object_list_addition
                         previous_tick = ticks
                 if "shift" in inputvar and "c" in inputvar and (ticks - previous_tick2) > 360:

@@ -319,7 +319,6 @@ class AnnouncementBox():
         sound.set_volume(0.75)
         self.sound = sound
         self.text = text
-        print(text)
         self.linedtext = wrap(text, AnnouncementBox.BREAKPOS) # wraps text by linebreak
         lineelements = []
         for i in range(len(self.linedtext)):
