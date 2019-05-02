@@ -9,18 +9,25 @@ class RotationState():
     def __init__(self, rotationPos, rotationMom):
         self.pos = rotationPos
         self.mom = rotationMom
-        self.rotating = True
-        if rotationPos == -1 and rotationMom == -1:
+        if not isinstance(rotationPos, str):
+            self.rotating = True
+        else:
             self.rotating = False
 
     def __str__(self):
         return "RotationStateObj: rot: " + str(self.pos) + " mom: " + str(self.mom)
 
-    def getPos(self):
+    def getRotation(self):
         return self.pos
 
-    def getMom(self):
+    def setRotation(self, value):
+        self.pos = value
+
+    def getMomentum(self):
         return self.mom
+
+    def setMomentum(self, value):
+        self.mom = value
 
     def getRotating(self):
         return self.rotating
@@ -31,6 +38,9 @@ class RotationState():
             self.pos -= 360
         if self.pos <= -360:
             self.pos += 360
+
+    def rotateBy(self, value):
+        self.pos += value
         
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -42,7 +52,7 @@ def particlemaker(xpos, ypos, xmom, ymom):
     printerlist_add = []
     for i in range(random.randint(max_particles - max_deviation, max_particles)):
         printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom +
-                            ((random.randint(-20, 20))/random_factor), 4, "NA", "NA", particle_lifespan]  
+                            ((random.randint(-20, 20))/random_factor), 4, RotationState(-1,-1), "NA", particle_lifespan]  
     return printerlist_add
     
 #physics handling
@@ -102,16 +112,16 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
                 object_list[3 +i] = 0
 
         #rotation
-        if not isinstance(object_list[5+i], str):
-            object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
-            if object_list[5+i] >= 360:
-                object_list[5+i] -= 360
-            if object_list[5+i] <= -360:
-                object_list[5+i] += 360
+        #if not isinstance(object_list[5+i], str):
+        #    object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
+        #    if object_list[5+i] >= 360:
+        #        object_list[5+i] -= 360
+        #    if object_list[5+i] <= -360:
+        #        object_list[5+i] += 360
 
         #rotation - now with objects!
-        #if object_list[5+i].getRotating():
-        #    object_list[5+i].rotate()
+        if object_list[5+i].getRotating():
+            object_list[5+i].rotate()
         
         
 #helps out by setting entities to reasonable speeds
@@ -135,7 +145,7 @@ def generateStars(width, height):
     possible_IDs = [100, 100, 100, 101, 101, 102, 102, 103, 104, 105]
     for i in range(24):
         ID = possible_IDs[random.randint(0, len(possible_IDs)-1)]
-        stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, "NA", "NA", 1]
+        stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, RotationState(-1,-1), "NA", 1]
     return stars_list
 
 #leveler
@@ -178,12 +188,13 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)
         if idSelection == [120, 120]:
             object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0]
-            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360), 0, 1]
+            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360), 0),"NA", 1]
         else:
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1]]
-            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360),
-                                random.randint(-10,10), 1] 
+            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360),
+                                random.randint(-10,10)),"NA", 1] 
+        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
         countervar += 1
         object_list += object_list_add
     return object_list
@@ -322,7 +333,7 @@ def dock(xpos, ypos, image):
     height = image.get_size()[1]
     newXpos = xpos+(width/2)+10
     newYpos = ypos+height+10
-    rotation = 180
+    rotation = RotationState(180, 0)
     xmom = 0
     ymom = -0.5
     return (newXpos, newYpos, xmom, ymom, rotation)
@@ -349,22 +360,7 @@ def processListForSave(save_list, width, height):
 #saves objectlist to file by breaking it into a maximum of 5 lines
 def saveObjects(sectornum, save_list, width, height):
     processListForSave(save_list, width, height)
-                        
-##    if len(save_list) >= 1000:
-##        save_list = save_list[:1000]
-##        print("Error: overflow in Main/saveObjects")
-##    savelist = []
-##    listhelper = int(len(save_list)/200) #200 = entities per level
-##    for i in range(listhelper):
-##        savelist.append(save_list[:200])
-##        save_list = save_list[200:]
-##    savelist.append(save_list)    
-##    listhelper = 5- len(savelist)
-##    for i in range(listhelper):
-##        savelist.append([])    
-##    for i in range(5):
-##        filehelper.set(savelist[i], sectornum*5+i)
-
+    
     resave_list = filehelper.loadObj(5)
     resave_list[sectornum-1] = save_list
 
@@ -405,16 +401,15 @@ def deleteObject(toDelete, delSector, width, height):
             del object_list[i:i+8]
     saveGame(delSector, object_list, width, height)
 
-#converter from old save files to new
-##resave_list = []
-##for sectornum in range(1, 19):
-##    resave = getObjects(sectornum, 1920, 1080, old=True)
-##    resave_list.append(resave)
-##
-##print(resave_list)
-##for i in range(len(resave_list)):
-##    processListForSave(resave_list[i], 1920, 1080)
-##
-##filehelper.saveObj(resave_list, 5)
+##pgx.filehelper = pgx.Filehelper("Assets\\saves\\defaultgamedata.txt")
+##for sectornum in range(1,19):
+##    resave = getObjects(sectornum, 1920, 1080)
+##    if len(resave) > 1:
+##        for i in range(0, len(resave), 8):
+##            resave[i+5] = RotationState(resave[i+5], resave[i+6])
+##            resave[i+6] = "NA"
+##        print(resave)
+##        saveGame(sectornum, resave, 1920, 1080)
+##print("finished")
 
 
