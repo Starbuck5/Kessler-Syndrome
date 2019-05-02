@@ -74,14 +74,14 @@ class Images:
     #when calling use later parameters, default parameters must be explicitly set
     #beFancy - True = use bounding rects of data ------ False = use image size alone
     def getHitbox(xpos, ypos, name, rotation, centered=True, beFancy=True, realRotation=False):
-        if rotation == -1000:
+        if isinstance(rotation, str):
             image = Images.get(name)
         elif realRotation:
             image = rotatePixelArt(Images.get(name), rotation)
         else:
             image = Images.get(name, rotation)
         if beFancy:
-            if rotation == -1:
+            if isinstance(rotation, str):
                 bound = Images.getRect(name)
             elif realRotation:
                 image = rotatePixelArt(Images.get(name), rotation)
@@ -227,7 +227,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
 
     if object_number == 7: #draws alien mines
-        image = Images.get(7, rotation)
+        image = Images.get(7, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
@@ -236,7 +236,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         scale = 1 + (.1 * (300 - decayLife))
         image = scaleImage(Images.get(9), scale)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 9, rotation)
+        colliderect = Images.getHitbox(xpos, ypos, 9, rotation.getRotation())
         Images.scaleHitbox(colliderect, scale)  
         
     if 9 < object_number < 40: #draws satellites

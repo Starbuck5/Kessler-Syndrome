@@ -600,11 +600,11 @@ def main():
                             explosion_sounds()
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missile v mine
                             printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i*8)],
-                                                object_list[3+(i*8)], 9, "NA", "NA", 300]
+                                                object_list[3+(i*8)], 9, RotationState("NA", "NA"), "NA", 300]
                             object_list[(i*8)+7] = -1
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 7: #ship v mine
                             printerlist_add += [object_list[(i2 * 8)], object_list[1+(i2 * 8)], object_list[2+(i2*8)],
-                                                object_list[3+(i2*8)], 9, "NA", "NA", 300]
+                                                object_list[3+(i2*8)], 9, RotationState("NA", "NA"), "NA", 300]
                             object_list[(i2*8)+7] = -1
                             object_list[4] = 5
                             object_list[7] = 200

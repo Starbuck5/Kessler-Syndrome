@@ -6,16 +6,12 @@ from pgx import scaleImage
 from pgx import filehelper
 
 class RotationState():
-    def __init__(self, *args):
-        if args:
-            rotationPos = args[0]
-            rotationMom = args[1]
-            self.pos = rotationPos
-            self.mom = rotationMom
+    def __init__(self, rotationPos, rotationMom):
+        self.pos = rotationPos
+        self.mom = rotationMom
+        if not isinstance(rotationPos, str):
             self.rotating = True
         else:
-            self.pos = -1000
-            self.mom = 0
             self.rotating = False
 
     def __str__(self):
@@ -389,16 +385,12 @@ def deleteObject(toDelete, delSector, width, height):
             del object_list[i:i+8]
     saveGame(delSector, object_list, width, height)
 
+##pgx.filehelper = pgx.Filehelper("Assets\\saves\\defaultgamedata.txt")
 ##for sectornum in range(1,19):
 ##    resave = getObjects(sectornum, 1920, 1080)
 ##    if len(resave) > 1:
 ##        for i in range(0, len(resave), 8):
-##            pos = resave[i+5]
-##            if pos == "NA":
-##                rot = RotationState()
-##            else:
-##                rot = RotationState(pos, mom)
-##            resave[i+5] = rot
+##            resave[i+5] = RotationState(resave[i+5], resave[i+6])
 ##            resave[i+6] = "NA"
 ##        print(resave)
 ##        saveGame(sectornum, resave, 1920, 1080)
