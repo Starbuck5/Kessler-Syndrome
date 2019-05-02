@@ -199,7 +199,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         screen.blit(image, (xpos, ypos))
             
     if object_number == 1 or object_number == 5: #draws main ship
-        image = rotatePixelArt(Images.get(1+SHIPSTATE/10), -rotation)
+        image = rotatePixelArt(Images.get(1+SHIPSTATE/10), -rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
@@ -208,7 +208,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
             flame_pointlist = [[xpos, ypos], [xpos+6*scalar3, ypos+5*scalar3],
                                 [xpos, ypos+20*scalar3],
                                 [xpos-6*scalar3, ypos+5*scalar3]]
-            flame_pointlist = Rotate(xpos, ypos, flame_pointlist, rotation)
+            flame_pointlist = Rotate(xpos, ypos, flame_pointlist, rotation.getRotation())
             pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
             pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
         flame = False
@@ -227,7 +227,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         colliderect = pygame.draw.aalines(screen, (255,255,255), True, alien_pointlist, False)
 
     if object_number == 7: #draws alien mines
-        image = Images.get(7, rotation)
+        image = Images.get(7, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
@@ -236,29 +236,29 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         scale = 1 + (.1 * (300 - decayLife))
         image = scaleImage(Images.get(9), scale)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 9, rotation)
+        colliderect = Images.getHitbox(xpos, ypos, 9, rotation.getRotation())
         Images.scaleHitbox(colliderect, scale)  
         
     if 9 < object_number < 40: #draws satellites
-        image = Images.get(object_number, rotation)
+        image = Images.get(object_number, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
                        image.get_height()]
         
     if 69 < object_number < 100: #draws asteroids
-        image = Images.get(object_number, rotation)
+        image = Images.get(object_number, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, object_number, rotation)
+        colliderect = Images.getHitbox(xpos, ypos, object_number, rotation.getRotation())
 
     if object_number == 110: #draws derelict ship
         image = Images.get(110)
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 110, rotation)
+        colliderect = Images.getHitbox(xpos, ypos, 110, rotation.getRotation())
 
     if object_number == 120: #draws alien drone
-        image = Images.get(120, rotation)
+        image = Images.get(120, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 120, rotation)
+        colliderect = Images.getHitbox(xpos, ypos, 120, rotation.getRotation())
 
     return colliderect
 
