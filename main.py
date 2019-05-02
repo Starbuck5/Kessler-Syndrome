@@ -9,6 +9,27 @@ from game import *
 import game
 from UIscreens import *
 import graphics
+
+#the ai method for the drone
+def droneAI(humanShip, droneShip):
+    distance = ((droneShip[0] - humanShip[0])**2 + (droneShip[1] - humanShip[1])**2)**0.5
+    droneShip[2] = (humanShip[0] - droneShip[0])/distance
+    droneShip[3] = (droneShip[1] - humanShip[1])/distance
+    if (droneShip[1] - humanShip[1]) > 0:
+        newRotation = math.degrees(math.acos(droneShip[2]))
+    else:
+        newRotation = 360 - math.degrees(math.acos(droneShip[2]))
+    rotationMom = newRotation - droneShip[5]
+    newRotationMom = rotationMom - 360
+    if abs(newRotationMom) < abs(rotationMom):
+        rotationMom = newRotationMom
+    if rotationMom > 5:
+        rotationMom = 5
+    elif rotationMom < -5:
+        rotationMom = -5
+    droneShip[6] = rotationMom
+    return droneShip
+    
                                                 
 #backened for collinfo, returns hitboxes when given an index of the objectlist
 def getHitbox(object_list, object_location, scalar3, graphlist):
@@ -417,16 +438,16 @@ def main():
                                    graphics.FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0)))
 
             for i in range(0, len(object_list), 8):
-                        object_number = object_list[i+4]
-                        if object_number == 0:
-                            dockPosition = dock(object_list[i], object_list[i+1], graphics.Images.get(0))
-                            for i2 in range(0, len(object_list), 8):
-                                if object_list[4 + i2] == 1:
-                                    object_list[i2] = dockPosition[0]
-                                    object_list[i2+1] = dockPosition[1]
-                                    object_list[i2+2] = dockPosition[2]
-                                    object_list[i2+3] = dockPosition[3]
-                                    object_list[i2+5] = dockPosition[4]
+                object_number = object_list[i+4]
+                if object_number == 0:
+                    dockPosition = dock(object_list[i], object_list[i+1], graphics.Images.get(0))
+                    for i2 in range(0, len(object_list), 8):
+                        if object_list[4 + i2] == 1:
+                            object_list[i2] = dockPosition[0]
+                            object_list[i2+1] = dockPosition[1]
+                            object_list[i2+2] = dockPosition[2]
+                            object_list[i2+3] = dockPosition[3]
+                            object_list[i2+5] = dockPosition[4]
             
             #game progression
             discovery = str(filehelper.get(1)[2])
@@ -618,6 +639,18 @@ def main():
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
+            # droneAI executed
+                if object_list[4 + (i * 8)] == 120:
+                    humanShip = [object_list[0], object_list[1], object_list[2], object_list[3], object_list[4],
+                                 object_list[5], object_list[6], object_list[7]]
+                    droneShip = [object_list[0+ (i * 8)], object_list[1+ (i * 8)], object_list[2+ (i * 8)],
+                                 object_list[3+ (i * 8)], object_list[4+ (i * 8)], object_list[5+ (i * 8)],
+                                 object_list[6+ (i * 8)], object_list[7+ (i * 8)]]
+                    droneShip = droneAI(humanShip, droneShip)
+                    object_list[2 + (i * 8)] = droneShip[2]
+                    object_list[3 + (i * 8)] = droneShip[3]
+                    object_list[6 + (i * 8)] = droneShip[6]
+            #droneAI executed
 
             #portals
             if portal_toggle: # ship collision with portal

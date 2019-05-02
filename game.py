@@ -141,16 +141,25 @@ def generateStars(width, height):
 #leveler
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids, sectornum):
     mineGeneration = [9, 10, 11, 12, 13, 14 ,15 ,16, 17, 18, 19]
-    if sectornum in mineGeneration:
+    droneGeneration = [14, 15, 16, 17, 18, 19]
+    if sectornum in droneGeneration:
         ASTEROID = 20
         SATS = 40
-        PARTS = 15
+        PARTS = 0
+        MINES = 20
+        DRONES = 20
+    elif sectornum in mineGeneration:
+        ASTEROID = 25
+        SATS = 40
+        PARTS = 10
         MINES = 25
+        DRONES = 0
     else:
         ASTEROID = 30
         SATS = 50
         PARTS = 20
         MINES = 0
+        DRONES = 0
     object_list = object_list[:8]
     object_list += generateStars(width, height)
     countervar = 0
@@ -162,13 +171,19 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
             idSelection = d_asteroids
         elif idChooser < ASTEROID + MINES + SATS:
             idSelection = d_sats
+        elif idChooser < ASTEROID + MINES + SATS + DRONES:
+            idSelection = [120, 120]
         else:
             idSelection = d_parts
-        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
-        object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
-                           asteroid_speedset[1]]
-        object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360),
-                            random.randint(-10,10), 1] 
+        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)
+        if idSelection == [120, 120]:
+            object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0]
+            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360), 0, 1]
+        else:
+            object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
+                               asteroid_speedset[1]]
+            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], random.randint(0,360),
+                                random.randint(-10,10), 1] 
         countervar += 1
         object_list += object_list_add
     return object_list
