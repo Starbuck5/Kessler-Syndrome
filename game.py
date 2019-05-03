@@ -41,7 +41,46 @@ class RotationState():
 
     def rotateBy(self, value):
         self.pos += value
+
+class AITools():
+    #takes two object list indices and returns distance between them
+    #object one is at index 0, two at index 1 (so not using true object list indices)
+    def distanceBetween(object_list, index1, index2):
+        xdiff = object_list[index1] - object_list[index2]
+        ydiff = object_list[index1+1] - object_list[index2+1]
+        return (xdiff**2 + ydiff**2)**0.5
+
+class DroneAI():
+    def __init__(self):
+        pass
+
+    def update(self, object_list, self_loc):
+        distance = AITools.distanceBetween(object_list, 0, self_loc)
+
+        #pulling entities out of the list for ease of change
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+
+        droneShip[2] = (humanShip[0] - droneShip[0])/distance
+        droneShip[3] = (droneShip[1] - humanShip[1])/distance        
+        if (droneShip[1] - humanShip[1]) > 0:
+            newRotation = math.degrees(math.acos(droneShip[2]))
+        else:
+            newRotation = 360 - math.degrees(math.acos(droneShip[2]))
+        rotationMom = newRotation - droneShip[5].getRotation()
+        newRotationMom = rotationMom - 360
+        if abs(newRotationMom) < abs(rotationMom):
+            rotationMom = newRotationMom
+        if rotationMom > 5:
+            rotationMom = 5
+        elif rotationMom < -5:
+            rotationMom = -5
+        droneShip[5].setMomentum(rotationMom)
+
+        #zippings modified entity back into the list
+        object_list[self_loc:self_loc+8] = droneShip
         
+             
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
     # particle settings
@@ -186,15 +225,15 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         else:
             idSelection = d_parts
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)
-        if idSelection == [120, 120]:
-            object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0]
-            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360), 0),"NA", 1]
+        if idSelection == [120, 120]: #drone creation
+            object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0,
+                               idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360), 0),
+                               DroneAI(), 1]
         else:
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1]]
             object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360),
-                                random.randint(-10,10)),"NA", 1] 
-        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)                    
+                                random.randint(-10,10)),"NA", 1]                    
         countervar += 1
         object_list += object_list_add
     return object_list
