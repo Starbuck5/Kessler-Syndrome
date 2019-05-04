@@ -92,12 +92,14 @@ def main():
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
+    temp_image = loadImage("Assets\\images\\supplies.gif")
+    temp_image.set_colorkey((255,255,255))
     graphlist = [scaleImage(loadImage("Assets\\images\\sat1.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat2.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat3.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
                  "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
-                 loadImage("Assets\\images\\solarpanel.tif")]
+                 loadImage("Assets\\images\\solarpanel.tif"), temp_image]
     earthpic = loadImage("Assets\\images\\earth.tif")
     infinitypic = loadImage("Assets\\images\\infinity.tif")
 
@@ -141,7 +143,7 @@ def main():
 
     # variable setup
     playerinfo = filehelper.get(1)
-    d_parts = [30]
+    d_parts = [30, 31]
     d_sats = [10, 11, 12, 13]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     ship_id = [1, 5]
@@ -561,7 +563,13 @@ def main():
                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                            object_list[(i2*8)+7] = -1
-                           drops = solarPanelDrops()
+                           if object_list[(4+(i2*8))] == 31: #supply drop
+                               ammunition = totalammunition #fills your ammo
+                               currentfuel = totalfuel #tops off your fuel
+                               drops = satelliteDrops()
+                               drops = [i*3 for i in drops] #multiplies satellite drop by 3
+                           else: 
+                               drops = solarPanelDrops()
                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 0: #going to garage
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))

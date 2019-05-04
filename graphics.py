@@ -239,7 +239,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         colliderect = Images.getHitbox(xpos, ypos, 9, rotation.getRotation())
         Images.scaleHitbox(colliderect, scale)  
         
-    if 9 < object_number < 40: #draws satellites
+    if 9 < object_number < 40: #draws satellites and parts
         image = Images.get(object_number, rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = [int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height()), image.get_width(),
