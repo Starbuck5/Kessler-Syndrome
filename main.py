@@ -750,7 +750,10 @@ def main():
                 object_list[3] = 0
 
             #physics!
-            doPhysics(object_list, width, height, max_speed, drag, step_drag)
+            if file_settings[5]: #if ship drag is on
+                doPhysics(object_list, width, height, max_speed, drag, step_drag)
+            else:
+                doPhysics(object_list, width, height, max_speed, [], step_drag)
 
             #ship durability state
             armorPercent = currentarmor / totalarmor * 100
