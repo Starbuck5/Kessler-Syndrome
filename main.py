@@ -522,7 +522,7 @@ def main():
 
             # quest handling
             if filehelper.get(0)[3] == 4:
-                object_list += [0.43*width, 0.39*height, 0, 0, 110, "NA", "NA", 1]
+                object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
@@ -654,7 +654,6 @@ def main():
                                                       d_sats, d_parts, d_asteroids, sectornum)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
-                            #recordings needed
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
