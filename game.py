@@ -191,18 +191,22 @@ def generateStars(width, height):
 def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids, sectornum):
     mineGeneration = [9, 10, 11, 12, 13, 14 ,15 ,16, 17, 18, 19]
     droneGeneration = [14, 15, 16, 17, 18, 19]
+    supplyGeneration = [12, 13, 14, 15, 16, 17, 18, 19]
+    additionalEntities = 0 #allows different sectors to generate greater numbers of entities than the base
     if sectornum in droneGeneration:
         ASTEROID = 20
-        SATS = 40
-        PARTS = 0
+        SATS = 35
+        PARTS = 10
         MINES = 20
-        DRONES = 20
+        DRONES = 15
+        additionalEntities = 4
     elif sectornum in mineGeneration:
         ASTEROID = 25
         SATS = 40
         PARTS = 10
         MINES = 25
         DRONES = 0
+        additionalEntities = 2
     else:
         ASTEROID = 30
         SATS = 50
@@ -212,7 +216,8 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
     object_list = object_list[:8]
     object_list += generateStars(width, height)
     countervar = 0
-    while countervar < random.randint(max_asteroids - 2, max_asteroids):
+    repetitions = random.randint(max_asteroids - 2, max_asteroids) + additionalEntities
+    for i in range(repetitions):
         idChooser = random.randint(0, 100)
         if idChooser < MINES:
             idSelection = [7, 7]
@@ -223,7 +228,9 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         elif idChooser < ASTEROID + MINES + SATS + DRONES:
             idSelection = [120, 120]
         else:
-            idSelection = d_parts
+            idSelection = d_parts[:]
+            if sectornum not in supplyGeneration:
+                idSelection.remove(31) #takes out ID 31, which is the supply drop                
         asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)
         if idSelection == [120, 120]: #drone creation
             object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0,
@@ -234,7 +241,6 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
                                asteroid_speedset[1]]
             object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360),
                                 random.randint(-10,10)),"NA", 1]                    
-        countervar += 1
         object_list += object_list_add
     return object_list
 
