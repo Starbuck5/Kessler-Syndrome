@@ -140,6 +140,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     image = loadImage("Assets\\images\\aliendrone.gif")
     image.set_colorkey((255,255,255))
     Images.addRotate(120, scaleImage(image, 1.5))
+    image = loadImage("Assets\\images\\spiker.gif")
+    image.set_colorkey((255,255,255))
+    Images.addRotate(121, scaleImage(image,2))
 
     #adding different types of stars
     base_star = loadImage("Assets\\images\\star.gif")
@@ -260,6 +263,14 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
         colliderect = Images.getHitbox(xpos, ypos, 120, rotation.getRotation())
 
+    else:
+        try:
+            image = Images.get(object_number, rotation.getRotation())
+            screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
+            colliderect = Images.getHitbox(xpos, ypos, 120, rotation.getRotation())
+        except:
+            pass
+        
     return colliderect
 
 #takes care of the printing logic

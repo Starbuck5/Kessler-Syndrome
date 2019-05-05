@@ -40,7 +40,12 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
     elif objectID == 110: #derelict ship
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 120: #alien drone
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation()) 
+        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
+    else:
+        try:
+            hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
+        except:
+            pass
     return hitBox
 
 #helps out the collision detection section of main
@@ -631,7 +636,10 @@ def main():
             #special entity behaviors
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
-                    object_list[i+6].update(object_list, i)
+                    try:
+                        object_list[i+6].update(object_list, i)
+                    except:
+                        pass
             #special entity behaviors
 
             #portals

@@ -79,7 +79,17 @@ class DroneAI():
 
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
-        
+
+def SpikeAI():
+    def __init__(self):
+        self.timer = -random.randint(0,300)
+
+    def update(self, object_list, self_loc):
+        self.timer += 1
+        if self.timer >= 0:
+            #TODO: shoot shoot shoot
+            self.timer -= 300
+            
              
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -214,13 +224,15 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         MINES = 0
         DRONES = 0
     object_list = object_list[:8]
-    object_list += generateStars(width, height)
+    object_list += generateStars(width, height) #adding in a star field
     countervar = 0
     repetitions = random.randint(max_asteroids - 2, max_asteroids) + additionalEntities
     for i in range(repetitions):
+        #choosing the ID
         idChooser = random.randint(0, 100)
         if idChooser < MINES:
-            idSelection = [7, 7]
+            #idSelection = [7, 7]
+            idSelection = [121, 121]
         elif idChooser < ASTEROID + MINES:
             idSelection = d_asteroids
         elif idChooser < ASTEROID + MINES + SATS:
@@ -230,17 +242,23 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         else:
             idSelection = d_parts[:]
             if sectornum not in supplyGeneration:
-                idSelection.remove(31) #takes out ID 31, which is the supply drop                
-        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd)
-        if idSelection == [120, 120]: #drone creation
+                idSelection.remove(31) #takes out ID 31, which is the supply drop
+        ID = idSelection[random.randint(0, len(idSelection)-1)]
+
+        #creating the entity        
+        asteroid_speedset = asteroidspeedmaker(max_asteroid_spd) #getting reasonable speed
+        if ID == 120: #special for drone creation
             object_list_add = [random.randint(0, width), random.randint(0, height), 0, 0,
-                               idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360), 0),
+                               ID, RotationState(random.randint(0,360), 0),
                                DroneAI(), 1]
+        elif ID == 121: #special for spike shooter creation
+            object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
+                               asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),
+                               SpikeAI(), 1]
         else:
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
-                               asteroid_speedset[1]]
-            object_list_add += [idSelection[random.randint(0, len(idSelection)-1)], RotationState(random.randint(0,360),
-                                random.randint(-10,10)),"NA", 1]                    
+                               asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),
+                               "NA", 1]                    
         object_list += object_list_add
     return object_list
 
