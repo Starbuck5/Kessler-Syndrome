@@ -1,10 +1,9 @@
-#just a file to de-clutter the main script
 import pygame
 import random
 from textwrap import wrap
 import pickle
 import codecs
-OS = "windows" #other option = "mac"
+import os
 
 #keyboard for continuous keypresses
 def keyboard():
@@ -87,20 +86,8 @@ def scretchImage(image, size):
     return image
 
 def handlePath(path):
-    newpath = ""
-    if OS == "mac":
-        for i in range(len(path)):
-            if path[i] == "\\":
-                newpath += "/"
-            else:
-                newpath += path[i]
-    else:
-        for i in range(len(path)):
-            if path[i] == "/":
-                newpath += "\\"
-            else:
-                newpath += path[i]
-    return newpath
+    path = path.split("\\")
+    return os.path.join(*path)
 
 def loadImage(path):
     path = handlePath(path)
