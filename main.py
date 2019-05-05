@@ -202,11 +202,12 @@ def main():
             Texthelper.write(screen, [(300, 540-200), "Kessler Syndrome", 7])
             
             # buttons
-            text_input = [(410, 540-50), "[Play]", 3]
-            if Texthelper.writeButton(screen, text_input):
+            if Texthelper.writeButtonBox(screen, [(410, 490), "Play", 3]):
                 status = "gameinit"
-            text_input = [(410, 550), "[Quit to desktop]", 3]
-            if Texthelper.writeButton(screen, text_input): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(410, 550), "Options", 3]):
+                status = "optionsinit"
+                OptionsInput.backStatus = "menuinit"
+            if Texthelper.writeButtonBox(screen, [(410, 610), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 pygame.quit() #stop the program
                 raise SystemExit #close the program            
             screen.blit(earthpic, (1500,800))

@@ -509,6 +509,7 @@ def drawPauseUI(screen, mode):
 
     if Texthelper.writeButton(screen, [("center", 485 + spacing), "Options", 2]):
         status = "optionsinit"
+        OptionsInput.backStatus = "pauseinit"
     timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 485 + spacing * 2), "Quit to menu", 2]):
@@ -530,6 +531,9 @@ def mapscreenUI(screen):
 class OptionsInput():
     width = ""
     height = ""
+    
+    #directly set by mainbefore options is called, controls what status is called by the back button
+    backStatus = "OptionsInput.backStatus needs to be set before use"
 
     def __init__(self, resolution):
         OptionsInput.width = InputGetter([(1000, 400), str(resolution[0]), 3], "int")
@@ -586,7 +590,7 @@ def optionsUI(screen, spacing, file_settings):
 
     if Texthelper.writeButton(screen, [("center", 800), "Back", 2]):
         screen.fill((0, 0, 0))
-        status = "pauseinit"
+        status = OptionsInput.backStatus
 
     pygame.display.flip()
     return status
