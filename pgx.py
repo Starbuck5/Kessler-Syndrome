@@ -258,9 +258,10 @@ class InputGetter():
             specialtext = self.currenttext[:]
             if self.blink < InputGetter.BLINKSPEED/2:
                 specialtext[1] += "|"
+            InputGetter._handleThisShit(self, self.inputtype)
             if Texthelper.writeNullButton(screen, specialtext) == False:
                 self.clicked = False
-            InputGetter._handleThisShit(self, self.inputtype)
+                self.last_input = ["getready"]
 
     def _handleThisShit(self, inputtype):
         last_input = self.last_input
