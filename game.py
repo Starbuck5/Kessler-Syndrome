@@ -43,12 +43,31 @@ class RotationState():
         self.pos += value
 
 class AITools():
+    #constants directly set by main
+    missile_accel = -1
+    missile_lifespan = -1
+    
     #takes two object list indices and returns distance between them
     #object one is at index 0, two at index 1 (so not using true object list indices)
     def distanceBetween(object_list, index1, index2):
         xdiff = object_list[index1] - object_list[index2]
         ydiff = object_list[index1+1] - object_list[index2+1]
         return (xdiff**2 + ydiff**2)**0.5
+
+    #releases a shot in the direction specified
+    #currently starts from x,y - so usually the center of the entity
+    #optional arg allows it to shoot entities of different types
+    def shoot(object_list, self_loc, angle, shot_type=2, lifespan=-1):
+        xpos = object_list[self_loc]
+        ypos = object_list[self_loc+1]
+        thrust_vector = (math.sin(math.radians(angle-90)), math.cos(math.radians(angle-90)))
+        xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel
+        ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel
+        if lifespan < 0:
+            lifespan = AITools.missile_lifespan
+        shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
+        object_list += shot
+        
 
 class DroneAI():
     def __init__(self):
@@ -80,15 +99,18 @@ class DroneAI():
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
 
-def SpikeAI():
+class SpikeAI():
     def __init__(self):
         self.timer = -random.randint(0,300)
 
     def update(self, object_list, self_loc):
         self.timer += 1
         if self.timer >= 0:
-            #TODO: shoot shoot shoot
-            self.timer -= 300
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation())
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+90)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+180)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+270)
+            self.timer = -300
             
              
 #particle effects

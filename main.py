@@ -112,6 +112,8 @@ def main():
     max_speed = 4 * scalarscalar
     missile_lifespan = 130 * scalarscalar
     missile_accel = 7 * scalarscalar
+    AITools.missile_accel = missile_accel
+    AITools.missile_lifespan = missile_lifespan
     step_x = 0.08 * scalarscalar
     step_y = 0.08 * scalarscalar
     step_r = 2.3
