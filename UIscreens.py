@@ -496,7 +496,6 @@ def home(screen):
     else:
         return shopStatus
 
-
 def drawPauseUI(screen, mode):
     status = "paused"
     Texthelper.write(screen, [("center", 400), "Paused", 6])
@@ -521,11 +520,46 @@ def drawPauseUI(screen, mode):
     pygame.display.flip()
     return status
 
-def mapscreenUI(screen):
+def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DEVMODE, mode):
     status = "mapscreen"
     if Texthelper.writeButton(screen, [(180, 520), "[Commence Flying]", 2.5]):
         status = "game"
         pygame.mouse.set_visible(False)
+
+    line_color = (255, 255, 255)
+
+    if mode:
+        for i in sector_map_coordinates.keys():
+            if discoveredSectors[i] or DEVMODE: #only visited sectors are drawn
+                graphics.drawSector(screen, sector_map_coordinates[i], i, sectornum)
+                if game.sectorGeneration(i): #draws infinity signs on map if regenerating sector
+                    screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
+                #draws all links between sectors
+                connections = game.sectorDestinations(i)
+                for j in range(4):
+                    adjacentSector = connections[j]
+                    if adjacentSector != -1:
+                        if j == 0:
+                            line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
+                            line_end = (sector_map_coordinates[adjacentSector][0] + 40,
+                                        sector_map_coordinates[adjacentSector][1])
+                        elif j == 1:
+                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
+                            line_end = (sector_map_coordinates[adjacentSector][0],
+                                        sector_map_coordinates[adjacentSector][1] + 40)
+                        elif j == 2:
+                            line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
+                            line_end = (sector_map_coordinates[adjacentSector][0] - 40,
+                                        sector_map_coordinates[adjacentSector][1])
+                        elif j == 3:
+                            line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
+                            line_end = (sector_map_coordinates[adjacentSector][0],
+                                        sector_map_coordinates[adjacentSector][1] - 40)
+                        draw.aaline(screen, line_color, line_start, line_end)
+                        #if an adjacent sector has not been visited, it is drawn with a ?
+                        if (not discoveredSectors[adjacentSector]) and (not DEVMODE):
+                            graphics.drawSector(screen, sector_map_coordinates[adjacentSector], "?", sectornum)
+
     return status
 
 class OptionsInput():

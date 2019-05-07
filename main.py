@@ -276,48 +276,16 @@ def main():
             pygame.mouse.set_visible(True)
             Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
-           
-            line_color = (255, 255, 255)
 
-            for i in sector_map_coordinates.keys():
-                if discoverSector[i] or DEVMODE: #only visited sectors are drawn
-                    graphics.drawSector(screen, sector_map_coordinates[i], i, sectornum)
-                    if sectorGeneration(i): #draws infinity signs on map if regenerating sector
-                        screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
-                    #draws all links between sectors
-                    connections = sectorDestinations(i)
-                    for j in range(4):
-                        adjacentSector = connections[j]
-                        if adjacentSector != -1:
-                            if j == 0:
-                                line_start = (sector_map_coordinates[i][0] - 40, sector_map_coordinates[i][1])
-                                line_end = (sector_map_coordinates[adjacentSector][0] + 40,
-                                            sector_map_coordinates[adjacentSector][1])
-                            elif j == 1:
-                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] - 40)
-                                line_end = (sector_map_coordinates[adjacentSector][0],
-                                            sector_map_coordinates[adjacentSector][1] + 40)
-                            elif j == 2:
-                                line_start = (sector_map_coordinates[i][0] + 40, sector_map_coordinates[i][1])
-                                line_end = (sector_map_coordinates[adjacentSector][0] - 40,
-                                            sector_map_coordinates[adjacentSector][1])
-                            elif j == 3:
-                                line_start = (sector_map_coordinates[i][0], sector_map_coordinates[i][1] + 40)
-                                line_end = (sector_map_coordinates[adjacentSector][0],
-                                            sector_map_coordinates[adjacentSector][1] - 40)
-                            pgx.draw.aaline(screen, line_color, line_start, line_end)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, True)      
 
-                            #if an adjacent sector has not been visited, it is drawn with a ?
-                            if (not discoverSector[adjacentSector]) and (not DEVMODE):
-                                graphics.drawSector(screen, sector_map_coordinates[adjacentSector], "?", sectornum)
-
-            status = mapscreenUI(screen)            
             pygame.display.flip()
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, False)
             inputvar = keyboard()
+
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
                 timer_popupmenu = 0
