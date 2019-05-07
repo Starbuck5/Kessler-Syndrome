@@ -298,7 +298,7 @@ class AnnouncementBox():
     width = 1
     height = 1
     upcoming = [] # upcoming anouncements that need to be displayed
-    BREAKPOS = 32 #amount of chars before a linebreak
+    BREAKPOS = 31 #amount of chars before a linebreak
     INTEXTSPEED = 4 # frames per character that it displayes at
     OUTTEXTSPEED = 0.5
     #image = portrait next to text, sound = whatever should play, text = text
