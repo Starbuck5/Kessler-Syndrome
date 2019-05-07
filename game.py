@@ -485,16 +485,3 @@ def deleteObject(toDelete, delSector, width, height):
         if object_list[i+4] == toDelete:
             del object_list[i:i+8]
     saveGame(delSector, object_list, width, height)
-
-##pgx.filehelper = pgx.Filehelper("Assets\\saves\\defaultgamedata.txt")
-##for sectornum in range(1,19):
-##    resave = getObjects(sectornum, 1920, 1080)
-##    if len(resave) > 1:
-##        for i in range(0, len(resave), 8):
-##            resave[i+5] = RotationState(resave[i+5], resave[i+6])
-##            resave[i+6] = "NA"
-##        print(resave)
-##        saveGame(sectornum, resave, 1920, 1080)
-##print("finished")
-
-

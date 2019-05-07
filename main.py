@@ -235,7 +235,7 @@ def main():
                     discovery[i - 1] = "1"
             filehelper.setElement("".join(discovery), 1, 2)
             cleared = list(cleared) 
-            for i in range(19):
+            for i in range(1, 20):
                 if clearedSector[i]:
                     cleared[i - 1] = "1"
             filehelper.setElement("".join(cleared), 1, 1)
@@ -449,7 +449,7 @@ def main():
                     
             cleared = str(filehelper.get(1)[1])
             clearedSector = {}
-            for i in range(19):
+            for i in range(1, 20):
                 if cleared[i - 1] == "8":
                     clearedSector[i] = False
                 else:
