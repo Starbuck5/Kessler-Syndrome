@@ -143,6 +143,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     image = loadImage("Assets\\images\\spiker.gif")
     image.set_colorkey((255,255,255))
     Images.addRotate(121, scaleImage(image,2))
+    image = loadImage("Assets\\images//alienshot.gif")
+    image.set_colorkey((255,255,255))
+    Images.addRotate(122, image)
 
     #adding different types of stars
     base_star = loadImage("Assets\\images\\star.gif")

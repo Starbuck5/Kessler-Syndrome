@@ -65,7 +65,10 @@ class AITools():
         ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel
         if lifespan < 0:
             lifespan = AITools.missile_lifespan
-        shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
+        if shot_type == 122: #alien shot
+            shot = [xpos, ypos, xmom, ymom, shot_type, RotationState(angle, 0), "NA", lifespan]
+        else:
+            shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
         object_list += shot
         
 
@@ -106,10 +109,10 @@ class SpikeAI():
     def update(self, object_list, self_loc):
         self.timer += 1
         if self.timer >= 0:
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation())
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+90)
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+180)
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+270)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+90, 122)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+180, 122)
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+270, 122)
             self.timer = -300
             
              
@@ -130,7 +133,7 @@ def particlemaker(xpos, ypos, xmom, ymom):
 def doPhysics(object_list, width, height, max_speed, drag, step_drag):
     for i in range(0, len(object_list), 8):
         #decaying objects
-        if object_list[4 + i] in [2, 8, 5, 4, 9]: #stuff in list should have a decrement to their life force
+        if object_list[4 + i] in [2, 8, 5, 4, 9, 122]: #stuff in list should have a decrement to their life force
             object_list[7 + i] -= 1
 
         #speed limit for ship

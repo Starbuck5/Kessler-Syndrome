@@ -551,7 +551,8 @@ def main():
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
-                        elif object_list[4 + (i * 8)] in ship_id and 69 < object_list[4 + (i2 * 8)] < 100: #ship v asteroid
+                        #ship v asteroid or spiker
+                        elif object_list[4 + (i * 8)] in ship_id and (69 < object_list[4 + (i2 * 8)] < 100 or object_list[4+i2*8] == 121):
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
@@ -564,7 +565,8 @@ def main():
                                 currentarmor = currentarmor - (int(force) - 5)
                                 Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
-                        elif object_list[4 + (i2 * 8)] == 2 and 69 < object_list[4 + (i * 8)] < 100: #missile v asteroid
+                        #missile v asteroid
+                        elif object_list[4 + (i2 * 8)] == 2 and (69 < object_list[4 + (i * 8)] < 100 or object_list[4+i2*8] == 121): 
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
@@ -599,6 +601,12 @@ def main():
                             object_list[7] = 200
                             Font.scramble(200)
                             currentarmor -= 0.03
+                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 122: #ship v spike
+                            currentarmor -= 1
+                            object_list[(i2*8)+7] = -1
+                        elif object_list[4 + (i * 8)] == 2 and object_list[4 + (i2 * 8)] == 122: #missile v spike
+                            object_list[(i*8)+7] = -1
+                            object_list[(i2*8)+7] = -1           
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
