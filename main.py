@@ -277,13 +277,13 @@ def main():
             Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
 
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, True)      
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, infinitypic, True)      
 
             pygame.display.flip()
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, False)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, infinitypic, False)
             inputvar = keyboard()
 
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:

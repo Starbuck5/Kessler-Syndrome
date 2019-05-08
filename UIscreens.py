@@ -520,7 +520,7 @@ def drawPauseUI(screen, mode):
     pygame.display.flip()
     return status
 
-def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DEVMODE, mode):
+def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DEVMODE, infinitypic, mode):
     status = "mapscreen"
     if Texthelper.writeButton(screen, [(180, 520), "[Commence Flying]", 2.5]):
         status = "game"
