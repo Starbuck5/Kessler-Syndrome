@@ -695,10 +695,14 @@ def main():
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
                 SoundVault.play('money')
                 clearedSector[sectornum] = True
-                if sectornum == 1:
+                sectorsCleared = 0
+                for n in clearedSector.values():
+                    if n:
+                        sectorsCleared += 1
+                if sectorsCleared == 2: #one sector is cleared by default, so 2 means player has actually cleared a sector
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                     pygame.mixer.Sound(file="Assets\\announcements\\2r.ogg"),                             
-                                    ("Finally! You've cleared the first sector! Now here's a reward for your obedience."
+                                    ("Finally! You've cleared your first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
 
             # deaderizer
