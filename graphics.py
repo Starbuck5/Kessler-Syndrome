@@ -34,11 +34,13 @@ def change_color(image, currentColor, newColor, toReturn = False):
 class Images:
     storage = {}
     bounding_rects = {}
-    def add(name, image): #or (ID, dictionary of rotations) 
+    def add(name, image, **kwargs): #or (ID, dictionary of rotations)
+        image = Images._processImage(image, **kwargs)
         Images.storage[name] = image
         Images.bounding_rects[name] = image.get_bounding_rect()
 
-    def addRotate(ID, image): #takes an ID and a surface and adds the dictionary of its rotations to Images storage 
+    def addRotate(ID, image, **kwargs): #takes an ID and a surface and adds the dictionary of its rotations to Images storage 
+        image = Images._processImage(image, **kwargs)
         rotatedict = {}
         rectdict = {}
         for j in range(36):
@@ -47,6 +49,11 @@ class Images:
             rectdict[j*10] =  rotatedImage.get_bounding_rect()
         Images.storage[ID] = rotatedict
         Images.bounding_rects[ID] = rectdict
+
+    def _processImage(image, **kwargs):
+        if "colorkey" in kwargs:
+            image.set_colorkey(kwargs["colorkey"])
+        return image
     
     def get(name, *args): #arg = rotation value
         if not args:
@@ -128,24 +135,15 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     #adding images for info bars
     Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
     Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
-    #Images.add("shotpic", loadImage("Assets\\images\\missile.tif"))
-    image = loadImage("Assets\\images\\missile.png")
-    image.set_colorkey((255,255,255))
-    Images.add("shotpic", image)
+    Images.add("shotpic", loadImage("Assets\\images\\missile.png"), colorkey=(255,255,255))
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
-    image = loadImage("Assets\\images\\aliendrone.gif")
-    image.set_colorkey((255,255,255))
-    Images.addRotate(120, scaleImage(image, 1.5))
-    image = loadImage("Assets\\images\\spiker.gif")
-    image.set_colorkey((255,255,255))
-    Images.addRotate(121, scaleImage(image,2))
-    image = loadImage("Assets\\images//alienshot.gif")
-    image.set_colorkey((255,255,255))
-    Images.addRotate(122, image)
+    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 1.5), colorkey=(255,255,255))
+    Images.addRotate(121, scaleImage(loadImage("Assets\\images\\spiker.gif"),2), colorkey=(255,255,255))
+    Images.addRotate(122, loadImage("Assets\\images//alienshot.gif"), colorkey=(255,255,255))
 
     #adding different types of stars
     base_star = loadImage("Assets\\images\\star.gif")
@@ -160,8 +158,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
-    image = loadImage("Assets\\images\\ships.png")
-    imageList = spriteSheetBreaker(image, 24, 60, 0, 0, 1, 4)
+    imageList = spriteSheetBreaker(loadImage("Assets\\images\\ships.png"), 24, 60, 0, 0, 1, 4)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
     Images.add(1.1, imageList[0])
