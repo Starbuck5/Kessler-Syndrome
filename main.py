@@ -566,7 +566,7 @@ def main():
                                 Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
                         #missile v asteroid
-                        elif object_list[4 + (i2 * 8)] == 2 and (69 < object_list[4 + (i * 8)] < 100 or object_list[4+i2*8] == 121): 
+                        elif object_list[4 + (i2 * 8)] == 2 and (69 < object_list[4 + (i * 8)] < 100 or object_list[4+i*8] == 121): 
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
