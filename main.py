@@ -613,11 +613,27 @@ def main():
                             Font.scramble(200)
                             currentarmor -= 0.03
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 122: #ship v spike
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
                             currentarmor -= 1
                             object_list[(i2*8)+7] = -1
                         elif object_list[4 + (i * 8)] == 2 and object_list[4 + (i2 * 8)] == 122: #missile v spike
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i*8)+7] = -1
-                            object_list[(i2*8)+7] = -1           
+                            object_list[(i2*8)+7] = -1
+                        elif object_list[4 + (i * 8)] == 120 and object_list[4 + (i2 * 8)] == 2: #missile v drone
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
+                            object_list[(i*8)+7] = -1
+                            object_list[(i2*8)+7] = -1
+                            explosion_sounds()
+                        elif object_list[4 + (i * 8)] == 121 and object_list[4 + (i2 * 8)] == 2: #missile v spiker
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
+                            object_list[(i*8)+7] = -1
+                            object_list[(i2*8)+7] = -1
+                            explosion_sounds()
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
