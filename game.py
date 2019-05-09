@@ -60,7 +60,8 @@ class AITools():
     def shoot(object_list, self_loc, angle, shot_type=2, lifespan=-1):
         xpos = object_list[self_loc]
         ypos = object_list[self_loc+1]
-        thrust_vector = (math.sin(math.radians(angle-90)), math.cos(math.radians(angle-90)))
+        angle = -(angle-90)
+        thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
         xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel
         ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel
         if lifespan < 0:
@@ -70,7 +71,6 @@ class AITools():
         else:
             shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
         object_list += shot
-        
 
 class DroneAI():
     def __init__(self):
@@ -98,9 +98,11 @@ class DroneAI():
         elif rotationMom < -5:
             rotationMom = -5
         droneShip[5].setMomentum(rotationMom)
-
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
+
+        if random.randint(0,100) == 0:
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
 
 class SpikeAI():
     def __init__(self):
