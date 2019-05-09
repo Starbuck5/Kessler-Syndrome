@@ -155,6 +155,14 @@ def homeUI(screen, shipInventory, homeInventory):
                 game.deleteObject(110, 11, screen.get_width(), screen.get_height())   
         else:
             Texthelper.writeBox(screen, [("center", 540+220), "send 20 gas to the airman", 3], color=(178,34,34))
+    #getting the airman his circuits
+    if filehelper.get(0)[3] == 5:
+        if homeInventory[2] >= 10:
+            if Texthelper.writeButtonBox(screen, [("center", 540+220), "send 10 circuits to the airman", 3], color=(34,178,34)):
+                homeInventory[2] -= 10
+                filehelper.setElement(6, 0, 3)   
+        else:
+            Texthelper.writeBox(screen, [("center", 540+220), "send 10 circuits to the airman", 3], color=(178,34,34))
 
     return status
 

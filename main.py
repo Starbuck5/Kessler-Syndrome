@@ -504,14 +504,25 @@ def main():
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
-                                ("So fellow traveler, what did you do to get banished up here? You've got dirt on the "
-                                 "president of the world you say? That's splendid!"))
+                                "So fellow traveler, what did you do to get banished up here?")
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                "You've got dirt on the president of the world you say? That's splendid!")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
                 shipInventory[3] += 100
                 filehelper.setElement(5, 0, 3)
+            if filehelper.get(0)[3] == 6:
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                ("Lets go team! Now the whole world will find out the President's crimes. "
+                                 "What did she do again?"))
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
+                filehelper.setElement(7, 0, 3)
             # quest handling
 
             # collision detection
