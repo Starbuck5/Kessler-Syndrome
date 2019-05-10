@@ -534,7 +534,9 @@ def main():
                     if CollisionInfo.doCollide(i, i2, object_list):
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
-                        if object_list[4 + (i * 8)] == 1 and object_list[4 + (i2 * 8)] in d_sats: #ship v satellite
+                        ID1 = object_list[4+(i*8)]
+                        ID2 = object_list[4+(i2*8)]
+                        if ID1 in ship_id and ID2 in d_sats: #ship v satellite
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
@@ -546,7 +548,7 @@ def main():
                                 SoundVault.play('money')
                             #merges the two lists by adding their like elements together
                             shipInventory = [a + b for a, b in zip(shipInventory, drops)]
-                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] in d_parts: #ship v debris
+                        elif ID1 in ship_id and ID2 in d_parts: #ship v debris
                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                            object_list[(i2*8)+7] = -1
@@ -558,12 +560,12 @@ def main():
                            else: 
                                drops = solarPanelDrops()
                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
-                        elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 0: #going to garage
+                        elif ID1 in ship_id and ID2 == 0: #going to garage
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
-                        #ship v asteroid or spiker
-                        elif object_list[4 + (i * 8)] in ship_id and (69 < object_list[4 + (i2 * 8)] < 100 or object_list[4+i2*8] == 121):
+                        #ship v asteroid or spiker or drone
+                        elif ID1 in ship_id and (69 < ID2 < 100 or ID2 == 121 or ID2 == 120):
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
                             yForce = abs(object_list[3+(i*8)] - object_list[3+(i2*8)])
                             force = (xForce + yForce)*2
@@ -576,8 +578,8 @@ def main():
                                 currentarmor = currentarmor - (int(force) - 5)
                                 Font.scramble(100) #scrambles text for 100 ticks
                             explosion_sounds()
-                        #missile v asteroid
-                        elif object_list[4 + (i2 * 8)] == 2 and (69 < object_list[4 + (i * 8)] < 100 or object_list[4+i*8] == 121): 
+                        #missile v asteroid or spiker or drone
+                        elif ID2 == 2 and (69 < ID1 < 100 or ID1 == 121 or ID1 == 120): 
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
@@ -622,18 +624,6 @@ def main():
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i*8)+7] = -1
                             object_list[(i2*8)+7] = -1
-                        elif object_list[4 + (i * 8)] == 120 and object_list[4 + (i2 * 8)] == 2: #missile v drone
-                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
-                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
-                            object_list[(i*8)+7] = -1
-                            object_list[(i2*8)+7] = -1
-                            explosion_sounds()
-                        elif object_list[4 + (i * 8)] == 121 and object_list[4 + (i2 * 8)] == 2: #missile v spiker
-                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
-                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
-                            object_list[(i*8)+7] = -1
-                            object_list[(i2*8)+7] = -1
-                            explosion_sounds()
                         object_list += printerlist_add
                     i2 += 1            
             # collision detection
