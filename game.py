@@ -252,14 +252,12 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         DRONES = 0
     object_list = object_list[:8]
     object_list += generateStars(width, height) #adding in a star field
-    countervar = 0
     repetitions = random.randint(max_asteroids - 2, max_asteroids) + additionalEntities
     for i in range(repetitions):
         #choosing the ID
         idChooser = random.randint(0, 100)
         if idChooser < MINES:
-            #idSelection = [7, 7]
-            idSelection = [121, 121]
+            idSelection = [121, 121, 7, 7, 7]
         elif idChooser < ASTEROID + MINES:
             idSelection = d_asteroids
         elif idChooser < ASTEROID + MINES + SATS:
