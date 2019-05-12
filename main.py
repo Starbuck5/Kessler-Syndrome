@@ -106,7 +106,6 @@ def main():
                  "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  loadImage("Assets\\images\\solarpanel.tif"), temp_image]
     earthpic = loadImage("Assets\\images\\earth.tif")
-    infinitypic = loadImage("Assets\\images\\infinity.tif")
 
     # settings
     max_speed = 4 * scalarscalar
@@ -276,14 +275,13 @@ def main():
             pygame.mouse.set_visible(True)
             Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
-
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, infinitypic, True)      
+            mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)      
 
             pygame.display.flip()
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, infinitypic, False)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)
             inputvar = keyboard()
 
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:

@@ -137,6 +137,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
     Images.add("shotpic", loadImage("Assets\\images\\missile.png"), colorkey=(255,255,255))
 
+    #adding other icons
+    Images.add("infinity", loadImage("Assets\\images\\infinity.tif"))
+
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
@@ -361,14 +364,20 @@ class InfoBars:
         Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
 
 #used by the map to actually draw out the sectors
-def drawSector(screen, location, number, currentsector):
+def drawSector(screen, location, number, currentsector, cleared):
     secsize = 80 #side length of the cubes
-    if number != currentsector:
-        pgx.draw.rect(screen, (255,255,255), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
     if number == currentsector:
-        pgx.draw.rect(screen, (255,15,25), (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
-        Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1])
-    Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2])
+        color = (70, 130, 180)
+    elif cleared:
+        color = (20, 160, 40)
+    else:
+        color = (180, 50, 50)
+    
+    pgx.draw.rect(screen, color, (location[0]-secsize/2, location[1]-secsize/2, secsize, secsize), 4)
+    
+    if number == currentsector:
+        Texthelper.write(screen, [(location[0]-35, location[1]-35), "U R Here", 1], color=color)
+    Texthelper.write(screen, [(location[0]-len(str(number))*10, location[1]-15), str(number), 2], color=color)
 
 #used in UIscreens and the main game loop to display the inventory
 def drawInventory(screen, shipInventory):
