@@ -132,7 +132,7 @@ def spriteSheetBreaker(sheet, width, height, margin, vertmargin, rows, columns):
 class SoundVault():
     storage = {}
     def __init__(self, name, filepath, **kwargs):
-        sound = pygame.mixer.Sound(handlePath(filepath))
+        sound = loadSound(filepath)
         if 'volume' in kwargs:
             sound.set_volume(kwargs['volume'])        
         SoundVault.storage[name] = sound
@@ -140,6 +140,10 @@ class SoundVault():
         return SoundVault.storage[name]
     def play(name):
         SoundVault.storage[name].play()
+
+def loadSound(path):
+    path = handlePath(path)
+    return pygame.mixer.Sound(file=path)
 
 pygame.mixer.init()
 SoundVault('button', "Assets\\sounds\\click.ogg", volume=0.5)

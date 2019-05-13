@@ -429,7 +429,7 @@ def main():
 
             if file_settings[3] == 1:
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                pygame.mixer.Sound(file="Assets\\announcements\\1r.ogg"),
+                                loadSound("Assets\\announcements\\1r.ogg"),
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
@@ -498,27 +498,27 @@ def main():
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 "So fellow traveler, what did you do to get banished up here?")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 "You've got dirt on the president of the world you say? That's splendid!")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
                 shipInventory[3] += 100
                 filehelper.setElement(5, 0, 3)
             if filehelper.get(0)[3] == 6:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 ("Lets go team! Now the whole world will find out the President's crimes. "
                                  "What did she do again?"))
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\sounds\\click.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
                 filehelper.setElement(7, 0, 3)
             # quest handling
@@ -659,42 +659,42 @@ def main():
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\3r.ogg"),
+                                                    loadSound("Assets\\announcements\\3r.ogg"),
                                                     "Jesus! Took you long enough to get here. Now get to work on this sector.")
                                 if sectornum == 6:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\4r.ogg"),
+                                                    loadSound("Assets\\announcements\\4r.ogg"),
                                                     ("I see you finally decided to travel further. Better pray to the "
                                                      "Virgin Mary that you don't die."))
                                 if sectornum == 9:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\5r.ogg"),
+                                                    loadSound("Assets\\announcements\\5r.ogg"),
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\sounds\\click.ogg"),
                                                     "Is someone out there? I've been stuck out here for so long")
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\sounds\\click.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
                                                      "eternally grateful"))
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    pygame.mixer.Sound(file="Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\sounds\\click.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
                                     file_settings[3] = 3
                                     filehelper.set(file_settings, 0)
                                 if sectornum == 12:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\6r.ogg"),
+                                                    loadSound("Assets\\announcements\\6r.ogg"),
                                                     ("Damn, you're slow. Clean this mess up before I get bored and "
                                                      "launch rockets at you!"))
                                 if sectornum == 17:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\7r.ogg"),
+                                                    loadSound("Assets\\announcements\\7r.ogg"),
                                                     "I see you found some more debris to clean up. make it quick!")
                                 if sectornum == 19:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    pygame.mixer.Sound(file="Assets\\announcements\\8r.ogg"),
+                                                    loadSound("Assets\\announcements\\8r.ogg"),
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
                                                      " cleaning zone. But wait… there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
@@ -716,7 +716,7 @@ def main():
                         sectorsCleared += 1
                 if sectorsCleared == 2: #one sector is cleared by default, so 2 means player has actually cleared a sector
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                    pygame.mixer.Sound(file="Assets\\announcements\\2r.ogg"),                             
+                                    loadSound("Assets\\announcements\\2r.ogg"),                             
                                     ("Finally! You've cleared your first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
 
