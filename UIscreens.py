@@ -608,31 +608,41 @@ def optionsUI(screen, spacing, file_settings):
     if Texthelper.writeButton(screen, [(1000, 400 + spacing), text, 3]):
         file_settings[4] = not file_settings[4]
 
-    Texthelper.write(screen, [(600, 400 + spacing * 2), "Ship Drag:", 3])
-    if (file_settings[5]):
+    Texthelper.write(screen, [(600, 400 + spacing * 2), "Fullscreen:", 3])
+    if (file_settings[2]):
         text = "On"
     else:
         text = "Off"
     if Texthelper.writeButton(screen, [(1000, 400 + spacing * 2), text, 3]):
+        file_settings[2] = not file_settings[2]
+
+    Texthelper.write(screen, [(600, 400 + spacing * 3), "Ship Drag:", 3])
+    if (file_settings[5]):
+        text = "On"
+    else:
+        text = "Off"
+    if Texthelper.writeButton(screen, [(1000, 400 + spacing * 3), text, 3]):
         file_settings[5] = not file_settings[5]
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 3.5), "Reset Gamedata", 3], color = (178, 34, 34)):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 4.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 5), "Restore Default Settings", 3]):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 6), "Restore Default Settings", 3]):
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
         for i in range(len(file_settings)): #has to be like this becuase of scope
             file_settings[i] = default_settings[i]
 
-    if Texthelper.writeButton(screen, [("center", 800), "Back", 2]):
+    if Texthelper.writeButton(screen, [("center", 900), "Back", 2]):
         screen.fill((0, 0, 0))
         status = OptionsInput.backStatus
+
+    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
 
     pygame.display.flip()
     return status
