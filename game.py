@@ -121,7 +121,7 @@ class SpikeAI():
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
     # particle settings
-    particle_lifespan = 45
+    particle_lifespan = 600 # 45
     random_factor = 30 # higher number = less random
     max_particles = 6
     max_deviation = 2

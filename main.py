@@ -21,7 +21,7 @@ def getHitbox(object_list, object_location, scalar3, graphlist):
     if objectID == 1 or objectID == 5: #main ship
         #objectID as 1.1 because thats full health ship and ship size doesn't change between states
         hitBox = graphics.Images.getHitbox(xpos, ypos, 1.1, -rotation.getRotation(), True, True, True)
-    elif objectID == 2 or objectID == 8: #shots
+    elif objectID == 2 or objectID == 8 or objectID == 4: #shots and debris particles
         hitBox = [xpos-2, ypos-2, 4, 4]
     elif objectID == 6: #aliens
         hitBox = [xpos, ypos, 60, 60]
@@ -622,7 +622,9 @@ def main():
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i*8)+7] = -1
                             object_list[(i2*8)+7] = -1
-                        object_list += printerlist_add
+                        elif object_list[4 + (i2 * 8)] == 4 and object_list[4+i*8] != 4: #if debris hits anything
+                            object_list[i2*8+7] = -1
+                        object_list += printerlist_add                            
                     i2 += 1            
             # collision detection
 
