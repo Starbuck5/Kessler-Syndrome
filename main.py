@@ -152,7 +152,6 @@ def main():
     d_parts = [30, 31]
     d_sats = [10, 11, 12, 13]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
-    d_aliens = [120, 121]
     ship_id = [1, 5]
     status = "menuinit"
     flame = False
@@ -707,7 +706,7 @@ def main():
             # reward for killing a sector
             numdebris = 0
             for i in range(0, len(object_list), 8):
-                if object_list[i+4] in d_asteroids + d_parts + d_sats + d_aliens:
+                if object_list[i+4] in d_asteroids + d_parts + d_sats:
                     numdebris += 1
             if numdebris == 0 and clearedSector[sectornum] == False:
                 shipInventory[3] += 50 #adds 50 credits to ship inventory
