@@ -43,7 +43,7 @@ def level1(screen, width, height):
         else:
             return startflamelist[random.randint(0, len(startflamelist)-1)]
 
-    opening_crawl = [line.rstrip('\n') for line in open("assets\\data\\opening_crawl.txt")]
+    opening_crawl = [line.rstrip('\n') for line in open(handlePath("assets\\data\\opening_crawl.txt"))]
     line_spacing = 80
     
     xpos = width/2 - soyuzsize[0]/2
