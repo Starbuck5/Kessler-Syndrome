@@ -352,7 +352,8 @@ def drawSector(screen, location, number, currentsector, cleared):
 
 #used in UIscreens and the main game loop to display the inventory
 def drawInventory(screen, shipInventory):
-    inventory_string = "metal:" + str(shipInventory[0]) + "   gas:" + str(shipInventory[1]) 
-    inventory_string += "   circuits:" + str(shipInventory[2]) + "    currency:" + str(shipInventory[3])
-    Texthelper.write(screen, [(0, 0), inventory_string,3])
+    Texthelper.write(screen, [(10,10), "metal:" + str(shipInventory[0]), 3], color = (120,120,120))
+    Texthelper.write(screen, [(310,10), "gas:" + str(shipInventory[1]), 3], color = (185,20,20))
+    Texthelper.write(screen, [(550,10), "circuits:" + str(shipInventory[1]), 3], color = (20,185,20))
+    Texthelper.write(screen, [(935,10), "credits:" + str(shipInventory[1]), 3], color = (230,180,20))
     
