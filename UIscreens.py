@@ -10,6 +10,21 @@ def timedFlip(mode):
         pygame.display.flip()
         pygame.time.wait(waitTime)
 
+#draws square of a list of costs [metal, gas, circuits, currency]
+#location is (x,y) - x=left column of costs, y=y location of "cost:" printout
+def drawCostSquare(screen, location, cost, mode):
+    x,y = location
+    Texthelper.write(screen, [("center", y), "cost:", 3])
+    timedFlip(mode) 
+
+    Texthelper.write(screen, [(x, y+55), str(cost[0]) + " metal", 3], color = (120,120,120))
+    Texthelper.write(screen, [(x+400, y+55), str(cost[1]) + " gas", 3], color = (185,20,20))
+    timedFlip(mode) 
+
+    Texthelper.write(screen, [(x, y+110), str(cost[2]) + " circuits", 3], color = (20,185,20))
+    Texthelper.write(screen, [(x+400, y+110), str(cost[3]) + " currency", 3], color = (230,180,20))
+    timedFlip(mode)
+
 class UpgradeScreenStorage():
     currentStat = -1
     addedStat = -1
@@ -51,17 +66,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
     else:
         Texthelper.write(screen, [("center", 540-110), "lv: " + str(ShipLv[editingIndex]) + " +1   " + "Stats: " + str(currentStat) + " +" + str(addedStat) + " " + pointName, 3])
         timedFlip(mode)         
-
-        Texthelper.write(screen, [("center", 540), "cost:", 3])
-        timedFlip(mode) 
-
-        Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3], color = (120,120,120))
-        Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3], color = (185,20,20))
-        timedFlip(mode) 
-
-        Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3], color = (20,185,20))
-        Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3], color = (230,180,20))
-        timedFlip(mode)    
+        drawCostSquare(screen, (600, 540), cost, mode)
 
         if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
             if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
@@ -91,6 +96,37 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
     
     if mode:
         pygame.display.flip()
+
+    return status
+
+#these upgrade screens only have one upgrade from 0 to 1 in the shipLv list
+def drawSpecialUpgrade(screen, shipLv, index, title, cost, status):
+    graphics.drawInventory(screen, inventory)
+    Texthelper.write(screen, [("center", 540-235), title, 6])
+    timedFlip(mode)
+
+    if shipLv[index] > 0:
+        Texthelper.write(screen, [("center", 540), "max level", 3])
+    else:
+        ##explanation of impact##
+        timedFlip(mode)         
+        drawCostSquare(screen, (600, 540), cost, mode)
+        
+        if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
+            if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
+                inventory[0] -= cost[0]
+                inventory[1] -= cost[1]
+                inventory[2] -= cost[2]
+                inventory[3] -= cost[3]
+                ShipLv[index] += 1
+                filehelper.set(inventory, 2)
+                filehelper.set(ShipLv, 3)
+        else:
+            Texthelper.write(screen, [("center", 540+220), "sorry", 3])
+        timedFlip(mode)       
+     
+    if Texthelper.writeButton(screen, [("center", 540+275), "back", 3]):
+        status = "garageinit"
 
     return status
 
@@ -406,7 +442,10 @@ def garageUI(screen, ShipLv, homeInventory, mode):
         Texthelper.write(screen, [(1000, 540+55), "locked", 3])
     timedFlip(mode)
 
-    if Texthelper.writeButton(screen, [("center", 540+110), "back", 3]):
+    Texthelper.write(screen, [("center", 675), "upgrade scavenging module", 3])
+    Texthelper.write(screen, [(1200, 660), "[onetime]", 1])
+
+    if Texthelper.writeButton(screen, [("center", 850), "back", 3]):
         status = "homeinit"
 
     return status
