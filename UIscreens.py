@@ -42,7 +42,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
     pointName = UpgradeScreenStorage.pointName
     
     pygame.mouse.set_visible(True) #necessary?
-    Texthelper.write(screen, [(0, 0), "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3]),3])
+    graphics.drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-235), upgradeType + " upgrade", 6])
     timedFlip(mode)     
 
@@ -55,13 +55,13 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
         Texthelper.write(screen, [("center", 540), "cost:", 3])
         timedFlip(mode) 
 
-        Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3])
-        Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3])
+        Texthelper.write(screen, [(600, 540+55), str(cost[0]) + " metal", 3], color = (120,120,120))
+        Texthelper.write(screen, [(1000, 540+55), str(cost[1]) + " gas", 3], color = (185,20,20))
         timedFlip(mode) 
 
-        Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3])
-        Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3])
-        timedFlip(mode)     
+        Texthelper.write(screen, [(600, 540+110), str(cost[2]) + " circuits", 3], color = (20,185,20))
+        Texthelper.write(screen, [(1000, 540+110), str(cost[3]) + " currency", 3], color = (230,180,20))
+        timedFlip(mode)    
 
         if inventory[0] >= cost[0] and inventory[1] >= cost[1] and inventory[2] >= cost[2] and inventory[3] >= cost[3]:
             if Texthelper.writeButton(screen, [("center", 540+220), "Upgrade", 3]):
@@ -384,8 +384,7 @@ def marketUI(screen, inventory, mode):
 def garageUI(screen, ShipLv, homeInventory, mode):
     status = "garage"
     inventory = homeInventory
-    largestring = "metal:" + str(inventory[0]) + "  gas:" + str(inventory[1]) + "  circuits:" + str(inventory[2]) + "  currency:" + str(inventory[3])
-    Texthelper.write(screen, [(0, 0), largestring, 3])
+    graphics.drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-180), "upgrade shop", 6])
     timedFlip(mode)
 
