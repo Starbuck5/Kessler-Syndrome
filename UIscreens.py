@@ -22,7 +22,7 @@ def drawCostSquare(screen, location, cost, mode):
     timedFlip(mode) 
 
     Texthelper.write(screen, [(x, y+110), str(cost[2]) + " circuits", 3], color = (20,185,20))
-    Texthelper.write(screen, [(x+400, y+110), str(cost[3]) + " currency", 3], color = (230,180,20))
+    Texthelper.write(screen, [(x+400, y+110), str(cost[3]) + " credits", 3], color = (230,180,20))
     timedFlip(mode)
 
 class UpgradeScreenStorage():
@@ -99,8 +99,11 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
 
     return status
 
+#drawSpecialUpgrade pulls these based on shipLv index being modified
+upgrade_explanations = [0, 0, 0, "--Pending Effect--"] 
+
 #these upgrade screens only have one upgrade from 0 to 1 in the shipLv list
-def drawSpecialUpgrade(screen, shipLv, index, title, cost, status):
+def drawSpecialUpgrade(screen, mode, shipLv, index, title, cost, status, inventory):
     graphics.drawInventory(screen, inventory)
     Texthelper.write(screen, [("center", 540-235), title, 6])
     timedFlip(mode)
@@ -108,7 +111,7 @@ def drawSpecialUpgrade(screen, shipLv, index, title, cost, status):
     if shipLv[index] > 0:
         Texthelper.write(screen, [("center", 540), "max level", 3])
     else:
-        ##explanation of impact##
+        Texthelper.write(screen, [("center", 450), upgrade_explanations[index], 2])
         timedFlip(mode)         
         drawCostSquare(screen, (600, 540), cost, mode)
         
@@ -118,9 +121,9 @@ def drawSpecialUpgrade(screen, shipLv, index, title, cost, status):
                 inventory[1] -= cost[1]
                 inventory[2] -= cost[2]
                 inventory[3] -= cost[3]
-                ShipLv[index] += 1
+                shipLv[index] += 1
                 filehelper.set(inventory, 2)
-                filehelper.set(ShipLv, 3)
+                filehelper.set(shipLv, 3)
         else:
             Texthelper.write(screen, [("center", 540+220), "sorry", 3])
         timedFlip(mode)       
@@ -441,9 +444,15 @@ def garageUI(screen, ShipLv, homeInventory, mode):
     else:
         Texthelper.write(screen, [(1000, 540+55), "locked", 3])
     timedFlip(mode)
-
-    Texthelper.write(screen, [("center", 675), "upgrade scavenging module", 3])
-    Texthelper.write(screen, [(1200, 660), "[onetime]", 1])
+    
+    if ShipLv[3] == 0:
+        Texthelper.write(screen, [(1200, 660), "[onetime]", 1])
+        if Texthelper.writeButton(screen, [("center", 675), "upgrade scavenging module", 3]):
+            status = "scavengeUpgradeinit"
+    else:
+        Texthelper.write(screen, [("center", 675), "superior scavenging module", 3])
+        
+    
 
     if Texthelper.writeButton(screen, [("center", 850), "back", 3]):
         status = "homeinit"
@@ -520,6 +529,12 @@ def home(screen):
 
     elif shopStatus == "ammoUpgrade":
         shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedoe", "ammoUpgrade", currentStats, totalStats)
+
+    elif shopStatus == "scavengeUpgradeinit":
+        shopStatus = drawSpecialUpgrade(screen, True, shipLv, 3, "Upgrade Scavenging Module", [10, 2, 2, 35], "scavengeUpgrade", homeInventory)
+
+    elif shopStatus == "scavengeUpgrade":
+        shopStatus = drawSpecialUpgrade(screen, False, shipLv, 3, "Upgrade Scavenging Module", [10, 2, 2, 35], shopStatus, homeInventory)
 
     elif shopStatus == "garageinit":
         garageUI(screen, shipLv, homeInventory, True)
