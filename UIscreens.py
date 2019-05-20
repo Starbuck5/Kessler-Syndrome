@@ -372,15 +372,15 @@ def marketUI(screen, inventory, mode):
 
     status = "market"
 
-    Texthelper.write(screen, [(500, 430), "metal:", 3])
+    Texthelper.write(screen, [(500, 430), "metal:", 3], color=(120,120,120))
     plusminusrow(screen, metalbox, 430)
     timedFlip(mode)
 
-    Texthelper.write(screen, [(500, 485), "gas:", 3])
+    Texthelper.write(screen, [(500, 485), "gas:", 3], color=(185,20,20))
     plusminusrow(screen, gasbox, 485)
     timedFlip(mode)
         
-    Texthelper.write(screen, [(500, 540), "circuits:", 3])
+    Texthelper.write(screen, [(500, 540), "circuits:", 3], color=(20,185,20))
     plusminusrow(screen, circuitbox, 540)
     timedFlip(mode)
 
@@ -389,7 +389,7 @@ def marketUI(screen, inventory, mode):
     buyvalue = metalbox.getIntText()*BUYVALUE[0] + gasbox.getIntText() * BUYVALUE[1] + circuitbox.getIntText() *BUYVALUE[2]
     if (sellvalue > 0):
         if not ableToSell:
-            Texthelper.write(screen, [("center", 670), "you cannot sell what you do not have", 1])
+            Texthelper.write(screen, [("center", 670), "you cannot sell what you do not have", 1], color=(178,34,34))
             Texthelper.writeBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(178,34,34))
         elif Texthelper.writeButtonBox(screen, [("center", 625), "sell for " + str(sellvalue) + " credits", 3], color=(34, 178, 34)):
             inventory[0] -= metalbox.getIntText()
@@ -401,7 +401,7 @@ def marketUI(screen, inventory, mode):
         timedFlip(mode)
 
         if buyvalue > inventory[3]:
-            Texthelper.write(screen, [("center", 745), "you cannot afford this", 1])
+            Texthelper.write(screen, [("center", 745), "you cannot afford this", 1], color=(178,34,34))
             Texthelper.writeBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(178,34,34))
         elif Texthelper.writeButtonBox(screen, [("center", 700), "buy for " + str(buyvalue) + " credits", 3], color=(34, 178, 34)):
             inventory[0] += metalbox.getIntText()
