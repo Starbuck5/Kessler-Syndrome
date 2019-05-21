@@ -219,7 +219,7 @@ def generateStars(width, height):
     stars_list = []
     # number of occurerences refers to relative probability of it showing up
     possible_IDs = [100, 100, 100, 101, 101, 102, 102, 103, 104, 105]
-    for i in range(24):
+    for i in range(random.randint(45, 55)):
         ID = possible_IDs[random.randint(0, len(possible_IDs)-1)]
         stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, RotationState(-1,-1), "NA", 1]
     return stars_list
