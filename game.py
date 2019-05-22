@@ -187,14 +187,6 @@ def doPhysics(object_list, width, height, max_speed, drag, step_drag):
             elif step_drag_y < object_list[3 +i] < 0:
                 object_list[3 +i] = 0
 
-        #rotation
-        #if not isinstance(object_list[5+i], str):
-        #    object_list[5+i] += object_list[6+i]/7 #the divided by moderates the speed of rotation
-        #    if object_list[5+i] >= 360:
-        #        object_list[5+i] -= 360
-        #    if object_list[5+i] <= -360:
-        #        object_list[5+i] += 360
-
         #rotation - now with objects!
         if object_list[5+i].getRotating():
             object_list[5+i].rotate()
@@ -455,19 +447,8 @@ def saveObjects(sectornum, save_list, width, height):
     filehelper.saveObj(resave_list, 5)
 
 #extracts the list saveObjects saved to file
-def getObjects(sectornum, width, height, **kwargs):
-    if 'old' in kwargs:
-        if kwargs['old']:
-            object_list = []
-            for i in range(5):
-                object_list += filehelper.get(sectornum*5+i)
-            if object_list != []:
-                while object_list[-1] == '':
-                    object_list.pop()
-        else:
-            object_list = filehelper.loadObj(5)[sectornum-1]
-    else:
-        object_list = filehelper.loadObj(5)[sectornum-1]
+def getObjects(sectornum, width, height):
+    object_list = filehelper.loadObj(5)[sectornum-1]
             
     # turning x and y float percentages back into coords
     if len(object_list) >= 8:
@@ -488,3 +469,13 @@ def deleteObject(toDelete, delSector, width, height):
         if object_list[i+4] == toDelete:
             del object_list[i:i+8]
     saveGame(delSector, object_list, width, height)
+
+##d_stars = [100, 101, 102, 103, 104, 105]
+##newstars = generateStars(1920,1080)
+##sector1 = getObjects(11, 1920, 1080)
+##for i in range(0, len(sector1), 8):
+##    if sector1[i+4] in d_stars:
+##        sector1[i+7] = -1
+##sector1 = deaderizer(sector1)
+##sector1 += newstars
+##saveObjects(11, sector1, 1920, 1080)
