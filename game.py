@@ -67,6 +67,7 @@ class AITools():
         if lifespan < 0:
             lifespan = AITools.missile_lifespan
         if shot_type == 122: #alien shot
+            angle = -angle + 90
             shot = [xpos, ypos, xmom, ymom, shot_type, RotationState(angle, 0), "NA", lifespan]
         else:
             shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
@@ -74,7 +75,7 @@ class AITools():
 
 class DroneAI():
     def __init__(self):
-        pass
+        self.progression = 0
 
     def update(self, object_list, self_loc):
         distance = AITools.distanceBetween(object_list, 0, self_loc)
@@ -82,27 +83,70 @@ class DroneAI():
         #pulling entities out of the list for ease of change
         droneShip = object_list[self_loc:self_loc+8]
         humanShip = object_list[0:8]
+        
+        if self.progression == 0:
+            droneShip[2] = (humanShip[0] - droneShip[0])/distance
+            droneShip[3] = (droneShip[1] - humanShip[1])/distance        
+            if (droneShip[1] - humanShip[1]) > 0:
+                newRotation = math.degrees(math.acos(droneShip[2]))
+            else:
+                newRotation = 360 - math.degrees(math.acos(droneShip[2]))
+            rotationMom = newRotation - droneShip[5].getRotation()
+            newRotationMom = rotationMom - 360
+            if abs(newRotationMom) < abs(rotationMom):
+                rotationMom = newRotationMom
+            if rotationMom > 5:
+                rotationMom = 5
+            elif rotationMom < -5:
+                rotationMom = -5
+            droneShip[5].setMomentum(rotationMom)
+            if distance <= 200:
+                self.progression = 1
+                shotCounter = 0
 
-        droneShip[2] = (humanShip[0] - droneShip[0])/distance
-        droneShip[3] = (droneShip[1] - humanShip[1])/distance        
-        if (droneShip[1] - humanShip[1]) > 0:
-            newRotation = math.degrees(math.acos(droneShip[2]))
-        else:
-            newRotation = 360 - math.degrees(math.acos(droneShip[2]))
-        rotationMom = newRotation - droneShip[5].getRotation()
-        newRotationMom = rotationMom - 360
-        if abs(newRotationMom) < abs(rotationMom):
-            rotationMom = newRotationMom
-        if rotationMom > 5:
-            rotationMom = 5
-        elif rotationMom < -5:
-            rotationMom = -5
-        droneShip[5].setMomentum(rotationMom)
+        elif self.progression == 1:
+            droneShip[2] = 0
+            droneShip[3] = 0
+            if shotCounter % 50 == 0:
+                AITools.shoot(object_list, self_loc, object_list[slef_loc+5], 122)
+            shotCounter += 1
+            print("shotCounter" + str(shotCounter))
+            if shotCounter == 200:
+                shotCounter = 0
+                self.progression = 2
+                direction = random.randint(0,1)
+                if direction == 0:
+                    direction = -1
+
+        elif self.progression == 2:
+            droneShip[2] = (humanShip[0] - droneShip[0])/distance
+            droneShip[3] = (droneShip[1] - humanShip[1])/distance
+            if (droneShip[1] - humanShip[1]) > 0:
+                newRotation = math.degrees(math.acos(droneShip[2]))
+            else:
+                newRotation = 360 - math.degrees(math.acos(droneShip[2]))
+            newRotation += (10*direction)
+            droneShip[2] = math.cos(newRotation)
+            droneShip[3] = math.sin(newRotation)
+            rotationMom = newRotation - droneShip[5].getRotation()
+            newRotationMom = rotationMom - 360
+            if abs(newRotationMom) < abs(rotationMom):
+                rotationMom = newRotationMom
+            if rotationMom > 5:
+                rotationMom = 5
+            elif rotationMom < -5:
+                rotationMom = -5
+            droneShip[5].setMomentum(rotationMom)
+            if distance < 50:
+                self.progression == 3
+
+        elif self.progression == 3:
+            if distance > 300:
+                self.progression = 0
+                
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
-
-        if random.randint(0,100) == 0:
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+        print("progression:" + str(self.progression))
 
 class SpikeAI():
     def __init__(self):
