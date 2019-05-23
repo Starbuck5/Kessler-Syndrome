@@ -5,6 +5,18 @@ from pgx import spriteSheetBreaker
 from pgx import scaleImage
 from pgx import filehelper
 
+class GameConstants():
+    #width = -1
+    width = 1920
+    #height = -1
+    height = 1080
+    #max_speed = -1
+    max_speed = 4
+    #drag = -1
+    drag = [1,5]
+    #step_drag = -1
+    step_drag = 0.04
+
 class RotationState():
     def __init__(self, rotationPos, rotationMom):
         self.pos = rotationPos
@@ -72,6 +84,34 @@ class AITools():
         else:
             shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
         object_list += shot
+
+    #takes in the objectlist and two locations, uses the missile accel to find the angle for
+    #the shooter to hit the target, taking into account both of their momentums
+    def getInterceptAngle(object_list, self_loc, target_loc):
+        shooter = object_list[self_loc:self_loc+8]
+        target = object_list[target_loc:target_loc+8]
+        coolTicker = 0
+        colliding = False
+        while not colliding:
+            doPhysics(shooter, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
+                      GameConstants.step_drag)
+            doPhysics(target, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
+                      GameConstants.step_drag)
+            xdiff = target[0] - shooter[0]
+            ydiff = target[1] - shooter[1]
+            if (xdiff**2 + ydiff**2)**0.5 < AITools.missile_accel * coolTicker:
+                angle = math.atan(ydiff/xdiff)
+                return math.degrees(angle)
+    
+            if coolTicker > 5000:
+                break
+            
+            coolTicker += 1
+
+    #combines the getInterceptAngle and shoot functions into one ~hopefully~ seamless package
+    def shootAt(object_list, self_loc, target_loc, shot_type=2, lifespan=-1):
+        angle = AITools.getInterceptAngle(object_list, self_loc, target_loc)
+        shoot(object_list, self_loc, angle, shot_type, lifespan)
 
 class DroneAI():
     def __init__(self):
