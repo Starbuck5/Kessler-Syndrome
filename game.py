@@ -164,7 +164,6 @@ class DroneAI():
                 
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
-        print("progression:" + str(self.progression))
 
 class SpikeAI():
     def __init__(self):
