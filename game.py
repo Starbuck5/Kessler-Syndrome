@@ -76,6 +76,10 @@ class AITools():
 class DroneAI():
     def __init__(self):
         self.progression = 0
+        self.shotCounter = 0
+        self.direction = random.randint(0,1)
+        if self.direction == 0:
+            self.direction = -1
 
     def update(self, object_list, self_loc):
         distance = AITools.distanceBetween(object_list, 0, self_loc)
@@ -85,12 +89,13 @@ class DroneAI():
         humanShip = object_list[0:8]
         
         if self.progression == 0:
-            droneShip[2] = (humanShip[0] - droneShip[0])/distance
-            droneShip[3] = (droneShip[1] - humanShip[1])/distance        
+            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
+            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
+            xMom = (humanShip[0] - droneShip[0])/distance
             if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(droneShip[2]))
+                newRotation = math.degrees(math.acos(xMom))
             else:
-                newRotation = 360 - math.degrees(math.acos(droneShip[2]))
+                newRotation = 360 - math.degrees(math.acos(xMom))
             rotationMom = newRotation - droneShip[5].getRotation()
             newRotationMom = rotationMom - 360
             if abs(newRotationMom) < abs(rotationMom):
@@ -99,35 +104,42 @@ class DroneAI():
                 rotationMom = 5
             elif rotationMom < -5:
                 rotationMom = -5
+            if abs(rotationMom) == 5:
+                droneShip[2] = droneShip[2]/2
+                droneShip[3] = droneShip[3]/2
             droneShip[5].setMomentum(rotationMom)
-            if distance <= 200:
+            rotationDistance = abs(newRotation - droneShip[5].getRotation())
+            if distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
                 self.progression = 1
-                shotCounter = 0
 
         elif self.progression == 1:
+            xMom = (humanShip[0] - droneShip[0])/distance
+            if (droneShip[1] - humanShip[1]) > 0:
+                newRotation = math.degrees(math.acos(xMom))
+            else:
+                newRotation = 360 - math.degrees(math.acos(xMom))
             droneShip[2] = 0
             droneShip[3] = 0
-            if shotCounter % 50 == 0:
-                AITools.shoot(object_list, self_loc, object_list[slef_loc+5], 122)
-            shotCounter += 1
-            print("shotCounter" + str(shotCounter))
-            if shotCounter == 200:
-                shotCounter = 0
+            droneShip[5].setMomentum(0)
+            if self.shotCounter % 50 == 0:
+                AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+            self.shotCounter += 1
+            if self.shotCounter == 200:
+                self.shotCounter = 0
                 self.progression = 2
-                direction = random.randint(0,1)
-                if direction == 0:
-                    direction = -1
+            rotationDistance = abs(newRotation - droneShip[5].getRotation())
+            if rotationDistance >= 20 and 360 - rotationDistance >= 20:
+                self.progression = 0
 
         elif self.progression == 2:
-            droneShip[2] = (humanShip[0] - droneShip[0])/distance
-            droneShip[3] = (droneShip[1] - humanShip[1])/distance
+            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*1.5
+            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*1.5
+            xMom = (humanShip[0] - droneShip[0])/distance
             if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(droneShip[2]))
+                newRotation = math.degrees(math.acos(xMom))
             else:
-                newRotation = 360 - math.degrees(math.acos(droneShip[2]))
-            newRotation += (10*direction)
-            droneShip[2] = math.cos(newRotation)
-            droneShip[3] = math.sin(newRotation)
+                newRotation = 360 - math.degrees(math.acos(xMom))
+            newRotation += (30*self.direction)
             rotationMom = newRotation - droneShip[5].getRotation()
             newRotationMom = rotationMom - 360
             if abs(newRotationMom) < abs(rotationMom):
@@ -137,11 +149,17 @@ class DroneAI():
             elif rotationMom < -5:
                 rotationMom = -5
             droneShip[5].setMomentum(rotationMom)
-            if distance < 50:
-                self.progression == 3
-
+            if distance <= 100:
+                self.progression = 3
+                self.direction = random.randint(0,1)
+                if self.direction == 0:
+                    self.direction = -1
+            elif distance >= 400:
+                self.progression = 0
+                
         elif self.progression == 3:
-            if distance > 300:
+            droneShip[5].setMomentum(0)
+            if distance >= 400:
                 self.progression = 0
                 
         #zippings modified entity back into the list
