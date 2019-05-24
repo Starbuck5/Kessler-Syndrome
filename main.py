@@ -87,7 +87,8 @@ def main():
     width = int(file_settings[0])
     height = int(file_settings[1])
     max_asteroids = 8
-    drag = [1,5]
+    if file_settings[5]:
+        GameConstants.drag = [1,5]
 
     #scaling
     scalarscalar = height / 1080
@@ -108,7 +109,7 @@ def main():
     earthpic = loadImage("Assets\\images\\earth.tif")
 
     # settings
-    max_speed = 4 * scalarscalar
+    GameConstants.max_speed = 4 * scalarscalar
     missile_lifespan = 130 * scalarscalar
     missile_accel = 7 * scalarscalar
     AITools.missile_accel = missile_accel
@@ -116,7 +117,7 @@ def main():
     step_x = 0.08 * scalarscalar
     step_y = 0.08 * scalarscalar
     step_r = 2.3
-    step_drag = 0.004 * scalarscalar
+    GameConstants.step_drag = 0.004 * scalarscalar
     max_asteroid_spd = 270 * scalarscalar
     color = (0, 0, 0) # for background
     shield_lifespan = 300
@@ -176,11 +177,11 @@ def main():
 
     # class setup
     Screenhelper(width,height)
-    #texthelper setup for scaling
     Texthelper.scalar = scalarscalar
     Texthelper.width = width
     Texthelper.height = height
-    #announcementbox setup
+    GameConstants.width = width
+    GameConstants.height = height
     AnnouncementBox.width = width
     AnnouncementBox.height = height
 
@@ -758,10 +759,7 @@ def main():
                 object_list[3] = 0
 
             #physics!
-            if file_settings[5]: #if ship drag is on
-                doPhysics(object_list, width, height, max_speed, drag, step_drag)
-            else:
-                doPhysics(object_list, width, height, max_speed, [], step_drag)
+            doPhysics(object_list)
 
             #ship durability state
             armorPercent = currentarmor / totalarmor * 100

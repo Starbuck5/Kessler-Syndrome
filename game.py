@@ -5,17 +5,13 @@ from pgx import spriteSheetBreaker
 from pgx import scaleImage
 from pgx import filehelper
 
+#stores a couple constants so they can be accessed without passing variables
 class GameConstants():
-    #width = -1
-    width = 1920
-    #height = -1
-    height = 1080
-    #max_speed = -1
-    max_speed = 4
-    #drag = -1
-    drag = [1,5]
-    #step_drag = -1
-    step_drag = 0.04
+    width = -1
+    height = -1
+    max_speed = -1
+    drag = []
+    step_drag = -1
 
 class RotationState():
     def __init__(self, rotationPos, rotationMom):
@@ -93,10 +89,8 @@ class AITools():
         coolTicker = 0
         colliding = False
         while not colliding:
-            doPhysics(shooter, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
-                      GameConstants.step_drag)
-            doPhysics(target, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
-                      GameConstants.step_drag)
+            doPhysics(shooter)
+            doPhysics(target)
             xdiff = target[0] - shooter[0]
             ydiff = target[1] - shooter[1]
             if (xdiff**2 + ydiff**2)**0.5 < AITools.missile_accel * coolTicker:
@@ -231,9 +225,14 @@ def particlemaker(xpos, ypos, xmom, ymom):
         printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom +
                             ((random.randint(-20, 20))/random_factor), 4, RotationState(-1,-1), "NA", particle_lifespan]  
     return printerlist_add
-    
+
+#physics wrapper
+def doPhysics(object_list):
+    specedPhysics(object_list, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
+                  GameConstants.step_drag)
+
 #physics handling
-def doPhysics(object_list, width, height, max_speed, drag, step_drag):
+def specedPhysics(object_list, width, height, max_speed, drag, step_drag):
     for i in range(0, len(object_list), 8):
         #decaying objects
         if object_list[4 + i] in [2, 8, 5, 4, 9, 122]: #stuff in list should have a decrement to their life force
