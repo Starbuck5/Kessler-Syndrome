@@ -2,7 +2,7 @@
 
 Game idea:
 Protagonist framed for crimes on Earth, exiled to space to collect orbital debris. 
-Protagonist becomes powerful by salvaging peices of old satellites, eventually confronting his framer (President of the World)
+Protagonist becomes powerful by salvaging pieces of old satellites, eventually confronting his framer (President of the World)
 in a boss battle.
 
 Controls:  
