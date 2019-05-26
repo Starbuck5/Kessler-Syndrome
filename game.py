@@ -413,7 +413,7 @@ def sectorGeneration(sectornum):
         return True
     return False
 
-def solarPanelDrops():
+def solarPanelDrops(shipLv):
     drops = [0, 0, 0, 0]
     if random.randint(1,100) <= 80:
         percentHelper = random.randint(1,100)
@@ -439,9 +439,11 @@ def solarPanelDrops():
             drops[3] += 6
         else:
             drops[3] += 9
+    if shipLv[3] > 0: #scavenging module
+        drops = [round(drop*1.5) for drop in drops]
     return drops
 
-def satelliteDrops():
+def satelliteDrops(shipLv):
     drops = [0, 0, 0, 0]
     if random.randint(1,100) <= 80:
         percentHelper = random.randint(1,100)
@@ -475,6 +477,8 @@ def satelliteDrops():
             drops[3] += 10
         else:
             drops[3] += 20
+    if shipLv[3] > 0: #scavenging module
+        drops = [round(drop*1.5) for drop in drops]
     return drops
 
 def RotatePoint(xpos, ypos, point, rotation):

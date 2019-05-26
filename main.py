@@ -543,7 +543,7 @@ def main():
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                              object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            drops = satelliteDrops()
+                            drops = satelliteDrops(ShipLv)
                             if drops[3]: #if currency is dropped
                                 SoundVault.play('money')
                             #merges the two lists by adding their like elements together
@@ -555,10 +555,10 @@ def main():
                            if object_list[(4+(i2*8))] == 31: #supply drop
                                ammunition = totalammunition #fills your ammo
                                currentfuel = totalfuel #tops off your fuel
-                               drops = satelliteDrops()
+                               drops = satelliteDrops(ShipLv)
                                drops = [i*3 for i in drops] #multiplies satellite drop by 3
                            else: 
-                               drops = solarPanelDrops()
+                               drops = solarPanelDrops(ShipLv)
                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
                         elif ID1 in ship_id and ID2 == 0: #going to garage
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))

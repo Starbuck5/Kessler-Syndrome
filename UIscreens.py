@@ -100,7 +100,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
     return status
 
 #drawSpecialUpgrade pulls these based on shipLv index being modified
-upgrade_explanations = [0, 0, 0, "--Pending Effect--"] 
+upgrade_explanations = [0, 0, 0, "Increases drops by 50%"] 
 
 #these upgrade screens only have one upgrade from 0 to 1 in the shipLv list
 def drawSpecialUpgrade(screen, mode, shipLv, index, title, cost, status, inventory):
