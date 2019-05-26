@@ -317,10 +317,11 @@ def generateStars(width, height):
     return stars_list
 
 #leveler
-def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids, sectornum):
+def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts, d_asteroids, d_fighters, sectornum):
     mineGeneration = [9, 10, 11, 12, 13, 14 ,15 ,16, 17, 18, 19]
     droneGeneration = [14, 15, 16, 17, 18, 19]
     supplyGeneration = [12, 13, 14, 15, 16, 17, 18, 19]
+    fighterGeneration = [11, 12, 13, 14, 15, 16, 17, 18, 19]
     additionalEntities = 0 #allows different sectors to generate greater numbers of entities than the base
     if sectornum in droneGeneration:
         ASTEROID = 20
@@ -353,7 +354,9 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         elif idChooser < ASTEROID + MINES:
             idSelection = d_asteroids
         elif idChooser < ASTEROID + MINES + SATS:
-            idSelection = d_sats
+            idSelection = d_sats[:]
+            if sectornum in fighterGeneration:
+                idSelection += d_fighters
         elif idChooser < ASTEROID + MINES + SATS + DRONES:
             idSelection = [120, 120]
         else:
@@ -372,6 +375,10 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),
                                SpikeAI(), 1]
+        elif 130 <= ID < 140: #special for fighters
+            object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
+                               asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-3,3)),
+                               "NA", 1]            
         else:
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),

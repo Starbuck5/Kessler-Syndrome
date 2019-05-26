@@ -154,6 +154,8 @@ def main():
     d_sats = [10, 11, 12, 13]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     d_aliens = [120, 121]
+    d_stars = [100, 101, 102, 103, 104, 105]
+    d_fighters = [130, 131, 132, 133]
     ship_id = [1, 5]
     status = "menuinit"
     flame = False
@@ -300,7 +302,7 @@ def main():
                         new_objects = getObjects(sectornum, width, height)
                         if new_objects[0] == -1 and len(new_objects)<8:
                             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                d_sats, d_parts, d_asteroids, sectornum)
+                                d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                         else:
                             object_list = object_list[:8] + new_objects[8:]
                         object_list[2] = 0  #kills momentum
@@ -657,7 +659,7 @@ def main():
                             new_objects = getObjects(sectornum, width, height)
                             if new_objects[0] == -1 and len(new_objects)<8:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                                      d_sats, d_parts, d_asteroids, sectornum)
+                                                      d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                             else:
                                 object_list = object_list[:8] + new_objects[8:]
                             if discoverSector[sectornum] == False:

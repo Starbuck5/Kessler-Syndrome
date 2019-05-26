@@ -169,6 +169,13 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     Images.add(1.3, imageList[2])
     Images.add(1.4, imageList[3])
 
+    #adding downed fighters
+    imageList = spriteSheetBreaker(loadImage("Assets\\images\\fighters.gif"), 42, 22, 0, 0, 2, 2)
+    for i in range(len(imageList)):
+        imageList[i].set_colorkey((255,255,255))
+        imageList[i] = scaleImage(imageList[i], 1.4)
+        Images.addRotate(130+i, imageList[i])
+
     #adding derelict ship, no rotation because it's always in the same orientation
     image = loadImage("Assets\\images\\derelict.gif")
     image.set_colorkey((255,255,255))
