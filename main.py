@@ -94,7 +94,7 @@ def main():
     scalarscalar = height / 1080
     scalar2 = 1.5 * scalarscalar # controls asteroid size
     scalar3 = 1.2 * scalarscalar # controls ship size
-    sat_scalar = 1 * scalarscalar #controls satellite size
+    sat_scalar = 1.2 * scalarscalar #controls satellite size
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
@@ -104,8 +104,10 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat2.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat3.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
-                 "s", "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
-                 loadImage("Assets\\images\\solarpanel.tif"), temp_image]
+                 scaleImage(loadImage("Assets\\images\\sat5.tif"), 0.9*sat_scalar),
+                 "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
+                 loadImage("Assets\\images\\solarpanel.tif"), temp_image,
+                 scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
 
     # settings
@@ -150,8 +152,8 @@ def main():
 
     # variable setup
     playerinfo = filehelper.get(1)
-    d_parts = [30, 31]
-    d_sats = [10, 11, 12, 13]
+    d_parts = [30, 31, 32]
+    d_sats = [10, 11, 12, 13, 14]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     d_aliens = [120, 121]
     d_stars = [100, 101, 102, 103, 104, 105]
