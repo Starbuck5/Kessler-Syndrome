@@ -568,6 +568,15 @@ def main():
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
                                 status = "homeinit"
+                        elif ID1 in ship_id and ID2 in d_fighters: #ship vs fighters
+                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
+                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
+                            object_list[(i2*8)+7] = -1
+                            drops = satelliteDrops(ShipLv)
+                            if drops[3]: #if currency is dropped
+                                SoundVault.play('money')
+                            #merges the two lists by adding their like elements together
+                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
                         #ship v asteroid or spiker or drone
                         elif ID1 in ship_id and (69 < ID2 < 100 or ID2 == 121 or ID2 == 120):
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
@@ -601,6 +610,12 @@ def main():
                             object_list[(i2*8)+7] = -1
                             object_list[(i*8)+7] = -1
                             explosion_sounds()
+                        elif ID2 == 2 and ID1 in d_fighters: #missile v derelict fighters
+                            printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
+                                                             object_list[2+(i * 8)], object_list[3+(i * 8)])
+                            object_list[(i2*8)+7] = -1
+                            object_list[(i*8)+7] = -1
+                            explosion_sounds()                            
                         elif object_list[4 + (i2 * 8)] == 2 and object_list[4 + (i * 8)] == 7: #missile v mine
                             printerlist_add += [object_list[(i * 8)], object_list[1+(i * 8)], object_list[2+(i*8)],
                                                 object_list[3+(i*8)], 9, RotationState("NA", "NA"), "NA", 300]
