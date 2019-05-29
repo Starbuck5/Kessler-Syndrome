@@ -88,7 +88,6 @@ class AITools():
         thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
         xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel / 3
         ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel / 3
-        print("wat")
         object_list += [xpos, ypos, xmom, ymom, 7, RotationState(random.randint(0,360),
                         random.randint(-10,10)), "NA", 1]
 
@@ -238,7 +237,31 @@ class SpikeAI():
             AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+180, 122)
             AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+270, 122)
             self.timer = -300
-            
+
+
+class AlienMineAI():
+    numFrames = 6
+    frameTick = 30 #number of ticks that constitute a new frame
+    
+    def __init__(self):
+        self.time = 0
+        self.frame = 1
+
+    def update(self, object_list, self_loc):
+        self.time += 1
+        if self.time >= AlienMineAI.frameTick:
+            self.time = 0
+            self.frame += 1
+            if self.frame > AlienMineAI.numFrames:
+                self.frame = 1
+
+    def getFrame(self):
+        return self.frame
+
+    def getFrameNum(self):
+        num = self.getFrame()
+        return 123 + num/100
+        
              
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -377,7 +400,7 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         #choosing the ID
         idChooser = random.randint(0, 100)
         if idChooser < MINES:
-            idSelection = [121, 121, 7, 7, 7]
+            idSelection = [121, 121, 7, 7, 7, 7, 123, 123]
         elif idChooser < ASTEROID + MINES:
             idSelection = d_asteroids
         elif idChooser < ASTEROID + MINES + SATS:
@@ -405,7 +428,11 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
         elif 130 <= ID < 140: #special for fighters
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-3,3)),
-                               "NA", 1]            
+                               "NA", 1]
+        elif ID == 123: #special for alien animated bombs
+            object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
+                               asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),
+                               AlienMineAI(), 1]
         else:
             object_list_add = [random.randint(0, width), random.randint(0, height), asteroid_speedset[0],
                                asteroid_speedset[1], ID, RotationState(random.randint(0,360),random.randint(-10,10)),
