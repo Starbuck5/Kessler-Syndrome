@@ -81,6 +81,17 @@ class AITools():
             shot = [xpos, ypos, xmom, ymom, shot_type, RotationState("NA", "NA"), "NA", lifespan]
         object_list += shot
 
+    def releaseMine(object_list, self_loc, angle):
+        xpos = object_list[self_loc]
+        ypos = object_list[self_loc+1]
+        angle = -(angle-90)
+        thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
+        xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel / 3
+        ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel / 3
+        print("wat")
+        object_list += [xpos, ypos, xmom, ymom, 7, RotationState(random.randint(0,360),
+                        random.randint(-10,10)), "NA", 1]
+
     #takes in the objectlist and two locations, uses the missile accel to find the angle for
     #the shooter to hit the target, taking into account both of their momentums
     def getInterceptAngle(object_list, self_loc, target_loc):
@@ -143,7 +154,9 @@ class DroneAI():
                 droneShip[3] = droneShip[3]/2
             droneShip[5].setMomentum(rotationMom)
             rotationDistance = abs(newRotation - droneShip[5].getRotation())
-            if distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
+            if distance <= 100:
+                self.progression = 3
+            elif distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
                 self.progression = 1
 
         elif self.progression == 1:
@@ -158,11 +171,13 @@ class DroneAI():
             if self.shotCounter % 50 == 0:
                 AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
             self.shotCounter += 1
+            rotationDistance = abs(newRotation - droneShip[5].getRotation())
             if self.shotCounter == 200:
                 self.shotCounter = 0
                 self.progression = 2
-            rotationDistance = abs(newRotation - droneShip[5].getRotation())
-            if rotationDistance >= 20 and 360 - rotationDistance >= 20:
+            elif distance <= 100:
+                self.progression = 3
+            elif rotationDistance >= 20 and 360 - rotationDistance >= 20:
                 self.progression = 0
 
         elif self.progression == 2:
@@ -184,15 +199,27 @@ class DroneAI():
                 rotationMom = -5
             droneShip[5].setMomentum(rotationMom)
             if distance <= 100:
+                droneShip[5].setMomentum(0)
                 self.progression = 3
                 self.direction = random.randint(0,1)
                 if self.direction == 0:
                     self.direction = -1
             elif distance >= 400:
                 self.progression = 0
-                
+
         elif self.progression == 3:
-            droneShip[5].setMomentum(0)
+            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
+            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
+            xMom = (humanShip[0] - droneShip[0])/distance
+            if (droneShip[1] - humanShip[1]) > 0:
+                newRotation = math.degrees(math.acos(xMom))
+            else:
+                newRotation = 360 - math.degrees(math.acos(xMom))
+            angle = newRotation
+            AITools.releaseMine(object_list, self_loc, angle)
+            self.progression = 4
+                
+        elif self.progression == 4:
             if distance >= 400:
                 self.progression = 0
                 
