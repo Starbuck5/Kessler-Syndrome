@@ -797,8 +797,8 @@ def main():
             graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
             graphics.drawInventory(screen, shipInventory)
-            if DEVMODE:
-                Texthelper.write(screen, [(1800, 20), str(round(clock.get_fps())),3]) 
+            if file_settings[6]:
+                Texthelper.write(screen, [(file_settings[0] - 50, 10), str(round(clock.get_fps())), 2]) 
             flame = False
             pygame.display.flip()
             # printer

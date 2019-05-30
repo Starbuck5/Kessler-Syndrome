@@ -1,4 +1,4 @@
-[?, 1080, True, 0, False, True]#game info: width, height, fullscreen, gamestate, cheats, ship drag
+[?, 1080, True, 0, False, True, False]#game info: width, height, fullscreen, gamestate, cheats, ship drag, FPS counter
 [player, 1888888888888888888, 1888888888888888888]#player info: name, sector clearing, sector visitation
 [0, 30, 0, 0]#inventory: metal, gas, circuits, credits
 [1, 1, 1, 0]#level info: armor lv, fuel tank lv, torpedo lv, scavenging module lv
