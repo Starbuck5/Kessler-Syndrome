@@ -638,17 +638,19 @@ def optionsUIinit(screen, file_settings):
     pygame.mouse.set_visible(True)
     OptionsInput([file_settings[0], file_settings[1]])
 
-def drawSettingsOption(screen, settingName, x, x2, y, file_settings, settingsIndex, *argv): #settingsIndex is the index of the setting in file_settings
-    #*argv is for specifying the on/off text of the setting. Default is "On"/"Off"
+def drawSettingsOption(screen, settingName, x, x2, y, file_settings, settingsIndex, **kwargs): #settingsIndex is the index of the setting in file_settings
+    #kwargs are for specifying the on/off text of the setting. Default is "On"/"Off"
     Texthelper.write(screen, [(x, y), settingName + ":", 3])
-    if len(argv) > 0 and file_settings[settingsIndex]:
-        text = argv[0]
-    elif len(argv) > 0 and not file_settings[settingsIndex]:
-        text = argv[1]
-    elif file_settings[settingsIndex]:
-        text = "On"
+    if file_settings[settingsIndex]:
+        if 'ontext' in kwargs:
+            text = kwargs['ontext']
+        else:
+            text = "On"
     else:
-        text = "Off"
+        if 'offtext' in kwargs:
+            text = kwargs['offtext']
+        else:
+            text = "Off"
     if Texthelper.writeButton(screen, [(x2, y), text, 3]):
         file_settings[settingsIndex] = not file_settings[settingsIndex]
 
@@ -670,7 +672,7 @@ def optionsUI(screen, file_settings):
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    drawSettingsOption(screen, "Cheats", 600, 1000, 400 + spacing * 1, file_settings, 4, "Enabled", "Disabled")
+    drawSettingsOption(screen, "Cheats", 600, 1000, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
 
     drawSettingsOption(screen, "Fullscreen", 600, 1000, 400 + spacing * 2, file_settings, 2)
 
@@ -715,11 +717,11 @@ def cheatsMenuUI(screen, cheats_settings):
 
     drawSettingsOption(screen, "Infinite Ammo", 600, 1100, 400 + spacing * 2, cheats_settings, 2)
 
-    drawSettingsOption(screen, "Teleportation", 600, 1100, 400 + spacing * 3, cheats_settings, 3)
+    drawSettingsOption(screen, "Teleportation", 600, 1100, 400 + spacing * 3, cheats_settings, 3, ontext = "Enabled", offtext = "Disabled")
 
     drawSettingsOption(screen, "Map Visibility", 600, 1100, 400 + spacing * 4, cheats_settings, 4)
 
-    drawSettingsOption(screen, "Hitboxes", 600, 1100, 400 + spacing * 5, cheats_settings, 5, "Visible", "Not Visible")
+    drawSettingsOption(screen, "Hitboxes", 600, 1100, 400 + spacing * 5, cheats_settings, 5, ontext = "Visible", offtext = "Not Visible")
 
     if not any(cheats_settings):
         Texthelper.write(screen, [("center", 800), "What's the point of cheats if everything's turned off?", 3], color = (125, 15, 198))

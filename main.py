@@ -310,6 +310,8 @@ def main():
                 timer_popupmenu = 0
 
             if DEVMODE and cheats_settings[3]:
+                Texthelper.write(screen, [(250, 200), "Click on a sector", 2.5], color = (125, 15, 198))
+                Texthelper.write(screen, [(250, 250), "to teleport", 2.5], color = (125, 15, 198))
                 for i in sector_map_coordinates.keys():
                     if discoverSector[i] or cheats_settings[4]:
                         if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
