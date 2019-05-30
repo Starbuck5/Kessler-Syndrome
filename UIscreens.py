@@ -627,7 +627,7 @@ class OptionsInput():
     width = ""
     height = ""
     
-    #directly set by mainbefore options is called, controls what status is called by the back button
+    #directly set by main before options is called, controls what status is called by the back button
     backStatus = "OptionsInput.backStatus needs to be set before use"
 
     def __init__(self, resolution):
@@ -689,11 +689,11 @@ def optionsUI(screen, spacing, file_settings):
         for i in range(len(file_settings)): #has to be like this becuase of scope
             file_settings[i] = default_settings[i]
 
+    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
+
     if Texthelper.writeButton(screen, [("center", 900), "Back", 2]):
         screen.fill((0, 0, 0))
         status = OptionsInput.backStatus
-
-    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
 
     pygame.display.flip()
     return status
