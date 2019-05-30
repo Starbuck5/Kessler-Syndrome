@@ -253,6 +253,12 @@ class AlienMineAI():
     def getFrameNum(self):
         num = self.getFrame()
         return 123 + num/100
+
+    #releases a bunch of spikes and destroys the entity
+    def explode(self, object_list, self_loc):
+        for i in range(15):
+            AITools.shoot(object_list, self_loc, i*24, 122)
+        object_list[self_loc + 7] = -1
         
              
 #particle effects
