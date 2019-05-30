@@ -606,14 +606,14 @@ def processListForSave(save_list, width, height):
 def saveObjects(sectornum, save_list, width, height):
     processListForSave(save_list, width, height)
     
-    resave_list = filehelper.loadObj(5)
+    resave_list = filehelper.loadObj(6)
     resave_list[sectornum-1] = save_list
 
-    filehelper.saveObj(resave_list, 5)
+    filehelper.saveObj(resave_list, 6)
 
 #extracts the list saveObjects saved to file
 def getObjects(sectornum, width, height):
-    object_list = filehelper.loadObj(5)[sectornum-1]
+    object_list = filehelper.loadObj(6)[sectornum-1]
             
     # turning x and y float percentages back into coords
     if len(object_list) >= 8:

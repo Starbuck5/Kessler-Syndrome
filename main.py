@@ -53,12 +53,12 @@ class CollisionInfo:
     everyHitbox = []
 
     #called once per tick, gets all the hitboxes ready for examination
-    def prime(object_list, scalar3, graphlist, DEVMODE):
+    def prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings):
         CollisionInfo.everyHitbox = []
         for i in range(int(len(object_list)/8)):
             hitbox = getHitbox(object_list, i, scalar3, graphlist)
             CollisionInfo.everyHitbox.append(hitbox)
-            if DEVMODE:
+            if DEVMODE and cheats_settings[5]:
                pygame.draw.rect(screen, (255,255,255), hitbox, 1)
 
     #tests if two objects collide by location in the object list and returns a boolean
@@ -152,6 +152,7 @@ def main():
 
     # variable setup
     playerinfo = filehelper.get(1)
+    cheats_settings = filehelper.get(5)
     d_parts = [30, 31, 32]
     d_sats = [10, 11, 12, 13, 14]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
@@ -267,7 +268,7 @@ def main():
             status = "options"
 
         if status == "options":
-            status = optionsUI(screen, 50, file_settings) 
+            status = optionsUI(screen, file_settings) 
 
             inputvar = keyboard()
             if "escape" in inputvar:
@@ -283,39 +284,47 @@ def main():
 
             pygame.display.flip()
 
+        if status == "cheatsmenu":
+            status = cheatsMenuUI(screen, cheats_settings)
+
+            if status != "cheatsmenu":
+                timer_popupmenu = 0
+                filehelper.set(cheats_settings, 5)
+
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
             Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
-            mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)      
+            mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, cheats_settings, clearedSector)      
 
             pygame.display.flip()
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, cheats_settings, clearedSector)
             inputvar = keyboard()
 
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
                 timer_popupmenu = 0
 
-            if DEVMODE:
+            if DEVMODE and cheats_settings[3]:
                 for i in sector_map_coordinates.keys():
-                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
-                                                        sector_map_coordinates[i][1] - 15), str(i), 2]):
-                        saveGame(sectornum, object_list, width, height)
-                        sectornum = i
-                        lasttransit = 0
-                        new_objects = getObjects(sectornum, width, height)
-                        if new_objects[0] == -1 and len(new_objects)<8:
-                            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                d_sats, d_parts, d_asteroids, d_fighters, sectornum)
-                        else:
-                            object_list = object_list[:8] + new_objects[8:]
-                        object_list[2] = 0  #kills momentum
-                        object_list[3] = 0
-                        status = "game"
+                    if discoverSector[i] or cheats_settings[4]:
+                        if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
+                                                            sector_map_coordinates[i][1] - 15), str(i), 2]):
+                            saveGame(sectornum, object_list, width, height)
+                            sectornum = i
+                            lasttransit = 0
+                            new_objects = getObjects(sectornum, width, height)
+                            if new_objects[0] == -1 and len(new_objects)<8:
+                                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                    d_sats, d_parts, d_asteroids, d_fighters, sectornum)
+                            else:
+                                object_list = object_list[:8] + new_objects[8:]
+                            object_list[2] = 0  #kills momentum
+                            object_list[3] = 0
+                            status = "game"
 
             if status != "mapscreen":
                 pygame.mouse.set_visible(False)
@@ -536,7 +545,7 @@ def main():
             # quest handling
 
             # collision detection
-            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE)
+            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings)
             numExaminations = int(len(object_list)/8)
             for i in range(numExaminations):
                 i2 = i + 1
@@ -758,9 +767,12 @@ def main():
 
             #HACKZ
             if DEVMODE:
-                currentfuel = totalfuel
-                currentarmor = totalarmor
-                ammunition = totalammunition
+                if cheats_settings[0]:
+                    currentarmor = totalarmor
+                if cheats_settings[1]: 
+                    currentfuel = totalfuel
+                if cheats_settings[2]:
+                    ammunition = totalammunition
                 
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
@@ -804,6 +816,8 @@ def main():
             if file_settings[6]:
                 Texthelper.write(screen, [(file_settings[0] - 50, 10), str(round(clock.get_fps())), 2]) 
             flame = False
+            if DEVMODE:
+                Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
        
