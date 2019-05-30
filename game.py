@@ -99,13 +99,15 @@ class AITools():
         coolTicker = 0
         colliding = False
         while not colliding:
-            doPhysics(shooter)
-            doPhysics(target)
-            xdiff = target[0] - shooter[0]
-            ydiff = target[1] - shooter[1]
+            #doPhysics(shooter)
+            #doPhysics(target)
+            xdiff = target[0] + target[2]*coolTicker - shooter[0]
+            ydiff = target[1] - target[3]*coolTicker - shooter[1]
+            distance = (xdiff**2 + ydiff**2)**0.5
             if (xdiff**2 + ydiff**2)**0.5 < AITools.missile_accel * coolTicker:
-                angle = math.atan(ydiff/xdiff)
-                return math.degrees(angle)
+                colliding = True
+                angle = math.degrees(math.acos(xdiff/distance))
+                return angle
     
             if coolTicker > 5000:
                 break
@@ -133,13 +135,7 @@ class DroneAI():
         humanShip = object_list[0:8]
         
         if self.progression == 0:
-            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
-            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
-            xMom = (humanShip[0] - droneShip[0])/distance
-            if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(xMom))
-            else:
-                newRotation = 360 - math.degrees(math.acos(xMom))
+            newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
             rotationMom = newRotation - droneShip[5].getRotation()
             newRotationMom = rotationMom - 360
             if abs(newRotationMom) < abs(rotationMom):
@@ -159,11 +155,7 @@ class DroneAI():
                 self.progression = 1
 
         elif self.progression == 1:
-            xMom = (humanShip[0] - droneShip[0])/distance
-            if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(xMom))
-            else:
-                newRotation = 360 - math.degrees(math.acos(xMom))
+            newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
             droneShip[2] = 0
             droneShip[3] = 0
             droneShip[5].setMomentum(0)
@@ -171,7 +163,7 @@ class DroneAI():
                 AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
             self.shotCounter += 1
             rotationDistance = abs(newRotation - droneShip[5].getRotation())
-            if self.shotCounter == 200:
+            if self.shotCounter == 100:
                 self.shotCounter = 0
                 self.progression = 2
             elif distance <= 100:
