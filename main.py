@@ -658,7 +658,7 @@ def main():
                         object_list[i+6].update(object_list, i)
                     except:
                        pass
-            special entity behaviors
+            #special entity behaviors
 
             #portals
             if portal_toggle: # ship collision with portal
