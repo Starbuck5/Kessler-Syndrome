@@ -107,6 +107,7 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat5.tif"), 0.9*sat_scalar),
                  "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  loadImage("Assets\\images\\solarpanel.tif"), temp_image,
+                 scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
 
@@ -153,7 +154,7 @@ def main():
     # variable setup
     playerinfo = filehelper.get(1)
     cheats_settings = filehelper.get(5)
-    d_parts = [30, 31, 32]
+    d_parts = [30, 31, 32, 33]
     d_sats = [10, 11, 12, 13, 14]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     d_aliens = [120, 121, 122, 123]
