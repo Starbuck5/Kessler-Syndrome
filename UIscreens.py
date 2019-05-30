@@ -627,7 +627,7 @@ class OptionsInput():
     width = ""
     height = ""
     
-    #directly set by mainbefore options is called, controls what status is called by the back button
+    #directly set by main before options is called, controls what status is called by the back button
     backStatus = "OptionsInput.backStatus needs to be set before use"
 
     def __init__(self, resolution):
@@ -637,6 +637,20 @@ class OptionsInput():
 def optionsUIinit(screen, file_settings):
     pygame.mouse.set_visible(True)
     OptionsInput([file_settings[0], file_settings[1]])
+
+def drawSettingsOption(screen, settingName, x, y, file_settings, settingsIndex, *argv): #settingsIndex is the index of the setting in file_settings
+    #*argv is for specifying the on/off text of the setting. Default is "On"/"Off"
+    Texthelper.write(screen, [(x, y), settingName + ":", 3])
+    if len(argv) > 0 and file_settings[settingsIndex]:
+        text = argv[0]
+    elif len(argv) > 0 and not file_settings[settingsIndex]:
+        text = argv[1]
+    elif file_settings[settingsIndex]:
+        text = "On"
+    else:
+        text = "Off"
+    if Texthelper.writeButton(screen, [(x + 400, y), text, 3]):
+        file_settings[settingsIndex] = not file_settings[settingsIndex]
 
 def optionsUI(screen, spacing, file_settings):
     status = "options"
@@ -653,49 +667,33 @@ def optionsUI(screen, spacing, file_settings):
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    Texthelper.write(screen, [(600, 400 + spacing), "Cheats:", 3])
-    if (file_settings[4]):
-        text = "Enabled"
-    else:
-        text = "Disabled"
-    if Texthelper.writeButton(screen, [(1000, 400 + spacing), text, 3]):
-        file_settings[4] = not file_settings[4]
+    drawSettingsOption(screen, "Cheats", 600, 400 + spacing * 1, file_settings, 4, "Enabled", "Disabled")
 
-    Texthelper.write(screen, [(600, 400 + spacing * 2), "Fullscreen:", 3])
-    if (file_settings[2]):
-        text = "On"
-    else:
-        text = "Off"
-    if Texthelper.writeButton(screen, [(1000, 400 + spacing * 2), text, 3]):
-        file_settings[2] = not file_settings[2]
+    drawSettingsOption(screen, "Fullscreen", 600, 400 + spacing * 2, file_settings, 2)
 
-    Texthelper.write(screen, [(600, 400 + spacing * 3), "Ship Drag:", 3])
-    if (file_settings[5]):
-        text = "On"
-    else:
-        text = "Off"
-    if Texthelper.writeButton(screen, [(1000, 400 + spacing * 3), text, 3]):
-        file_settings[5] = not file_settings[5]
+    drawSettingsOption(screen, "Ship Drag", 600, 400 + spacing * 3, file_settings, 5)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 4.5), "Reset Gamedata", 3], color = (178, 34, 34)):
+    drawSettingsOption(screen, "FPS Counter", 600, 400 + spacing * 4, file_settings, 6)
+
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 5.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 6), "Restore Default Settings", 3]):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 7), "Restore Default Settings", 3]):
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
         for i in range(len(file_settings)): #has to be like this becuase of scope
             file_settings[i] = default_settings[i]
 
+    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
+
     if Texthelper.writeButton(screen, [("center", 900), "Back", 2]):
         screen.fill((0, 0, 0))
         status = OptionsInput.backStatus
-
-    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
 
     pygame.display.flip()
     return status
