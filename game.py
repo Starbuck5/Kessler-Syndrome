@@ -630,7 +630,8 @@ def deleteObject(toDelete, delSector, width, height):
     object_list = getObjects(delSector, width, height)
     for i in range(0, len(object_list), 8):
         if object_list[i+4] == toDelete:
-            del object_list[i:i+8]
+            deletedex = i
+    del object_list[deletedex:deletedex+8]
     saveGame(delSector, object_list, width, height)
 
 ##d_stars = [100, 101, 102, 103, 104, 105]
