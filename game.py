@@ -88,8 +88,8 @@ class AITools():
         thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
         xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel / 3
         ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel / 3
-        object_list += [xpos, ypos, xmom, ymom, 7, RotationState(random.randint(0,360),
-                        random.randint(-10,10)), "NA", 1]
+        object_list += [xpos, ypos, xmom, ymom, 123, RotationState(random.randint(0,360),
+                        random.randint(-10,10)), AlienMineAI(), 1]
 
     #takes in the objectlist and two locations, uses the missile accel to find the angle for
     #the shooter to hit the target, taking into account both of their momentums
