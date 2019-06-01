@@ -545,6 +545,20 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
                 filehelper.setElement(7, 0, 3)
+            if filehelper.get(0)[3] == 7:
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "I'm in! We've transmitted an account of the President's crimes to the whole world.")
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "Oh boy you're in trouble now.")
+                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "Large inbound contact detected, seems to be holding position in sector 19.")
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "The president has come for us. You must go defeat her.")
+                filehelper.setElement(8, 0, 3)
             # quest handling
 
             # collision detection

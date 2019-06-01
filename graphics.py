@@ -193,6 +193,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     change_color(image, (0,0,0,255), (25,25,25,255))
     Images.add(110, image)
 
+    #adding president's ship
+    Images.addRotate(666, loadImage("Assets\\images\\protoprez2.gif"), colorkey=(255,255,255))
+
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
 ship = [1,5]
