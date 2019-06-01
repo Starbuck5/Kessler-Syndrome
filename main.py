@@ -755,7 +755,7 @@ def main():
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                                     loadSound("Assets\\announcements\\8r.ogg"),
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
-                                                     " cleaning zone. But wait… there's more! You're going to keep "
+                                                     " cleaning zone. But wait... there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
                                 discoverSector[sectornum] = True
 
