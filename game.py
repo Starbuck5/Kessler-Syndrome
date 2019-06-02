@@ -217,6 +217,9 @@ class DroneAI():
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
 
+class PrezAI(DroneAI):
+    pass
+
 class SpikeAI():
     def __init__(self):
         self.timer = -random.randint(0,300)

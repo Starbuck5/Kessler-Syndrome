@@ -558,6 +558,9 @@ def main():
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "The president has come for us. You must go defeat her.")
+                sector19 = getObjects(19, width, height)
+                sector19 += [width*0.5, height*0.5, 0, 0, 666, RotationState(0, 0), PrezAI(), 1]
+                saveGame(19, sector19, width, height)
                 filehelper.setElement(8, 0, 3)
             # quest handling
 
