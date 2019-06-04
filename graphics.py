@@ -142,6 +142,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
+    Images.add(200, scaleImage(loadImage("Assets\\images\\fuelstation.tif"), 2))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
 
