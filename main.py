@@ -629,9 +629,12 @@ def main():
                         elif ID1 in ship_id and ID2 == 123: #ship vs alienbomb
                             currentarmor -= 7
                             object_list[(i2*8)+6].explode(object_list, i2*8)
-                            explosion_sounds()                        
-                        #missile v asteroid or spiker or drone or alienbomb
-                        elif ID2 == 2 and (69 < ID1 < 100 or ID1 == 121 or ID1 == 120 or ID1 == 123): 
+                            explosion_sounds()
+                        elif ID2 == 2 and ID1 == 123: #missile vs alienbomb
+                            object_list[(i*8)+6].explode(object_list, i*8)
+                            explosion_sounds()
+                        #missile v asteroid or spiker or drone
+                        elif ID2 == 2 and (69 < ID1 < 100 or ID1 == 121 or ID1 == 120): 
                             printerlist_add += particlemaker(object_list[(i * 8)], object_list[1+(i * 8)],
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i2*8)+7] = -1
