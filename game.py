@@ -216,6 +216,9 @@ class DroneAI():
             self.progression = 4
                 
         elif self.progression == 4:
+            droneShip[5].setMomentum(0)
+            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*1.5
+            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*1.5
             if distance >= 400:
                 self.progression = 0
                 
