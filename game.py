@@ -106,7 +106,10 @@ class AITools():
             distance = (xdiff**2 + ydiff**2)**0.5
             if (xdiff**2 + ydiff**2)**0.5 < AITools.missile_accel * coolTicker:
                 colliding = True
-                angle = math.degrees(math.acos(xdiff/distance))
+                if (shooter[1] - target[1]) > 0:
+                    angle = math.degrees(math.acos(xdiff/distance))
+                else:
+                    angle = 360 - math.degrees(math.acos(xdiff/distance))
                 return angle
     
             if coolTicker > 5000:
@@ -135,6 +138,8 @@ class DroneAI():
         humanShip = object_list[0:8]
         
         if self.progression == 0:
+            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
+            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
             newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
             rotationMom = newRotation - droneShip[5].getRotation()
             newRotationMom = rotationMom - 360
@@ -159,7 +164,7 @@ class DroneAI():
             droneShip[2] = 0
             droneShip[3] = 0
             droneShip[5].setMomentum(0)
-            if self.shotCounter % 50 == 0:
+            if self.shotCounter % 25 == 0:
                 AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
             self.shotCounter += 1
             rotationDistance = abs(newRotation - droneShip[5].getRotation())
