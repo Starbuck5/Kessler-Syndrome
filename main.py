@@ -225,8 +225,7 @@ def main():
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
             if Texthelper.writeButtonBox(screen, [(410, 610), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
-                pygame.quit() #stop the program
-                raise SystemExit #close the program            
+                status = "exiting"         
             screen.blit(earthpic, (1500,800))
             pygame.display.flip()
             
@@ -336,6 +335,10 @@ def main():
             pygame.display.flip()
 
         if status == "exiting":
+            for i in range(1, 19):
+                print("SECTOR", i)
+                print(getObjects(i, 1920, 1080))
+                print("\n")
             pygame.quit()
             raise SystemExit
 
@@ -385,9 +388,22 @@ def main():
 
         if status == "gameinit":       
             # changing variable setup
-            sectornum = 1 #spawns you back in home sector every time game is re-initialized
-            #- maybe not the best approach but it works for now
-            object_list = getObjects(sectornum, width, height)
+
+            start_sector = -1
+            for i in range(1, 19):
+                if len(getObjects(i, width, height)) > 1:
+                    if getObjects(i, width, height)[4] == 1:
+                        start_sector = i
+                        break
+
+            if start_sector > 0:
+                object_list = getObjects(start_sector, width, height)
+                sectornum = start_sector
+            else:
+                print("we lost the ship, recreating now boss")
+                object_list = [width*0.5, height*0.3, 0, 0, 1, RotationState(90,0), "NA", 1] + getObjects(1, width, height)
+                sectornum = 1
+                                
             previous_tick = 0
             previous_tick2 = 0
             scalar1 = 0
@@ -720,7 +736,7 @@ def main():
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                                       d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                             else:
-                                object_list = object_list[:8] + new_objects[8:]
+                                object_list = object_list[:8] + new_objects
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),

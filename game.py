@@ -593,11 +593,12 @@ def dock(xpos, ypos, image):
     return (newXpos, newYpos, xmom, ymom, rotation)
 
 #wrapper for saveObjects that determines how to save a level
+#gets rid of the first entity in the list automatically, assuming that is the ship
 def saveGame(sectornum, object_list, width, height):
     if sectorGeneration(sectornum):
         saveObjects(sectornum, [-1], width, height)
     else:
-        saveObjects(sectornum, object_list[:], width, height)
+        saveObjects(sectornum, object_list[8:], width, height)
 
 def processListForSave(save_list, width, height):
     for i in range(len(save_list)):
