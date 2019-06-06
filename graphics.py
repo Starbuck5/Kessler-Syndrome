@@ -142,6 +142,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
+    Images.add(200, scaleImage(loadImage("Assets\\images\\fuelstation.tif"), 2))
     Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
 
@@ -193,6 +194,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     change_color(image, (0,0,0,255), (25,25,25,255))
     Images.add(110, image)
 
+    #adding president's ship
+    Images.addRotate(666, loadImage("Assets\\images\\protoprez2.gif"), colorkey=(255,255,255))
+
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
 ship = [1,5]
@@ -214,11 +218,8 @@ SHIPSTATE = 1 #set in main, controls which of the durability stages of the ship 
 #the nuts and bolts of printing the things    
 def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame, special): 
     colliderect = ""
-    if 99 < object_number < 110: #draws stars
-        image = Images.get(object_number)
-        screen.blit(image, (xpos, ypos))
-        
-    elif object_number == 0: #draws zvezda
+    
+    if object_number == 0: #draws zvezda
         image = Images.get(0)
         screen.blit(image, (xpos, ypos))
             
@@ -250,11 +251,6 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
         colliderect = Images.getHitbox(xpos, ypos, 9, rotation.getRotation())
         Images.scaleHitbox(colliderect, scale)  
             
-    elif object_number == 110: #draws derelict ship
-        image = Images.get(110)
-        screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
-        colliderect = Images.getHitbox(xpos, ypos, 110, rotation.getRotation())
-
     elif object_number == 123:
         image = Images.get(special.getFrameNum(), rotation.getRotation())
         screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
@@ -262,7 +258,10 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
 
     else:
         try:
-            image = Images.get(object_number, rotation.getRotation())
+            if rotation.getRotating():
+                image = Images.get(object_number, rotation.getRotation())
+            else:
+                image = Images.get(object_number)
             screen.blit(image, (int(xpos-0.5*image.get_width()), int(ypos-0.5*image.get_height())))
             colliderect = Images.getHitbox(xpos, ypos, object_number, rotation.getRotation())
         except:

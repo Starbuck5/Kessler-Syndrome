@@ -53,12 +53,12 @@ class CollisionInfo:
     everyHitbox = []
 
     #called once per tick, gets all the hitboxes ready for examination
-    def prime(object_list, scalar3, graphlist, DEVMODE):
+    def prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings):
         CollisionInfo.everyHitbox = []
         for i in range(int(len(object_list)/8)):
             hitbox = getHitbox(object_list, i, scalar3, graphlist)
             CollisionInfo.everyHitbox.append(hitbox)
-            if DEVMODE:
+            if DEVMODE and cheats_settings[5]:
                pygame.draw.rect(screen, (255,255,255), hitbox, 1)
 
     #tests if two objects collide by location in the object list and returns a boolean
@@ -107,6 +107,7 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat5.tif"), 0.9*sat_scalar),
                  "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  loadImage("Assets\\images\\solarpanel.tif"), temp_image,
+                 scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
 
@@ -152,7 +153,8 @@ def main():
 
     # variable setup
     playerinfo = filehelper.get(1)
-    d_parts = [30, 31, 32]
+    cheats_settings = filehelper.get(5)
+    d_parts = [30, 31, 32, 33]
     d_sats = [10, 11, 12, 13, 14]
     d_asteroids = [70, 71, 72, 73, 80, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97]
     d_aliens = [120, 121, 122, 123]
@@ -267,7 +269,7 @@ def main():
             status = "options"
 
         if status == "options":
-            status = optionsUI(screen, 50, file_settings) 
+            status = optionsUI(screen, file_settings) 
 
             inputvar = keyboard()
             if "escape" in inputvar:
@@ -283,39 +285,49 @@ def main():
 
             pygame.display.flip()
 
+        if status == "cheatsmenu":
+            status = cheatsMenuUI(screen, cheats_settings)
+
+            if status != "cheatsmenu":
+                timer_popupmenu = 0
+                filehelper.set(cheats_settings, 5)
+
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
             Font.set_scramble_paused(True) #pauses any scrambling going on
             Screenhelper.greyOut(screen)
-            mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)      
+            mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, cheats_settings, clearedSector)      
 
             pygame.display.flip()
             status = "mapscreen"
 
         if status == "mapscreen":
-            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, clearedSector)
+            status = mapscreenUI(screen, sector_map_coordinates, discoverSector, sectornum, DEVMODE, cheats_settings, clearedSector)
             inputvar = keyboard()
 
             if ("m" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
                 timer_popupmenu = 0
 
-            if DEVMODE:
+            if DEVMODE and cheats_settings[3]:
+                Texthelper.write(screen, [(250, 200), "Click on a sector", 2.5], color = (125, 15, 198))
+                Texthelper.write(screen, [(250, 250), "to teleport", 2.5], color = (125, 15, 198))
                 for i in sector_map_coordinates.keys():
-                    if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
-                                                        sector_map_coordinates[i][1] - 15), str(i), 2]):
-                        saveGame(sectornum, object_list, width, height)
-                        sectornum = i
-                        lasttransit = 0
-                        new_objects = getObjects(sectornum, width, height)
-                        if new_objects[0] == -1 and len(new_objects)<8:
-                            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                d_sats, d_parts, d_asteroids, d_fighters, sectornum)
-                        else:
-                            object_list = object_list[:8] + new_objects[8:]
-                        object_list[2] = 0  #kills momentum
-                        object_list[3] = 0
-                        status = "game"
+                    if discoverSector[i] or cheats_settings[4]:
+                        if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
+                                                            sector_map_coordinates[i][1] - 15), str(i), 2]):
+                            saveGame(sectornum, object_list, width, height)
+                            sectornum = i
+                            lasttransit = 0
+                            new_objects = getObjects(sectornum, width, height)
+                            if new_objects[0] == -1 and len(new_objects)<8:
+                                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                    d_sats, d_parts, d_asteroids, d_fighters, sectornum)
+                            else:
+                                object_list = object_list[:8] + new_objects[8:]
+                            object_list[2] = 0  #kills momentum
+                            object_list[3] = 0
+                            status = "game"
 
             if status != "mapscreen":
                 pygame.mouse.set_visible(False)
@@ -533,10 +545,27 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
                 filehelper.setElement(7, 0, 3)
+            if filehelper.get(0)[3] == 7:
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "I'm in! We've transmitted an account of the President's crimes to the whole world.")
+                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "Oh boy you're in trouble now.")
+                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "Large inbound contact detected, seems to be holding position in sector 19.")
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "The president has come for us. You must go defeat her.")
+                sector19 = getObjects(19, width, height)
+                sector19 += [width*0.5, height*0.5, 0, 0, 666, RotationState(0, 0), PrezAI(), 1]
+                saveGame(19, sector19, width, height)
+                filehelper.setElement(8, 0, 3)
             # quest handling
 
             # collision detection
-            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE)
+            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings)
             numExaminations = int(len(object_list)/8)
             for i in range(numExaminations):
                 i2 = i + 1
@@ -596,6 +625,13 @@ def main():
                             else:
                                 currentarmor = currentarmor - (int(force) - 5)
                                 Font.scramble(100) #scrambles text for 100 ticks
+                            explosion_sounds()                       
+                        elif ID1 in ship_id and ID2 == 123: #ship vs alienbomb
+                            currentarmor -= 7
+                            object_list[(i2*8)+6].explode(object_list, i2*8)
+                            explosion_sounds()
+                        elif ID2 == 2 and ID1 == 123: #missile vs alienbomb
+                            object_list[(i*8)+6].explode(object_list, i*8)
                             explosion_sounds()
                         #missile v asteroid or spiker or drone
                         elif ID2 == 2 and (69 < ID1 < 100 or ID1 == 121 or ID1 == 120): 
@@ -725,7 +761,7 @@ def main():
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                                     loadSound("Assets\\announcements\\8r.ogg"),
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
-                                                     " cleaning zone. But wait… there's more! You're going to keep "
+                                                     " cleaning zone. But wait... there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
                                 discoverSector[sectornum] = True
 
@@ -758,9 +794,12 @@ def main():
 
             #HACKZ
             if DEVMODE:
-                currentfuel = totalfuel
-                currentarmor = totalarmor
-                ammunition = totalammunition
+                if cheats_settings[0]:
+                    currentarmor = totalarmor
+                if cheats_settings[1]: 
+                    currentfuel = totalfuel
+                if cheats_settings[2]:
+                    ammunition = totalammunition
                 
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
@@ -804,6 +843,8 @@ def main():
             if file_settings[6]:
                 Texthelper.write(screen, [(file_settings[0] - 50, 10), str(round(clock.get_fps())), 2]) 
             flame = False
+            if DEVMODE:
+                Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
        

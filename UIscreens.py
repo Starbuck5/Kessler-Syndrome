@@ -581,13 +581,13 @@ def drawPauseUI(screen, mode):
     pygame.display.flip()
     return status
 
-def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DEVMODE, clearedSector):
+def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DEVMODE, cheats_settings, clearedSector):
     status = "mapscreen"
 
     line_color = (255, 255, 255)
     infinitypic = graphics.Images.get("infinity")
     for i in sector_map_coordinates.keys():
-        if discoveredSectors[i] or DEVMODE: #only visited sectors are drawn
+        if discoveredSectors[i] or (DEVMODE and cheats_settings[4]): #only visited sectors are drawn
             graphics.drawSector(screen, sector_map_coordinates[i], i, sectornum, clearedSector[i])
             if game.sectorGeneration(i): #draws infinity signs on map if regenerating sector
                 screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
@@ -638,42 +638,47 @@ def optionsUIinit(screen, file_settings):
     pygame.mouse.set_visible(True)
     OptionsInput([file_settings[0], file_settings[1]])
 
-def drawSettingsOption(screen, settingName, x, y, file_settings, settingsIndex, *argv): #settingsIndex is the index of the setting in file_settings
-    #*argv is for specifying the on/off text of the setting. Default is "On"/"Off"
+def drawSettingsOption(screen, settingName, x, x2, y, file_settings, settingsIndex, **kwargs): #settingsIndex is the index of the setting in file_settings
+    #kwargs are for specifying the on/off text of the setting. Default is "On"/"Off"
     Texthelper.write(screen, [(x, y), settingName + ":", 3])
-    if len(argv) > 0 and file_settings[settingsIndex]:
-        text = argv[0]
-    elif len(argv) > 0 and not file_settings[settingsIndex]:
-        text = argv[1]
-    elif file_settings[settingsIndex]:
-        text = "On"
+    if file_settings[settingsIndex]:
+        if 'ontext' in kwargs:
+            text = kwargs['ontext']
+        else:
+            text = "On"
     else:
-        text = "Off"
-    if Texthelper.writeButton(screen, [(x + 400, y), text, 3]):
+        if 'offtext' in kwargs:
+            text = kwargs['offtext']
+        else:
+            text = "Off"
+    if Texthelper.writeButton(screen, [(x2, y), text, 3]):
         file_settings[settingsIndex] = not file_settings[settingsIndex]
 
-def optionsUI(screen, spacing, file_settings):
+def optionsUI(screen, file_settings):
     status = "options"
+    spacing = 50
 
     screen.fill((0, 0, 0))
+
+    if file_settings[4] and Texthelper.writeButton(screen, [(1250, 456), "[Cheats settings?]", 2], color = (125, 15, 198)):
+        status = "cheatsmenu"
 
     Texthelper.write(screen, [("center", 200), "Options", 6])
 
     Texthelper.write(screen, [(600, 400), "Resolution:", 3])
-
     OptionsInput.width.update(screen)
     OptionsInput.height.update(screen)
     Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    drawSettingsOption(screen, "Cheats", 600, 400 + spacing * 1, file_settings, 4, "Enabled", "Disabled")
+    drawSettingsOption(screen, "Cheats", 600, 1000, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
 
-    drawSettingsOption(screen, "Fullscreen", 600, 400 + spacing * 2, file_settings, 2)
+    drawSettingsOption(screen, "Fullscreen", 600, 1000, 400 + spacing * 2, file_settings, 2)
 
-    drawSettingsOption(screen, "Ship Drag", 600, 400 + spacing * 3, file_settings, 5)
+    drawSettingsOption(screen, "Ship Drag", 600, 1000, 400 + spacing * 3, file_settings, 5)
 
-    drawSettingsOption(screen, "FPS Counter", 600, 400 + spacing * 4, file_settings, 6)
+    drawSettingsOption(screen, "FPS Counter", 600, 1000, 400 + spacing * 4, file_settings, 6)
 
     if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 5.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
@@ -698,3 +703,31 @@ def optionsUI(screen, spacing, file_settings):
     pygame.display.flip()
     return status
 
+def cheatsMenuUI(screen, cheats_settings):
+    status = "cheatsmenu"
+    spacing = 50
+
+    screen.fill((0, 0, 0))
+
+    Texthelper.write(screen, [("center", 200), "Cheats Options", 6], color = (125, 15, 198))
+
+    drawSettingsOption(screen, "Infinite Armor", 600, 1100, 400, cheats_settings, 0)
+
+    drawSettingsOption(screen, "Infinite Fuel", 600, 1100, 400 + spacing * 1, cheats_settings, 1)
+
+    drawSettingsOption(screen, "Infinite Ammo", 600, 1100, 400 + spacing * 2, cheats_settings, 2)
+
+    drawSettingsOption(screen, "Teleportation", 600, 1100, 400 + spacing * 3, cheats_settings, 3, ontext = "Enabled", offtext = "Disabled")
+
+    drawSettingsOption(screen, "Map Visibility", 600, 1100, 400 + spacing * 4, cheats_settings, 4)
+
+    drawSettingsOption(screen, "Hitboxes", 600, 1100, 400 + spacing * 5, cheats_settings, 5, ontext = "Visible", offtext = "Not Visible")
+
+    if not any(cheats_settings):
+        Texthelper.write(screen, [("center", 800), "What's the point of cheats if everything's turned off?", 3], color = (125, 15, 198))
+
+    if Texthelper.writeButton(screen, [("center", 900), "Back", 2]):
+        status = "optionsinit"
+
+    pygame.display.flip()
+    return status

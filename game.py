@@ -88,8 +88,8 @@ class AITools():
         thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
         xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel / 3
         ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel / 3
-        object_list += [xpos, ypos, xmom, ymom, 7, RotationState(random.randint(0,360),
-                        random.randint(-10,10)), "NA", 1]
+        object_list += [xpos, ypos, xmom, ymom, 123, RotationState(random.randint(0,360),
+                        random.randint(-10,10)), AlienMineAI(), 1]
 
     #takes in the objectlist and two locations, uses the missile accel to find the angle for
     #the shooter to hit the target, taking into account both of their momentums
@@ -222,6 +222,9 @@ class DroneAI():
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
 
+class PrezAI(DroneAI):
+    pass
+
 class SpikeAI():
     def __init__(self):
         self.timer = -random.randint(0,300)
@@ -258,6 +261,12 @@ class AlienMineAI():
     def getFrameNum(self):
         num = self.getFrame()
         return 123 + num/100
+
+    #releases a bunch of spikes and destroys the entity
+    def explode(self, object_list, self_loc):
+        for i in range(15):
+            AITools.shoot(object_list, self_loc, i*24, 122)
+        object_list[self_loc + 7] = -1
         
              
 #particle effects
@@ -360,7 +369,7 @@ def generateStars(width, height):
     possible_IDs = [100, 100, 100, 101, 101, 102, 102, 103, 104, 105]
     for i in range(random.randint(45, 55)):
         ID = possible_IDs[random.randint(0, len(possible_IDs)-1)]
-        stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, RotationState(-1,-1), "NA", 1]
+        stars_list += [random.randint(0,width), random.randint(0,height), 0, 0, ID, RotationState("NA","NA"), "NA", 1]
     return stars_list
 
 #leveler
@@ -603,14 +612,14 @@ def processListForSave(save_list, width, height):
 def saveObjects(sectornum, save_list, width, height):
     processListForSave(save_list, width, height)
     
-    resave_list = filehelper.loadObj(5)
+    resave_list = filehelper.loadObj(6)
     resave_list[sectornum-1] = save_list
 
-    filehelper.saveObj(resave_list, 5)
+    filehelper.saveObj(resave_list, 6)
 
 #extracts the list saveObjects saved to file
 def getObjects(sectornum, width, height):
-    object_list = filehelper.loadObj(5)[sectornum-1]
+    object_list = filehelper.loadObj(6)[sectornum-1]
             
     # turning x and y float percentages back into coords
     if len(object_list) >= 8:
@@ -629,15 +638,18 @@ def deleteObject(toDelete, delSector, width, height):
     object_list = getObjects(delSector, width, height)
     for i in range(0, len(object_list), 8):
         if object_list[i+4] == toDelete:
-            del object_list[i:i+8]
+            deletedex = i
+    del object_list[deletedex:deletedex+8]
     saveGame(delSector, object_list, width, height)
 
-##d_stars = [100, 101, 102, 103, 104, 105]
-##newstars = generateStars(1920,1080)
-##sector1 = getObjects(11, 1920, 1080)
-##for i in range(0, len(sector1), 8):
-##    if sector1[i+4] in d_stars:
-##        sector1[i+7] = -1
-##sector1 = deaderizer(sector1)
-##sector1 += newstars
-##saveObjects(11, sector1, 1920, 1080)
+#mini program to replace the star fields of pre-generated sectors when star generation is changed
+def _changeStars(sectornum):
+    d_stars = [100, 101, 102, 103, 104, 105]
+    newstars = generateStars(1920,1080)
+    sector1 = getObjects(sectornum, 1920, 1080)
+    for i in range(0, len(sector1), 8):
+        if sector1[i+4] in d_stars:
+            sector1[i+7] = -1
+    sector1 = deaderizer(sector1)
+    sector1 += newstars
+    saveObjects(sectornum, sector1, 1920, 1080)
