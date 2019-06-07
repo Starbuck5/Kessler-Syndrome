@@ -1,5 +1,6 @@
 import random
 import math
+import graphics
 from pgx import loadImage
 from pgx import spriteSheetBreaker
 from pgx import scaleImage
@@ -591,6 +592,17 @@ def dock(xpos, ypos, image):
     xmom = 0
     ymom = -0.5
     return (newXpos, newYpos, xmom, ymom, rotation)
+
+def updateShipGraphics(currentarmor, totalarmor):
+    armorPercent = currentarmor / totalarmor * 100
+    if armorPercent <= 30:
+        graphics.SHIPSTATE = 4
+    elif armorPercent <= 60:
+        graphics.SHIPSTATE = 3
+    elif armorPercent <= 90:
+        graphics.SHIPSTATE = 2
+    else:
+        graphics.SHIPSTATE = 1    
 
 #wrapper for saveObjects that determines how to save a level
 def saveGame(sectornum, object_list, width, height):

@@ -221,10 +221,12 @@ def main():
             # buttons
             if Texthelper.writeButtonBox(screen, [(410, 490), "Play", 3]):
                 status = "gameinit"
-            if Texthelper.writeButtonBox(screen, [(410, 550), "Options", 3]):
+            if Texthelper.writeButtonBox(screen, [(410, 550), "Arcade Mode [Beta]", 3]):
+                status = "arcadeinit"
+            if Texthelper.writeButtonBox(screen, [(410, 610), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(410, 610), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(410, 670), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 pygame.quit() #stop the program
                 raise SystemExit #close the program            
             screen.blit(earthpic, (1500,800))
@@ -460,11 +462,7 @@ def main():
             
             status = "game"
 
-        if status == "game":
-            screen.fill(color)
-            AnnouncementBox.play(screen)
-            Font.timerhelper() #once a game loop update to a scramble timer
-            
+        if status == "game" or status == "arcade":            
             # input handling
             inputvar = keyboard()
             ticks = pygame.time.get_ticks()
@@ -507,17 +505,16 @@ def main():
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360 and file_settings[4]:
                     DEVMODE = not DEVMODE #switches booleans
                     previous_tick2 = ticks
-                if "shift" in inputvar and "f" in inputvar and (ticks - previous_tick2) > 360:
-                    colorA = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-                    while colorA[0] + colorA[1] + colorA[2] > 150:
-                        colorA = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-                    Font.changeColor(colorA)
-                    previous_tick2 = ticks
                 if "t" in inputvar and timer_portal_toggle > 30:
                     portal_toggle = not portal_toggle
                     timer_portal_toggle = 0
             # input handling
-
+        
+        if status == "game":
+            screen.fill(color)
+            AnnouncementBox.play(screen)
+            Font.timerhelper() #once a game loop update to a scramble timer
+            
             # quest handling
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
@@ -826,16 +823,8 @@ def main():
             doPhysics(object_list)
 
             #ship durability state
-            armorPercent = currentarmor / totalarmor * 100
-            if armorPercent <= 30:
-                graphics.SHIPSTATE = 4
-            elif armorPercent <= 60:
-                graphics.SHIPSTATE = 3
-            elif armorPercent <= 90:
-                graphics.SHIPSTATE = 2
-            else:
-                graphics.SHIPSTATE = 1
-
+            updateShipGraphics(currentarmor, totalarmor)
+            
             # printer
             graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
@@ -847,7 +836,50 @@ def main():
                 Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
-       
+
+        if status == "arcadeinit":
+            object_list = [0.5, 0.5, 0, 0, 1, RotationState(90,0), "NA", 1] #constructing a ship
+            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
+                                  d_asteroids, d_fighters, sectornum)
+            status = "arcade"
+
+        if status == "arcade":
+            screen.fill(color)
+            AnnouncementBox.play(screen)
+            Font.timerhelper() #once a game loop update to a scramble timer
+
+            #special entity behaviors
+            for i in range(0, len(object_list), 8):
+                if not isinstance(object_list[i+6], str):
+                    try:
+                        object_list[i+6].update(object_list, i)
+                    except:
+                       pass
+
+            # deaderizer
+            object_list = deaderizer(object_list)
+            
+            # fuel consumption
+            if flame:
+                currentfuel -= 1
+
+            #physics!
+            doPhysics(object_list)
+
+            #ship durability state
+            updateShipGraphics(currentarmor, totalarmor)
+            
+            # printer
+            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
+            graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
+            graphics.drawInventory(screen, shipInventory)
+            if file_settings[6]:
+                Texthelper.write(screen, [(file_settings[0] - 50, 10), str(round(clock.get_fps())), 2]) 
+            flame = False
+            if DEVMODE:
+                Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
+            pygame.display.flip()
+        
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
                 running = False
