@@ -9,78 +9,10 @@ from game import *
 import game
 from UIscreens import *
 import graphics
+import Collisions
+from Collisions import explosion_sounds
                                                 
-#backened for collinfo, returns hitboxes when given an index of the objectlist
-def getHitbox(object_list, object_location, scalar3, graphlist):
-    xpos = object_list[object_location*8]
-    ypos = object_list[1+object_location*8]
-    objectID = object_list[4+object_location*8]
-    rotation = object_list[5+object_location*8]
-    
-    hitBox = [xpos, ypos, 0,0]
-    if objectID == 1 or objectID == 5: #main ship
-        #objectID as 1.1 because thats full health ship and ship size doesn't change between states
-        hitBox = graphics.Images.getHitbox(xpos, ypos, 1.1, -rotation.getRotation(), True, True, True)
-    elif objectID == 2 or objectID == 8 or objectID == 4: #shots and debris particles
-        hitBox = [xpos-2, ypos-2, 4, 4]
-    elif objectID == 6: #aliens
-        hitBox = [xpos, ypos, 60, 60]
-    elif objectID == 0: #zvezda
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation(), False)
-    elif 9 < objectID < 40: #pixel things
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-    elif objectID == 7: #alien mines
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-    elif objectID == 9: #mine explosion
-        scale = 1 + (.1 * (300 - object_list[object_location*8+7]))
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-        graphics.Images.scaleHitbox(hitBox, scale)     
-    elif 69 < objectID < 100: #asteroids
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-    elif objectID == 110: #derelict ship
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-    elif objectID == 120: #alien drone
-        hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-    else:
-        try:
-            hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
-        except:
-            pass
-    return hitBox
-
-#helps out the collision detection section of main
-class CollisionInfo:
-    everyHitbox = []
-
-    #called once per tick, gets all the hitboxes ready for examination
-    def prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings):
-        CollisionInfo.everyHitbox = []
-        for i in range(int(len(object_list)/8)):
-            hitbox = getHitbox(object_list, i, scalar3, graphlist)
-            CollisionInfo.everyHitbox.append(hitbox)
-            if DEVMODE and cheats_settings[5]:
-               pygame.draw.rect(screen, (255,255,255), hitbox, 1)
-
-    #tests if two objects collide by location in the object list and returns a boolean
-    def doCollide(object_number1, object_number2, object_list):
-        if object_number1 != object_number2: #exempts object intersecting itself
-            hitBox1 = CollisionInfo.everyHitbox[object_number1]
-            hitBox2 = CollisionInfo.everyHitbox[object_number2]
-            if hitBox1[2] != 0 and hitBox1[3] != 0 and hitBox2[2] != 0 and hitBox1[3] != 0:
-                if pygame.Rect(hitBox1).colliderect(pygame.Rect(hitBox2)):
-                    return True
-        return False
-
-#sound effects for collision        
-def explosion_sounds():
-    explosion_picker = random.randint(0,1)
-    if explosion_picker == 0:
-        SoundVault.play('explosion1')
-    if explosion_picker == 1:
-        SoundVault.play('explosion2')
-     
 def main():
-    global screen
     file_settings = filehelper.get(0) #grabs settings from file
 
     #sets adjustable settings
@@ -561,13 +493,14 @@ def main():
                 filehelper.setElement(8, 0, 3)
             # quest handling
 
+        if status == "game" or status == "arcade":
             # collision detection
-            CollisionInfo.prime(object_list, scalar3, graphlist, DEVMODE, cheats_settings)
+            Collisions.prime(object_list, screen, graphlist, DEVMODE, cheats_settings)
             numExaminations = int(len(object_list)/8)
             for i in range(numExaminations):
                 i2 = i + 1
                 while i2 < numExaminations:                   
-                    if CollisionInfo.doCollide(i, i2, object_list):
+                    if Collisions.doCollide(i, i2, object_list):
                         printerlist_add = []
                         drops = [0,0,0,0] #why is this here?
                         ID1 = object_list[4+(i*8)]
@@ -688,6 +621,7 @@ def main():
                     i2 += 1            
             # collision detection
 
+        if status == "game":
             #special entity behaviors
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
