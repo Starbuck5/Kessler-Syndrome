@@ -11,6 +11,8 @@ from UIscreens import *
 import graphics
 import Collisions
 from Collisions import explosion_sounds
+
+upgrades = Filehelper("assets\\data\\upgrades.txt")
                                                 
 def main():
     file_settings = filehelper.get(0) #grabs settings from file
@@ -324,13 +326,11 @@ def main():
             object_list = getObjects(sectornum, width, height)
             previous_tick = 0
             previous_tick2 = 0
-            scalar1 = 0
             pygame.mouse.set_visible(False)
             #inventory
             shipInventory = [0,0,0,0]
 
             #fuel and armor and ammunition
-            upgrades = Filehelper("assets\\data\\upgrades.txt")
             ShipLv = filehelper.get(3)
             fuelHelp = upgrades.get(ShipLv[1]+20)
             totalfuel = fuelHelp[4]
@@ -760,7 +760,7 @@ def main():
             updateShipGraphics(currentarmor, totalarmor)
             
             # printer
-            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
+            graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
             graphics.drawInventory(screen, shipInventory)
             if file_settings[6]:
@@ -774,7 +774,24 @@ def main():
         if status == "arcadeinit":
             object_list = [0.5, 0.5, 0, 0, 1, RotationState(90,0), "NA", 1] #constructing a ship
             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
-                                  d_asteroids, d_fighters, sectornum)
+                                  d_asteroids, d_fighters, 1)
+            arcade_level = 1
+
+            ShipLv = [1,1,1,0]
+            fuelHelp = upgrades.get(ShipLv[1]+20)
+            totalfuel = fuelHelp[4]
+            currentfuel = totalfuel
+            armorHelp = upgrades.get(ShipLv[0])
+            totalarmor = armorHelp[4]
+            currentarmor = totalarmor
+            totalammunition = 0
+            if ShipLv[2] == 0:
+                totalammunition = 0
+            else:
+                ammunitionHelp = upgrades.get(ShipLv[2]+40)
+                totalammunition = ammunitionHelp[4]
+            ammunition = totalammunition
+
             status = "arcade"
 
         if status == "arcade":
@@ -792,10 +809,24 @@ def main():
 
             # deaderizer
             object_list = deaderizer(object_list)
-            
+
+            #progression
+            numdebris = 0
+            for i in range(0, len(object_list), 8):
+                if object_list[i+4] in d_debris:
+                    numdebris += 1
+            if numdebris == 0:
+                arcade_level += 1
+                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
+                                  d_asteroids, d_fighters, arcade_level)
+                        
             # fuel consumption
             if flame:
                 currentfuel -= 1
+
+            #ship death
+            if currentarmor <= 0 or currentfuel <= 0:
+                status = "menuinit"
 
             #physics!
             doPhysics(object_list)
@@ -804,7 +835,7 @@ def main():
             updateShipGraphics(currentarmor, totalarmor)
             
             # printer
-            graphics.printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame)
+            graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
             graphics.drawInventory(screen, shipInventory)
             if file_settings[6]:

@@ -216,7 +216,7 @@ def reorderObjectList(object_list):
 SHIPSTATE = 1 #set in main, controls which of the durability stages of the ship prints (not always 1)
 
 #the nuts and bolts of printing the things    
-def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar, flame, special): 
+def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar3, graphlist, scalarscalar, flame, special): 
     colliderect = ""
     
     if object_number == 0: #draws zvezda
@@ -270,7 +270,7 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1,
     return colliderect
 
 #takes care of the printing logic
-def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flame):
+def printer(screen, object_list, scalar3, graphlist, scalarscalar, flame):
     object_list = reorderObjectList(object_list)
     #needed for testing which direction things are off the screen
     width, height = screen.get_size()
@@ -287,7 +287,7 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flam
         special = object_list[i+6]
         decayLife = object_list[i+7]
         
-        colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
+        colliderect = crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar3, graphlist, scalarscalar,
                                   flame, special)
         if colliderect:
             if not screen.get_rect().contains(colliderect):
@@ -301,7 +301,7 @@ def printer(screen, object_list, scalar1, scalar3, graphlist, scalarscalar, flam
                 elif down.colliderect(colliderect):
                     ypos -= height
                 
-                crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar1, scalar3, graphlist, scalarscalar,
+                crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar3, graphlist, scalarscalar,
                             flame, special)
 
 #flashing alerts for low fuel and armor
