@@ -238,7 +238,7 @@ def main():
             drawPauseUI(screen, True)
             
             #saving objectlist, sector achievements data
-            saveGame(sectornum, object_list[:], width, height)
+            saveGame(sectornum, object_list, width, height)
             discovery = list("8" * len(sector_map_coordinates))
             for i in discoverSector.keys():
                 if discoverSector[i]:
@@ -315,7 +315,7 @@ def main():
                     if discoverSector[i] or cheats_settings[4]:
                         if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
                                                             sector_map_coordinates[i][1] - 15), str(i), 2]):
-                            saveGame(sectornum, object_list, width, height)
+                            saveGame(sectornum, object_list[8:], width, height)
                             sectornum = i
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
@@ -335,7 +335,8 @@ def main():
             pygame.display.flip()
 
         if status == "exiting":
-            for i in range(1, 19):
+            ## sector object list visualizer ##
+            for i in range(1, 20):
                 print("SECTOR", i)
                 print(getObjects(i, 1920, 1080))
                 print("\n")
@@ -392,7 +393,7 @@ def main():
             start_sector = -1
             for i in range(1, 19):
                 if len(getObjects(i, width, height)) > 1:
-                    if getObjects(i, width, height)[4] == 1:
+                    if getObjects(i, width, height)[4] in ship_id:
                         start_sector = i
                         break
 
@@ -728,15 +729,14 @@ def main():
                         isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        
                         if isValidTransfer and isValidTime and isValidCollision:
                             SoundVault.play('portal')
-                            saveGame(sectornum, object_list, width, height)
+                            saveGame(sectornum, object_list[8:], width, height)
                             sectornum = destinations[i]
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
-                            if new_objects[0] == -1 and len(new_objects)<8:
-                                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                            if new_objects == ["PLEASE GENERATE"]:
+                                new_objects = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                                       d_sats, d_parts, d_asteroids, d_fighters, sectornum)
-                            else:
-                                object_list = object_list[:8] + new_objects
+                            object_list = object_list[:8] + new_objects
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
@@ -819,11 +819,12 @@ def main():
                 
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
-                saveGame(sectornum, object_list, width, height)
+                saveGame(sectornum, object_list[8:], width, height)
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 SoundVault.play('death')
-                object_list[7] = -10
+                object_list[4] = 5   #sets the ship to be objID 5 for 200 ticks
+                object_list[7] = 200 #meaning the player is paralyzed
                 currentfuel = totalfuel
                 currentarmor = totalarmor
                 shipInventory = [0,0,0,0]
@@ -832,11 +833,13 @@ def main():
 
             if timer_shipdeath == 200:
                 sectornum = 1
-                object_list = getObjects(sectornum, width, height)
+                shipObj = object_list[:8]
+                object_list = shipObj + getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2
                 object_list[2] = 0
                 object_list[3] = 0
+                object_list[4] = 1
 
             #physics!
             doPhysics(object_list)

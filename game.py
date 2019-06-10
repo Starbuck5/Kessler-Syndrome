@@ -593,14 +593,14 @@ def dock(xpos, ypos, image):
     return (newXpos, newYpos, xmom, ymom, rotation)
 
 #wrapper for saveObjects that determines how to save a level
-#gets rid of the first entity in the list automatically, assuming that is the ship
+#if ship_id is changed, this function needs to be changed as well
 def saveGame(sectornum, object_list, width, height):
-    if sectorGeneration(sectornum):
+    if sectorGeneration(sectornum) and object_list[4] not in [1, 5]:
         saveObjects(sectornum, [-1], width, height)
     else:
-        saveObjects(sectornum, object_list[8:], width, height)
+        saveObjects(sectornum, object_list[:], width, height)
 
-def processListForSave(save_list, width, height):
+def _processListForSave(save_list, width, height):
     for i in range(len(save_list)):
         if isinstance(save_list[i], float):
             save_list[i] = round(save_list[i], 1)
@@ -614,17 +614,14 @@ def processListForSave(save_list, width, height):
 
 #saves objectlist to file by breaking it into a maximum of 5 lines
 def saveObjects(sectornum, save_list, width, height):
-    processListForSave(save_list, width, height)
+    _processListForSave(save_list, width, height)
     
     resave_list = filehelper.loadObj(6)
     resave_list[sectornum-1] = save_list
 
     filehelper.saveObj(resave_list, 6)
 
-#extracts the list saveObjects saved to file
-def getObjects(sectornum, width, height):
-    object_list = filehelper.loadObj(6)[sectornum-1]
-            
+def _processListFromSave(object_list, width, height):
     # turning x and y float percentages back into coords
     if len(object_list) >= 8:
         for i in range(len(object_list)):
@@ -632,9 +629,22 @@ def getObjects(sectornum, width, height):
                 object_list[i] = round(object_list[i]*width)     
             if i % 8 == 1:
                 object_list[i] = round(object_list[i]*height)
-    for i in range(int(len(object_list)/8)):
-        if object_list[4+i*8] == 2 or object_list[4+i*8] == 8:
-            object_list[6+i*8] = -10 #gets rid of shots and alien shots when entering a sector
+
+#extracts the list saveObjects saved to file
+def getObjects(sectornum, width, height):
+    object_list = filehelper.loadObj(6)[sectornum-1]
+
+    if object_list == [-1]:
+        object_list = ["PLEASE GENERATE"]
+    if len(object_list) > 1:
+        if sectorGeneration(sectornum) and object_list[4] not in [1,5]:
+           object_list = ["PLEASE GENERATE"] 
+                    
+    if object_list != ["PLEASE GENERATE"]:
+        _processListFromSave(object_list, width, height)
+        for i in range(int(len(object_list)/8)):
+            if object_list[4+i*8] == 2 or object_list[4+i*8] == 8:
+                object_list[7+i*8] = -10 #gets rid of shots and alien shots when entering a sector
     return object_list
 
 #deletes everyinstance of toDelete type in the delSector - only changes the file doesn't change anything in play
@@ -657,3 +667,8 @@ def _changeStars(sectornum):
     sector1 = deaderizer(sector1)
     sector1 += newstars
     saveObjects(sectornum, sector1, 1920, 1080)
+
+#removing random ship that was in sector 11
+#obj = getObjects(11, 1920, 1080)
+#obj = obj[8:]
+#saveObjects(11, obj, 1920, 1080)
