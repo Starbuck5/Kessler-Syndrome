@@ -160,7 +160,7 @@ def main():
             if Texthelper.writeButtonBox(screen, [(410, 610), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(410, 610), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(410, 670), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 status = "exiting"         
 
             screen.blit(earthpic, (1500,800))
@@ -273,10 +273,10 @@ def main():
 
         if status == "exiting":
             ## sector object list visualizer ##
-            for i in range(1, 20):
-                print("SECTOR", i)
-                print(getObjects(i, 1920, 1080))
-                print("\n")
+            #for i in range(1, 20):
+            #    print("SECTOR", i)
+            #    print(getObjects(i, 1920, 1080))
+            #    print("\n")
             pygame.quit()
             raise SystemExit
 
