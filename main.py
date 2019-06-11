@@ -160,9 +160,9 @@ def main():
             if Texthelper.writeButtonBox(screen, [(410, 610), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(410, 670), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
-                pygame.quit() #stop the program
-                raise SystemExit #close the program            
+            if Texthelper.writeButtonBox(screen, [(410, 610), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+                status = "exiting"         
+
             screen.blit(earthpic, (1500,800))
             pygame.display.flip()
             
@@ -175,7 +175,7 @@ def main():
             drawPauseUI(screen, True)
             
             #saving objectlist, sector achievements data
-            saveGame(sectornum, object_list[:], width, height)
+            saveGame(sectornum, object_list, width, height)
             discovery = list("8" * len(sector_map_coordinates))
             for i in discoverSector.keys():
                 if discoverSector[i]:
@@ -252,19 +252,19 @@ def main():
                     if discoverSector[i] or cheats_settings[4]:
                         if Texthelper.writeButton(screen, [(sector_map_coordinates[i][0] - len(str(i)) * 10,
                                                             sector_map_coordinates[i][1] - 15), str(i), 2]):
-                            saveGame(sectornum, object_list, width, height)
+                            saveGame(sectornum, object_list[8:], width, height)
                             sectornum = i
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
-                            if new_objects[0] == -1 and len(new_objects)<8:
+                            if new_objects == ["PLEASE GENERATE"]:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                    d_sats, d_parts, d_asteroids, d_fighters, sectornum)
+                                                      d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                             else:
-                                object_list = object_list[:8] + new_objects[8:]
+                                object_list = object_list[:8] + new_objects
                             object_list[2] = 0  #kills momentum
                             object_list[3] = 0
                             status = "game"
-
+                            
             if status != "mapscreen":
                 pygame.mouse.set_visible(False)
                 Font.set_scramble_paused(False) #resumes any scrambling going on
@@ -272,6 +272,11 @@ def main():
             pygame.display.flip()
 
         if status == "exiting":
+            ## sector object list visualizer ##
+            for i in range(1, 20):
+                print("SECTOR", i)
+                print(getObjects(i, 1920, 1080))
+                print("\n")
             pygame.quit()
             raise SystemExit
 
@@ -321,9 +326,22 @@ def main():
 
         if status == "gameinit":       
             # changing variable setup
-            sectornum = 1 #spawns you back in home sector every time game is re-initialized
-            #- maybe not the best approach but it works for now
-            object_list = getObjects(sectornum, width, height)
+
+            start_sector = -1
+            for i in range(1, 19):
+                if len(getObjects(i, width, height)) > 1:
+                    if getObjects(i, width, height)[4] in ship_id:
+                        start_sector = i
+                        break
+
+            if start_sector > 0:
+                object_list = getObjects(start_sector, width, height)
+                sectornum = start_sector
+            else:
+                print("we lost the ship, recreating now boss")
+                object_list = [width*0.5, height*0.3, 0, 0, 1, RotationState(90,0), "NA", 1] + getObjects(1, width, height)
+                sectornum = 1
+                                
             previous_tick = 0
             previous_tick2 = 0
             pygame.mouse.set_visible(False)
@@ -643,15 +661,15 @@ def main():
                         isValidCollision = portalRects[i].collidepoint((object_list[0], object_list[1]))                        
                         if isValidTransfer and isValidTime and isValidCollision:
                             SoundVault.play('portal')
-                            saveGame(sectornum, object_list, width, height)
+                            saveGame(sectornum, object_list[8:], width, height)
                             sectornum = destinations[i]
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
-                            if new_objects[0] == -1 and len(new_objects)<8:
+                            if new_objects == ["PLEASE GENERATE"]:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                                       d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                             else:
-                                object_list = object_list[:8] + new_objects[8:]
+                                object_list = object_list[:8] + new_objects
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
@@ -734,11 +752,12 @@ def main():
                 
             #ship death
             if currentarmor <= 0 or currentfuel <= 0:
-                saveGame(sectornum, object_list, width, height)
+                saveGame(sectornum, object_list[8:], width, height)
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 SoundVault.play('death')
-                object_list[7] = -10
+                object_list[4] = 5   #sets the ship to be objID 5 for 200 ticks
+                object_list[7] = 200 #meaning the player is paralyzed
                 currentfuel = totalfuel
                 currentarmor = totalarmor
                 shipInventory = [0,0,0,0]
@@ -747,11 +766,13 @@ def main():
 
             if timer_shipdeath == 200:
                 sectornum = 1
-                object_list = getObjects(sectornum, width, height)
+                shipObj = object_list[:8]
+                object_list = shipObj + getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
                 object_list[1] = height/2 - height*0.2
                 object_list[2] = 0
                 object_list[3] = 0
+                object_list[4] = 1
 
             #physics!
             doPhysics(object_list)
