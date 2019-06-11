@@ -319,15 +319,15 @@ def main():
                             sectornum = i
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
-                            if new_objects[0] == -1 and len(new_objects)<8:
+                            if new_objects == ["PLEASE GENERATE"]:
                                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
-                                    d_sats, d_parts, d_asteroids, d_fighters, sectornum)
+                                                      d_sats, d_parts, d_asteroids, d_fighters, sectornum)
                             else:
-                                object_list = object_list[:8] + new_objects[8:]
+                                object_list = object_list[:8] + new_objects
                             object_list[2] = 0  #kills momentum
                             object_list[3] = 0
                             status = "game"
-
+                            
             if status != "mapscreen":
                 pygame.mouse.set_visible(False)
                 Font.set_scramble_paused(False) #resumes any scrambling going on
@@ -734,9 +734,10 @@ def main():
                             lasttransit = 0
                             new_objects = getObjects(sectornum, width, height)
                             if new_objects == ["PLEASE GENERATE"]:
-                                new_objects = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
+                                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height,
                                                       d_sats, d_parts, d_asteroids, d_fighters, sectornum)
-                            object_list = object_list[:8] + new_objects
+                            else:
+                                object_list = object_list[:8] + new_objects
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
