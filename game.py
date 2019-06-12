@@ -277,14 +277,14 @@ class AlienMineAI():
 def particlemaker(xpos, ypos, xmom, ymom):
     # particle settings
     lifespan_randomness = 300
-    particle_lifespan = 600 + random.randint(-lifespan_randomness,lifespan_randomness) # 45
+    particle_lifespan = 600 # 45
     random_factor = 30 # higher number = less random
     max_particles = 6
     max_deviation = 2
     printerlist_add = []
     for i in range(random.randint(max_particles - max_deviation, max_particles)):
         printerlist_add += [xpos, ypos, xmom + ((random.randint(-20, 20))/random_factor), ymom +
-                            ((random.randint(-20, 20))/random_factor), 4, RotationState(-1,-1), "NA", particle_lifespan]  
+                            ((random.randint(-20, 20))/random_factor), 4, RotationState(-1,-1), "NA", particle_lifespan + random.randint(-lifespan_randomness,lifespan_randomness)]  
     return printerlist_add
 
 #physics wrapper
