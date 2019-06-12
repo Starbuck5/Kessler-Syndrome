@@ -638,7 +638,8 @@ def main():
                                                              object_list[2+(i * 8)], object_list[3+(i * 8)])
                             object_list[(i*8)+7] = -1
                             object_list[(i2*8)+7] = -1
-                        elif object_list[4 + (i2 * 8)] == 4 and object_list[4+i*8] != 4: #if debris hits anything
+                        #if debris hits anything thats not a star
+                        elif object_list[4 + (i2 * 8)] == 4 and object_list[4+i*8] not in (d_stars + [4]):
                             object_list[i2*8+7] = -1
                         object_list += printerlist_add                            
                     i2 += 1            
