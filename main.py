@@ -172,7 +172,7 @@ def main():
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             Font.set_scramble_paused(True) #pauses any scrambling going on
-            drawPauseUI(screen, True)
+            drawPauseUI(screen, "pauseinit", True)
             
             #saving objectlist, sector achievements data
             saveGame(sectornum, object_list, width, height)
@@ -189,7 +189,7 @@ def main():
             status = "paused"
 
         if status == "paused":
-            status = drawPauseUI(screen, False)
+            status = drawPauseUI(screen, "pauseinit", False)
             inputvar = keyboard()
             if ("p" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
                 status = "game"
@@ -444,13 +444,16 @@ def main():
                     while color[0] + color[1] + color[2] > 150:
                         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
                     previous_tick2 = ticks
-                if "m" in inputvar and timer_popupmenu > 25:
+                if "m" in inputvar and timer_popupmenu > 25 and status == "game":
                     timer_popupmenu = 0
                     status = "mapscreeninit"
                 if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1:
                     if timer_popupmenu > 25:
                         timer_popupmenu = 0
-                        status = "pauseinit"
+                        if status == "game":
+                            status = "pauseinit"
+                        if status == "arcade":
+                            status = "arcadepauseinit"
                 lasttransit += 1
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360 and file_settings[4]:
                     DEVMODE = not DEVMODE #switches booleans
@@ -793,7 +796,7 @@ def main():
             # printer
 
         if status == "arcadeinit":
-            object_list = [0.5, 0.5, 0, 0, 1, RotationState(90,0), "NA", 1] #constructing a ship
+            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), "NA", 1] #constructing a ship
             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
                                   d_asteroids, d_fighters, 1)
             arcade_level = 1
@@ -812,6 +815,16 @@ def main():
                 ammunitionHelp = upgrades.get(ShipLv[2]+40)
                 totalammunition = ammunitionHelp[4]
             ammunition = totalammunition
+
+            #initializes printouts of fuel and armor and ammo
+            graphics.InfoBars.init(graphics.FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0)),
+                                   graphics.FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0)))
+
+            previous_tick = 0
+            previous_tick2 = 0
+            pygame.mouse.set_visible(False)
+            #inventory
+            shipInventory = [0,0,0,0]
 
             status = "arcade"
 
@@ -839,8 +852,7 @@ def main():
             if numdebris == 0:
                 arcade_level += 1
                 object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
-                                  d_asteroids, d_fighters, arcade_level)
-                        
+                                  d_asteroids, d_fighters, arcade_level)                        
             # fuel consumption
             if flame:
                 currentfuel -= 1
@@ -865,6 +877,26 @@ def main():
             if DEVMODE:
                 Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
+
+        if status == "arcadepauseinit":
+            optionsScreenshot = screen.copy()
+            pygame.mouse.set_visible(True)
+            Screenhelper.greyOut(screen)
+            Font.set_scramble_paused(True) #pauses any scrambling going on
+            drawPauseUI(screen, "arcadepauseinit", True)
+            status = "arcadepaused"
+
+        if status == "arcadepaused":
+            status = drawPauseUI(screen, "arcadepauseinit", False)
+            inputvar = keyboard()
+            if ("p" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
+                status = "arcade"
+                timer_popupmenu = 0
+            if status != "paused":
+                Font.set_scramble_paused(False) #resumes any scrambling going on
+                pygame.mouse.set_visible(False)
+            if status == "menuinit":
+                Font.endScramble()
         
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:

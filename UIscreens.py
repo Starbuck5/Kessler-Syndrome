@@ -557,7 +557,7 @@ def home(screen):
     else:
         return shopStatus
 
-def drawPauseUI(screen, mode):
+def drawPauseUI(screen, backstatus, mode):
     status = "paused"
     Texthelper.write(screen, [("center", 400), "Paused", 6])
     timedFlip(mode)
@@ -569,7 +569,7 @@ def drawPauseUI(screen, mode):
 
     if Texthelper.writeButton(screen, [("center", 485 + spacing), "Options", 2]):
         status = "optionsinit"
-        OptionsInput.backStatus = "pauseinit"
+        OptionsInput.backStatus = backstatus
     timedFlip(mode)
 
     if Texthelper.writeButton(screen, [("center", 485 + spacing * 2), "Quit to menu", 2]):
