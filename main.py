@@ -205,6 +205,7 @@ def main():
             status = "options"
 
         if status == "options":
+            screen.fill(color)
             status = optionsUI(screen, file_settings) 
 
             inputvar = keyboard()
@@ -222,6 +223,7 @@ def main():
             pygame.display.flip()
 
         if status == "cheatsmenu":
+            screen.fill(color)
             status = cheatsMenuUI(screen, cheats_settings)
 
             if status != "cheatsmenu":

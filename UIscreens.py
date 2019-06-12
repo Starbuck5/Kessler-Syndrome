@@ -658,8 +658,6 @@ def optionsUI(screen, file_settings):
     status = "options"
     spacing = 50
 
-    screen.fill((0, 0, 0))
-
     if file_settings[4] and Texthelper.writeButton(screen, [(1250, 456), "[Cheats settings?]", 2], color = (125, 15, 198)):
         status = "cheatsmenu"
 
@@ -706,8 +704,6 @@ def optionsUI(screen, file_settings):
 def cheatsMenuUI(screen, cheats_settings):
     status = "cheatsmenu"
     spacing = 50
-
-    screen.fill((0, 0, 0))
 
     Texthelper.write(screen, [("center", 200), "Cheats Options", 6], color = (125, 15, 198))
 
