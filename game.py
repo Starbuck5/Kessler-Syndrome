@@ -276,7 +276,8 @@ class AlienMineAI():
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
     # particle settings
-    particle_lifespan = 600 # 45
+    lifespan_randomness = 300
+    particle_lifespan = 600 + random.randint(-lifespan_randomness,lifespan_randomness) # 45
     random_factor = 30 # higher number = less random
     max_particles = 6
     max_deviation = 2
