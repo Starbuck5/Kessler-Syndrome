@@ -32,14 +32,14 @@ def setup():
         widthBox.update(screen)
         Texthelper.write(screen, [(190, 75), "by", 1.5])
         heightBox.update(screen)
-        Texthelper.write(screen, [("center", 110), "Please change to your desired resolution", 1])
+        Texthelper.write(screen, [("center", 110), "Please change to your desired resolution", 0.9])
 
         Texthelper.write(screen, [(50, 170), "Fullscreen:", 1.5])
         if Texthelper.writeButton(screen, [(240, 170), str(full), 1.5]):
             full = not full
-        Texthelper.write(screen, [(5, 200), "Note: If you are going to do fullscreen,", 1])
-        Texthelper.write(screen, [(5, 215), "the resolution set should be the same as", 1])
-        Texthelper.write(screen, [(5, 230), "your monitors resolution", 1])
+        Texthelper.write(screen, [(2, 200), "Note: If you are going to do fullscreen,", 1])
+        Texthelper.write(screen, [(2, 215), "the resolution set should be the same", 1])
+        Texthelper.write(screen, [(27, 230), "as your monitors resolution", 1])
 
         if Texthelper.writeButton(screen, [("center", 270), "Continue", 1.25]):
             contents = filehelper.get(0)
