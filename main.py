@@ -129,7 +129,7 @@ def main():
     AnnouncementBox.height = height
 
     #graphics setup
-    graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3)
+    graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
     
     
     running = True

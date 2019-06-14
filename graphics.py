@@ -120,7 +120,7 @@ def rotationCachingHelper(filepath, spritesheetWidth, spritesheetHeight, sprites
 
 #must be called after scaling is fully set up, not before
 #starts image caching of rotated images
-def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
+def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar):
     #adding all asteroid images/rotations
     rotationCachingHelper("Assets\\images\\smallasteroids.gif", 40, 40, 1, 4, 70, scalar2)
     rotationCachingHelper("Assets\\images\\mediumasteroids.gif", 50, 50, 1, 4, 80, scalar2)
@@ -133,9 +133,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
         Images.addRotate(pixelStuff[i], surf)
 
     #adding images for info bars
-    Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2))
-    Images.add("armorpic", loadImage("Assets\\images\\armor.tif"))
-    Images.add("shotpic", loadImage("Assets\\images\\missile.png"), colorkey=(255,255,255))
+    Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2*scalarscalar))
+    Images.add("armorpic", scaleImage(loadImage("Assets\\images\\armor.tif"), scalarscalar))
+    Images.add("shotpic", scaleImage(loadImage("Assets\\images\\missile.png"), scalarscalar), colorkey=(255,255,255))
 
     #adding other icons
     Images.add("infinity", loadImage("Assets\\images\\infinity.tif"))
@@ -176,6 +176,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     imageList = spriteSheetBreaker(loadImage("Assets\\images\\ships.png"), 24, 60, 0, 0, 1, 4)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
+        imageList[i] = scaleImage(imageList[i], scalar3)
     Images.add(1.1, imageList[0])
     Images.add(1.2, imageList[1])
     Images.add(1.3, imageList[2])
@@ -185,11 +186,11 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3):
     imageList = spriteSheetBreaker(loadImage("Assets\\images\\fighters.gif"), 42, 22, 0, 0, 2, 2)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
-        imageList[i] = scaleImage(imageList[i], 1.1)
+        imageList[i] = scaleImage(imageList[i], 1.1*scalarscalar)
         Images.addRotate(130+i, imageList[i])
 
     #adding derelict ship, no rotation because it's always in the same orientation
-    image = loadImage("Assets\\images\\derelict.gif")
+    image = scaleImage(loadImage("Assets\\images\\derelict.gif"), scalarscalar)
     image.set_colorkey((255,255,255))
     change_color(image, (0,0,0,255), (25,25,25,255))
     Images.add(110, image)
@@ -343,18 +344,18 @@ class InfoBars:
         shotpic = Images.get("shotpic")
         #fuel
         InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
-        screen.blit(fuelpic, (1600, 1000))
+        pgx.draw.sblit(screen, fuelpic, (1600, 1000))
         pgx.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
         pgx.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
         #Texthelper.write(screen, [(1665, 1005), str(currentfuel), 3])
         #armor
         InfoBars.armoralert.update(screen, currentarmor/totalarmor)
-        screen.blit(armorpic, (1600, 930))
+        pgx.draw.sblit(screen, armorpic, (1600, 930))
         pgx.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
         pgx.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
         #Texthelper.write(screen, [(1665, 935), str(currentarmor), 3])
         #ammunition
-        screen.blit(shotpic, (1600, 860))
+        pgx.draw.sblit(screen, shotpic, (1600, 860))
         Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
 
 #used by the map to actually draw out the sectors

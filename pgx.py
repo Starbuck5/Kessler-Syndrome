@@ -703,4 +703,10 @@ class draw:
             startpos[i] *= Texthelper.scalar
             endpos[i] *= Texthelper.scalar
         pygame.draw.aaline(Surface, color, startpos, endpos, blend)
+
+    #static version of normal blit except it moves coordinates based on screen size
+    #because it uses texthelper the location tuple/list can use fancy things like center
+    def sblit(baseSurface, secondSurface, location):
+        location = Texthelper._interpretcoords([location])[0]
+        baseSurface.blit(secondSurface, location)
    
