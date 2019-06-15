@@ -383,11 +383,32 @@ class Texthelper():
     HALFSIZERS = ["\'", ".", ":" ",", "!", "|"]
 
     #part of the input sanitizing process: figures out how to center text mainly
+    #styles of coordinate input:
+    # (100, 200)
+    # ("center", 200) centers text in the screen in the x dimension
+    # ("right.350, 100") aligns text rightwards at x=350
+    # ("right-200") puts text 200 (scaled) left of the right bound of the screen
     def _interpretcoords(text_input):
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
         text_input2 = text_input[0:] #very important line
-        if isinstance(location_list[0], str):
+        if isinstance(location_list[0], str) and ("-" in location_list[0] or "+" in location_list[0]):
+            if "left" in location_list[0]:
+                index = 5 
+                startnum = 0     
+            elif "right" in location_list[0]:
+                index = 6 
+                startnum = Texthelper.width
+            else:
+                raise ValueError("invalid string keyword for relative coordinates")
+            offset = int(location_list[0][index:]) * Texthelper.scalar
+            if location_list[0][index-1] == "+":
+                location_list[0] = startnum + offset
+            elif location_list[0][index-1] == "-":
+                location_list[0] = startnum - offset
+            else:
+                raise ValueError("you appear to have entered an incorrect coordinate format")
+        elif isinstance(location_list[0], str):
             if "center" in location_list[0]:
                 if location_list[0][-1].isdigit():
                      num = int(location_list[0][location_list[0].rfind(".")+1:])
@@ -410,7 +431,7 @@ class Texthelper():
                 else:
                     location_list[0] = Texthelper.width - Texthelper._textlength(text_input)                
             else:
-                raise ValueError("invalid string keyword for coordinates")
+                raise ValueError("invalid string keyword for coordinates")            
         else:
             location_list[0] *= Texthelper.scalar
         location_list[1] *= Texthelper.scalar            
