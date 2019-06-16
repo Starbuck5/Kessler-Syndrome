@@ -155,7 +155,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     for i in range(len(imageList)):
         image = imageList[i]
         image.set_colorkey((255,255,255))
-        image = scaleImage(image, 2)
+        image = scaleImage(image, 2*scalarscalar)
         if i == 0:
             Images.addRotate(123, image) #reference image at 123 for hitboxes
         Images.addRotate(123 + (i+1)/100, image)

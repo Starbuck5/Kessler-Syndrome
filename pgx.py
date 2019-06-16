@@ -85,8 +85,8 @@ def scaleImage(image, scalar):
     image = pygame.transform.scale(image, newsize)
     return image
 
-def scretchImage(image, size):
-    image = pygame.transform.scale(image, (size[0], size[1]))
+def stretchImage(image, size):
+    image = pygame.transform.scale(image, (round(size[0]), round(size[1])))
     return image
 
 def handlePath(path):
@@ -303,15 +303,13 @@ class InputGetter():
 
  
 class AnnouncementBox():
-    width = 1
-    height = 1
     upcoming = [] # upcoming anouncements that need to be displayed
     BREAKPOS = 31 #amount of chars before a linebreak
     INTEXTSPEED = 4 # frames per character that it displayes at
     OUTTEXTSPEED = 0.5
     #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
-        self.image = scretchImage(image, (round(AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1)))
+        self.image = stretchImage(image, (108*Texthelper.scalar, 108*Texthelper.scalar))
         sound.set_volume(0.75)
         self.sound = sound
         self.text = text
@@ -335,16 +333,18 @@ class AnnouncementBox():
             AnnouncementBox.upcoming[0]._timehelper()
 
     def _draw(self, screen):
-        screen.blit(self.image, (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1))) # placing image on scrreen
-        boxheight = AnnouncementBox.height*0.1
+        draw.sblit(screen, self.image, (576, 108)) #placing image on screen
+
+        #calculating the height the box needs based on how much text there is 
+        boxheight = 108
         if len(self.linedtext) > 3:
             length = len(self.linedtext)
-            boxheight += AnnouncementBox.height*((length-3)*0.03333)
+            boxheight += 36*(length-3)
         boxheight = round(boxheight)
-        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3+AnnouncementBox.height*0.1), round(AnnouncementBox.height*0.1),
-                                                 round(AnnouncementBox.width*0.4-AnnouncementBox.height*0.1), boxheight), 4)
-        pygame.draw.rect(screen, (255,255,255), (round(AnnouncementBox.width*0.3), round(AnnouncementBox.height*0.1),
-                                                 round(AnnouncementBox.height*0.1),round(AnnouncementBox.height*0.1)), 4)
+
+        #draws the two rectangles that make up the box
+        draw.rect(screen, (255,255,255), (684, 108, 660, boxheight), 4)
+        draw.rect(screen, (255,255,255), (576, 108, 108, 108), 4)
         
         # trims text to self.bounds and prints it
         total_chars = 0
@@ -352,17 +352,14 @@ class AnnouncementBox():
             start = max([0,self.bounds[0]-total_chars])
             end = min([len(self.linedtext[line]),max([0,self.bounds[1]-total_chars])])
             text = self.linedtext[line][start:end]
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.31+self.image.get_size()[0]),
-                             round(AnnouncementBox.height*0.11)+round(AnnouncementBox.height*0.03*line)),
-                             text, 2])
+            Texthelper.write(screen, [(703, 120+round(32.4*line)), text, 2])
             total_chars += len(self.linedtext[line])
         
         if self.bounds[1] >= sum(self.lineelements):
             self.printing = False
         
         if not self.printing:
-            Texthelper.write(screen, [(round(AnnouncementBox.width*0.40), round(AnnouncementBox.height*0.11 + boxheight)),
-                                      "Press Enter to Continue", 1.5])
+            Texthelper.write(screen, [(768, 120+boxheight), "Press Enter to Continue", 1.5])
             inputvar = keyboard()
             if "enter" in inputvar:
                 self.ending = True

@@ -125,8 +125,6 @@ def main():
     Texthelper.height = height
     GameConstants.width = width
     GameConstants.height = height
-    AnnouncementBox.width = width
-    AnnouncementBox.height = height
 
     #graphics setup
     graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
