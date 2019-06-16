@@ -704,30 +704,29 @@ class Filehelper():
 
 filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
 
+#special scaled draws reliant on Texthelper scaling
 class draw:
+    #calls Texthelper interpret coords but takes care of some things automatically
+    #location is (x, y) or [x, y]
+    def _interpretcoords(location):
+        return Texthelper._interpretcoords([location])[0]
+    
     def rect(Surface, color, Rect, width = 0):
-        try:
-            Rect = Rect.copy() #works for lists of coords and rects
-            for i in range(4):
-                Rect[i] = round(Rect[i]*Texthelper.scalar)
-        except:
-            Rect = list(Rect)
-            for i in range(4):
-                Rect[i] = round(Rect[i]*Texthelper.scalar)
+        Rect = list(Rect)
+        Rect[0], Rect[1] = draw._interpretcoords((Rect[0], Rect[1]))
+        Rect[2] *= Texthelper.scalar
+        Rect[3] *= Texthelper.scalar                                         
         width = round(width*Texthelper.scalar)
         pygame.draw.rect(Surface, color, Rect, width)
 
     def aaline(Surface, color, startpos, endpos, blend=1):
-        startpos = list(startpos)
-        endpos = list(endpos)
-        for i in range(2):
-            startpos[i] *= Texthelper.scalar
-            endpos[i] *= Texthelper.scalar
+        startpos = draw._interpretcoords(startpos)
+        endpos = draw._interpretcoords(endpos)
         pygame.draw.aaline(Surface, color, startpos, endpos, blend)
 
     #static version of normal blit except it moves coordinates based on screen size
     #because it uses texthelper the location tuple/list can use fancy things like center
     def sblit(baseSurface, secondSurface, location):
-        location = Texthelper._interpretcoords([location])[0]
+        location = draw._interpretcoords(location)
         baseSurface.blit(secondSurface, location)
    

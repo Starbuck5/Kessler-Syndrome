@@ -590,7 +590,7 @@ def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DE
         if discoveredSectors[i] or (DEVMODE and cheats_settings[4]): #only visited sectors are drawn
             graphics.drawSector(screen, sector_map_coordinates[i], i, sectornum, clearedSector[i])
             if game.sectorGeneration(i): #draws infinity signs on map if regenerating sector
-                screen.blit(infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15)) 
+                draw.sblit(screen, infinitypic, (sector_map_coordinates[i][0] - 10, sector_map_coordinates[i][1] + 15))
             #draws all links between sectors
             connections = game.sectorDestinations(i)
             for j in range(4):

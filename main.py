@@ -32,7 +32,7 @@ def main():
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
-    temp_image = loadImage("Assets\\images\\supplies.gif")
+    temp_image = scaleImage(loadImage("Assets\\images\\supplies.gif"), scalarscalar)
     temp_image.set_colorkey((255,255,255))
     graphlist = [scaleImage(loadImage("Assets\\images\\sat1.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat2.tif"), sat_scalar),
@@ -367,8 +367,8 @@ def main():
             ammunition = filehelper.get(4)[2]
 
             #initializes printouts of fuel and armor and ammo
-            graphics.InfoBars.init(graphics.FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0)),
-                                   graphics.FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0)))
+            graphics.InfoBars.init(graphics.FlashyBox(["right-280", 990, 280, 70], 0.2, (255,0,0)),
+                                   graphics.FlashyBox(["right-280", 920, 280, 70], 0.2, (255,0,0)))
 
             for i in range(0, len(object_list), 8):
                 object_number = object_list[i+4]
@@ -794,7 +794,7 @@ def main():
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
             if DEVMODE:
-                Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
+                Texthelper.write(screen, [(10, 1050), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
 
@@ -878,7 +878,7 @@ def main():
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
             if DEVMODE:
-                Texthelper.write(screen, [(10, file_settings[1] - 30), "Cheats On", 2], color = (125, 15, 198))
+                Texthelper.write(screen, [(10, 1050), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
 
         if status == "arcadepauseinit":

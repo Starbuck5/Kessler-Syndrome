@@ -138,18 +138,18 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add("shotpic", scaleImage(loadImage("Assets\\images\\missile.png"), scalarscalar), colorkey=(255,255,255))
 
     #adding other icons
-    Images.add("infinity", loadImage("Assets\\images\\infinity.tif"))
+    Images.add("infinity", scaleImage(loadImage("Assets\\images\\infinity.tif"), scalarscalar))
 
     #adding miscellaneous other object images
-    Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2))
-    Images.add(200, scaleImage(loadImage("Assets\\images\\fuelstation.tif"), 2))
-    Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2))
-    Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5))
+    Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2*scalarscalar))
+    Images.add(200, scaleImage(loadImage("Assets\\images\\fuelstation.tif"), 2*scalarscalar))
+    Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2*scalarscalar))
+    Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5*scalarscalar))
 
     #aliens
-    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 1.5), colorkey=(255,255,255))
-    Images.addRotate(121, scaleImage(loadImage("Assets\\images\\spiker.gif"),2), colorkey=(255,255,255))
-    Images.addRotate(122, loadImage("Assets\\images\\alienshot.gif"), colorkey=(255,255,255))
+    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 1.5*scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(121, scaleImage(loadImage("Assets\\images\\spiker.gif"), 2*scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(122, scaleImage(loadImage("Assets\\images\\alienshot.gif"), scalarscalar), colorkey=(255,255,255))
     #aliens - alien mines
     imageList = spriteSheetBreaker(loadImage("Assets\\images\\alienbomb.gif"), 19, 19, 0, 0, 1, 6)
     for i in range(len(imageList)):
@@ -196,7 +196,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(110, image)
 
     #adding president's ship
-    Images.addRotate(666, loadImage("Assets\\images\\protoprez2.gif"), colorkey=(255,255,255))
+    Images.addRotate(666, scaleImage(loadImage("Assets\\images\\protoprez2.gif"), scalarscalar), colorkey=(255,255,255))
 
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
@@ -336,7 +336,7 @@ class InfoBars:
     def init(fuelalert, armoralert):
         InfoBars.fuelalert = fuelalert
         InfoBars.armoralert = armoralert
-
+        
     #prints out the fuel and armor bars
     def draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition):
         fuelpic = Images.get("fuelpic")
@@ -344,19 +344,19 @@ class InfoBars:
         shotpic = Images.get("shotpic")
         #fuel
         InfoBars.fuelalert.update(screen, currentfuel/totalfuel)
-        pgx.draw.sblit(screen, fuelpic, (1600, 1000))
-        pgx.draw.rect(screen, (178,34,34), [1650, 1000, 200, 50])
-        pgx.draw.rect(screen, (139,0,0), [1650, 1000, 200*currentfuel/totalfuel, 50])
+        pgx.draw.sblit(screen, fuelpic, ("right-270", 1000))
+        pgx.draw.rect(screen, (178,34,34), ["right-220", 1000, 200, 50])
+        pgx.draw.rect(screen, (139,0,0), ["right-220", 1000, 200*currentfuel/totalfuel, 50])
         #Texthelper.write(screen, [(1665, 1005), str(currentfuel), 3])
         #armor
         InfoBars.armoralert.update(screen, currentarmor/totalarmor)
-        pgx.draw.sblit(screen, armorpic, (1600, 930))
-        pgx.draw.rect(screen, (128,128,128), [1650, 930, 200, 50])
-        pgx.draw.rect(screen, (64,64,64), [1650, 930, 200*currentarmor/totalarmor, 50])
+        pgx.draw.sblit(screen, armorpic, ("right-270", 930))
+        pgx.draw.rect(screen, (128,128,128), ["right-220", 930, 200, 50])
+        pgx.draw.rect(screen, (64,64,64), ["right-220", 930, 200*currentarmor/totalarmor, 50])
         #Texthelper.write(screen, [(1665, 935), str(currentarmor), 3])
         #ammunition
-        pgx.draw.sblit(screen, shotpic, (1600, 860))
-        Texthelper.write(screen, [(1665, 865), str(ammunition) + "/" + str(totalammunition), 3])
+        pgx.draw.sblit(screen, shotpic, ("right-270", 860))
+        Texthelper.write(screen, [("right-205", 865), str(ammunition) + "/" + str(totalammunition), 3])
 
 #used by the map to actually draw out the sectors
 def drawSector(screen, location, number, currentsector, cleared):
