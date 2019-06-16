@@ -78,7 +78,11 @@ def mouse():
 
 def scaleImage(image, scalar):
     size = image.get_size()
-    image = pygame.transform.scale(image, (round(size[0]*scalar), round(size[1]*scalar)))
+    newsize = [round(size[0]*scalar), round(size[1]*scalar)]
+    for i in range(2):
+        if not newsize[i]:
+            newsize[i] = 1
+    image = pygame.transform.scale(image, newsize)
     return image
 
 def scretchImage(image, size):
