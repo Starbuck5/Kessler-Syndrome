@@ -386,6 +386,13 @@ class Texthelper():
     HALFSIZERS = ["\'", ".", ":" ",", "!", "|"]
     SAFEASPECT = (16,9) #the aspect ratio scaling goes back to for certain algorithms
 
+    #helps interpretcoords
+    def __compensateForAspect(x):
+        asw, ash = Texthelper.SAFEASPECT
+        supposedwidth = Texthelper.height/ash*asw
+        blackbarsize = (supposedwidth - Texthelper.width)/2
+        return x - blackbarsize
+            
     #part of the input sanitizing process: figures out how to center text mainly
     #styles of coordinate input:
     # (100, 200)
@@ -417,6 +424,7 @@ class Texthelper():
                 if location_list[0][-1].isdigit():
                      num = int(location_list[0][location_list[0].rfind(".")+1:])
                      num *= Texthelper.scalar
+                     num = Texthelper.__compensateForAspect(num)
                      location_list[0] = num - Texthelper._textlength(text_input) / 2 
                 else:
                     location_list[0] = Texthelper.width / 2 - Texthelper._textlength(text_input) / 2
@@ -424,6 +432,7 @@ class Texthelper():
                 if location_list[0][-1].isdigit():
                      num = int(location_list[0][location_list[0].rfind(".")+1:])
                      num *= Texthelper.scalar
+                     num = Texthelper.__compensateForAspect(num)
                      location_list[0] = num
                 else:
                     location_list[0] = 0
@@ -431,17 +440,15 @@ class Texthelper():
                 if location_list[0][-1].isdigit():
                      num = int(location_list[0][location_list[0].rfind(".")+1:])
                      num *= Texthelper.scalar
+                     num = Texthelper.__compensateForAspect(num)
                      location_list[0] = num - Texthelper._textlength(text_input) 
                 else:
                     location_list[0] = Texthelper.width - Texthelper._textlength(text_input)                
             else:
                 raise ValueError("invalid string keyword for coordinates")            
         else:
-            asw, ash = Texthelper.SAFEASPECT
-            supposedwidth = Texthelper.height/ash*asw
-            blackbarsize = (supposedwidth - Texthelper.width)/2
             location_list[0] *= Texthelper.scalar
-            location_list[0] -= blackbarsize
+            location_list[0] = Texthelper.__compensateForAspect(location_list[0])
         location_list[1] *= Texthelper.scalar            
         text_input2[0] = (location_list[0], location_list[1])
         return text_input2
