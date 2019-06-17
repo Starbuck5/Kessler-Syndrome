@@ -246,6 +246,8 @@ class InputGetter():
     def update(self, screen):
         self.rawtext = self.currenttext[1]
         if self.clicked == False:
+            if self.currenttext[1] == "":
+               self.currenttext = self.initialtext 
             if Texthelper.writeButton(screen, self.currenttext) == True:
                 self.clicked = True
         if self.clicked == True:
