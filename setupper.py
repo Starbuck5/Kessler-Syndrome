@@ -13,6 +13,7 @@ def setup():
     Texthelper.width = 600
     Texthelper.height = 450
     Texthelper.scalar = 1.5
+    Texthelper.SAFEASPECT = (4,3)
 
     suggestedRes = pygame.display.list_modes()[0]
     widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")

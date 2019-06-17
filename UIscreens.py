@@ -617,7 +617,7 @@ def mapscreenUI(screen, sector_map_coordinates, discoveredSectors, sectornum, DE
                     if (not discoveredSectors[adjacentSector]) and (not DEVMODE):
                         graphics.drawSector(screen, sector_map_coordinates[adjacentSector], "?", sectornum, False)
                         
-    if Texthelper.writeButton(screen, [(180, 520), "[Commence Flying]", 2.5]):
+    if Texthelper.writeButton(screen, [(245, 705), "[Commence Flying]", 2.5]):
         status = "game"
         pygame.mouse.set_visible(False)
         

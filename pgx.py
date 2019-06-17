@@ -382,6 +382,7 @@ class Texthelper():
     height = 1
     lastPressTime = 0
     HALFSIZERS = ["\'", ".", ":" ",", "!", "|"]
+    SAFEASPECT = (16,9) #the aspect ratio scaling goes back to for certain algorithms
 
     #part of the input sanitizing process: figures out how to center text mainly
     #styles of coordinate input:
@@ -434,7 +435,11 @@ class Texthelper():
             else:
                 raise ValueError("invalid string keyword for coordinates")            
         else:
+            asw, ash = Texthelper.SAFEASPECT
+            supposedwidth = Texthelper.height/ash*asw
+            blackbarsize = (supposedwidth - Texthelper.width)/2
             location_list[0] *= Texthelper.scalar
+            location_list[0] -= blackbarsize
         location_list[1] *= Texthelper.scalar            
         text_input2[0] = (location_list[0], location_list[1])
         return text_input2
@@ -462,8 +467,8 @@ class Texthelper():
     def _sanitizeinput(proto_input):
         text_input = proto_input[:] #avoids mangling variables passed by reference
         text_input[2] = text_input[2] * Texthelper.scalar
-        text_input = Texthelper._interpretcoords(text_input)        
         text_input[1] = text_input[1].lower()
+        text_input = Texthelper._interpretcoords(text_input)                
         return text_input
     
     #petitions the font to have the right color

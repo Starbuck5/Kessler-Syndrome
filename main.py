@@ -792,7 +792,7 @@ def main():
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
             if DEVMODE:
-                Texthelper.write(screen, [(10, 1050), "Cheats On", 2], color = (125, 15, 198))
+                Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
 
@@ -876,7 +876,7 @@ def main():
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
             if DEVMODE:
-                Texthelper.write(screen, [(10, 1050), "Cheats On", 2], color = (125, 15, 198))
+                Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
 
         if status == "arcadepauseinit":
