@@ -733,6 +733,10 @@ def main():
                                     loadSound("Assets\\announcements\\2r.ogg"),                             
                                     ("Finally! You've cleared your first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
+                elif sectorsCleared != 1:
+                    AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                    loadSound("Assets\\sounds\\click.ogg"),
+                                    "Sector cleared. Credits acquired.")
 
             # deaderizer
             object_list = deaderizer(object_list)
