@@ -302,7 +302,7 @@ def main():
             ShipLv = filehelper.get(3)
             currentStats = filehelper.get(4)
             totalStats = [totalarmor, totalfuel, totalammunition]
-            setupShop(ShipLv, shipInventory, homeInventory, currentStats, totalStats, color)
+            setupShop(ShipLv, object_list[6].getInventory(), homeInventory, currentStats, totalStats, color)
             status = "home"
             
         if status == "home":
@@ -349,14 +349,12 @@ def main():
                 sectornum = start_sector
             else:
                 print("we lost the ship, recreating now boss")
-                object_list = [width*0.5, height*0.3, 0, 0, 1, RotationState(90,0), "NA", 1] + getObjects(1, width, height)
+                object_list = [width*0.5, height*0.3, 0, 0, 1, RotationState(90,0), ShipExtras(), 1] + getObjects(1, width, height)
                 sectornum = 1
                                 
             previous_tick = 0
             previous_tick2 = 0
             pygame.mouse.set_visible(False)
-            #inventory
-            shipInventory = [0,0,0,0]
 
             #fuel and armor and ammunition
             ShipLv = filehelper.get(3)
@@ -482,7 +480,7 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
-                shipInventory[3] += 100
+                object_list[6].addInventory([0,0,0,100])
                 filehelper.setElement(5, 0, 3)
             if filehelper.get(0)[3] == 6:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
@@ -535,7 +533,7 @@ def main():
                             if drops[3]: #if currency is dropped
                                 SoundVault.play('money')
                             #merges the two lists by adding their like elements together
-                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]
+                            object_list[6].addInventory(drops)
                         elif ID1 in ship_id and ID2 in d_parts: #ship v debris
                            printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                             object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
@@ -547,7 +545,7 @@ def main():
                                drops = [i*3 for i in drops] #multiplies satellite drop by 3
                            else: 
                                drops = solarPanelDrops(ShipLv)
-                           shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
+                           object_list[6].addInventory(drops)                        
                         elif ID1 in ship_id and ID2 == 0: #going to garage
                             Texthelper.writeBox(screen, [(800,500), "press enter", 1], color = (0,100,200))
                             if "enter" in inputvar:
@@ -559,8 +557,7 @@ def main():
                             drops = satelliteDrops(ShipLv)
                             if drops[3]: #if currency is dropped
                                 SoundVault.play('money')
-                            #merges the two lists by adding their like elements together
-                            shipInventory = [a + b for a, b in zip(shipInventory, drops)]                            
+                            object_list[6].addInventory(drops)                           
                         #ship v asteroid or spiker or drone
                         elif ID1 in ship_id and (69 < ID2 < 100 or ID2 == 121 or ID2 == 120):
                             xForce = abs(object_list[2+(i*8)] - object_list[2+(i2*8)]) 
@@ -723,7 +720,7 @@ def main():
                 if object_list[i+4] in d_debris:
                     numdebris += 1
             if numdebris == 0 and clearedSector[sectornum] == False:
-                shipInventory[3] += 50 #adds 50 credits to ship inventory
+                object_list[6].addInventory([0,0,0,50]) #adds 50 credits to ship inventory
                 SoundVault.play('money')
                 clearedSector[sectornum] = True
                 sectorsCleared = 0
@@ -766,7 +763,7 @@ def main():
                 object_list[7] = 200 #meaning the player is paralyzed
                 currentfuel = totalfuel
                 currentarmor = totalarmor
-                shipInventory = [0,0,0,0]
+                object_list[6].setInventory([0,0,0,0])
                 lasttransit = 0
                 timer_shipdeath = 0
 
@@ -789,7 +786,7 @@ def main():
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
-            graphics.drawInventory(screen, shipInventory)
+            graphics.drawInventory(screen, object_list[6].getInventory())
             if file_settings[6]:
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
@@ -799,7 +796,7 @@ def main():
             # printer
 
         if status == "arcadeinit":
-            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), "NA", 1] #constructing a ship
+            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), ShipExtras(), 1] #constructing a ship
             object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
                                   d_asteroids, d_fighters, 1)
             arcade_level = 1
@@ -826,8 +823,6 @@ def main():
             previous_tick = 0
             previous_tick2 = 0
             pygame.mouse.set_visible(False)
-            #inventory
-            shipInventory = [0,0,0,0]
 
             status = "arcade"
 
@@ -873,7 +868,7 @@ def main():
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
-            graphics.drawInventory(screen, shipInventory)
+            graphics.drawInventory(screen, object_list[6].getInventory())
             if file_settings[6]:
                 Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
             flame = False
