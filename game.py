@@ -271,7 +271,19 @@ class AlienMineAI():
         for i in range(15):
             AITools.shoot(object_list, self_loc, i*24, 122)
         object_list[self_loc + 7] = -1
-        
+
+class ShipExtras():
+    def __init__(self):
+        self.inventory = [0,0,0,0]
+
+    def getInventory(self):
+        return self.inventory
+
+    def setInventory(self, newInventory):
+        self.inventory = newInventory
+
+    def addInventory(self, newInventory):
+        self.inventory = [a + b for a, b in zip(self.inventory, newInventory)]
              
 #particle effects
 def particlemaker(xpos, ypos, xmom, ymom):
@@ -681,7 +693,8 @@ def _changeStars(sectornum):
     sector1 += newstars
     saveObjects(sectornum, sector1, 1920, 1080)
 
-#removing random ship that was in sector 11
-#obj = getObjects(11, 1920, 1080)
-#obj = obj[8:]
-#saveObjects(11, obj, 1920, 1080)
+def _discretionaryactivity():
+    print("working on corrections...")
+    obj = getObjects(1, 1920, 1080)
+    obj = obj[8:]
+    saveObjects(1, obj, 1920, 1080)

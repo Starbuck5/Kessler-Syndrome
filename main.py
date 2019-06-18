@@ -273,6 +273,8 @@ def main():
             pygame.display.flip()
 
         if status == "exiting":
+            ## way to script changes to objectlist without pickle errors ##
+            #game._discretionaryactivity()
             ## sector object list visualizer ##
             #for i in range(1, 20):
             #    print("SECTOR", i)
