@@ -123,6 +123,7 @@ def main():
     Texthelper.scalar = scalarscalar
     Texthelper.width = width
     Texthelper.height = height
+    Texthelper.SAFEASPECT = (16,9)
     GameConstants.width = width
     GameConstants.height = height
 
@@ -158,7 +159,9 @@ def main():
             if Texthelper.writeButtonBox(screen, [(410, 610), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(410, 670), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(410, 670), "Credits", 3]):
+                status = "credits"
+            if Texthelper.writeButtonBox(screen, [(410, 730), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 status = "exiting"         
 
             screen.blit(earthpic, (1500,800))
@@ -217,8 +220,6 @@ def main():
                 filehelper.set(file_settings, 0)
                 if (not file_settings[4]):
                     DEVMODE = False #if you disable cheats devmode is turned off
-
-            pygame.display.flip()
 
         if status == "cheatsmenu":
             screen.fill(color)
@@ -323,6 +324,13 @@ def main():
                                     object_list[i2+2] = dockPosition[2]
                                     object_list[i2+3] = dockPosition[3]
                                     object_list[i2+5] = dockPosition[4]
+
+        if status == "credits":
+            screen.fill(color)
+            sdlnum = pygame.get_sdl_version()
+            sdlnum = str(sdlnum[0]) + "." + str(sdlnum[1]) + "." + str(sdlnum[2])
+            status = creditsUI(screen, sdlnum)
+            pygame.display.flip()
 
         if status == "gameinit":       
             # changing variable setup
@@ -806,8 +814,8 @@ def main():
             ammunition = totalammunition
 
             #initializes printouts of fuel and armor and ammo
-            graphics.InfoBars.init(graphics.FlashyBox([1590, 990, 280, 70], 0.2, (255,0,0)),
-                                   graphics.FlashyBox([1590, 920, 280, 70], 0.2, (255,0,0)))
+            graphics.InfoBars.init(graphics.FlashyBox(["right-280", 990, 280, 70], 0.2, (255,0,0)),
+                                   graphics.FlashyBox(["right-280", 920, 280, 70], 0.2, (255,0,0)))
 
             previous_tick = 0
             previous_tick2 = 0

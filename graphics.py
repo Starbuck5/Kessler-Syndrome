@@ -139,6 +139,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
 
     #adding other icons
     Images.add("infinity", scaleImage(loadImage("Assets\\images\\infinity.tif"), scalarscalar))
+    Images.add("pygamebadge", scaleImage(loadImage("Assets\\images\\pygame-badge-SMA-unscaled.png"), 2.5*scalarscalar))
 
     #adding miscellaneous other object images
     Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2*scalarscalar))

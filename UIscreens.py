@@ -727,3 +727,19 @@ def cheatsMenuUI(screen, cheats_settings):
 
     pygame.display.flip()
     return status
+
+def creditsUI(screen, sdlnum):
+    status = "credits"
+    badge = graphics.Images.get("pygamebadge")
+    draw.sblit(screen, badge, ("right-500", 140))
+    Texthelper.write(screen, [("right-500", 950), "running on SDL version " + sdlnum, 1.5])
+    Texthelper.write(screen, [(370, 220), "Created by", 5])
+    Texthelper.write(screen, [(475, 300), "Charlie Hayden", 3], color=(30,144,255))
+    Texthelper.write(screen, [(370, 420), "With help from", 4])
+    Texthelper.write(screen, [(475, 500), "Colby Smith", 3], color=(138,43,226))
+    Texthelper.write(screen, [(475, 550), "Julian Baldwin", 3], color=(255,120,0))
+    Texthelper.write(screen, [(475, 600), "Nick Bradley", 3], color=(35,132,37))
+    Texthelper.write(screen, [(300,750), "Sound effects credited in Assets/sounds/assetsources.txt", 1.5])
+    if Texthelper.writeButton(screen, [("center", 1000), "Back", 3]):
+        status = "menuinit" 
+    return status
