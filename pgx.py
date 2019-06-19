@@ -457,14 +457,18 @@ class Texthelper():
     def _drawtext(screen, text_input):
         text_location, text, scale = text_input
         horizontal_pos = text_location[0]
+        vertical_pos = text_location[1]
         for i in range(len(text)):
-            if text[i] != " " and not text[i] in Texthelper.HALFSIZERS:
+            if text[i] == "\n":
+                horizontal_pos = text_location[0]
+                vertical_pos += 15 * scale     
+            elif text[i] != " " and not text[i] in Texthelper.HALFSIZERS:
                 text3 = Font.getChar(text[i], scale)                
-                screen.blit(text3, (horizontal_pos, text_location[1]))
+                screen.blit(text3, (horizontal_pos, vertical_pos))
                 horizontal_pos += 11 * scale
             elif text[i] in Texthelper.HALFSIZERS:
                 text3 = Font.getChar(text[i], scale)
-                screen.blit(text3, (horizontal_pos, text_location[1]))
+                screen.blit(text3, (horizontal_pos, vertical_pos))
                 horizontal_pos += 5 * scale                
             elif text[i] == " " and text[i-1] != " " and i != 0:
                 horizontal_pos += 6 * scale
