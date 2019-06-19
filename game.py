@@ -5,6 +5,7 @@ from pgx import loadImage
 from pgx import spriteSheetBreaker
 from pgx import scaleImage
 from pgx import filehelper
+import pgx
 
 #stores a couple constants so they can be accessed without passing variables
 class GameConstants():
@@ -131,7 +132,7 @@ class DroneAI():
         if self.direction == 0:
             self.direction = -1
 
-    def update(self, object_list, self_loc):
+    def update(self, screen, object_list, self_loc):
         distance = AITools.distanceBetween(object_list, 0, self_loc)
 
         #pulling entities out of the list for ease of change
@@ -226,14 +227,42 @@ class DroneAI():
         #zippings modified entity back into the list
         object_list[self_loc:self_loc+8] = droneShip
 
-class PrezAI(DroneAI):
-    pass
+class ArmorManager():
+    def __init__(self, totalarmor):
+        self.armor = totalarmor
+        self.totalarmor = totalarmor
+
+    def applyDamage(self, amount):
+        self.armor -= amount
+
+    def getArmor(self):
+        return self.armor
+
+    def setArmor(self, amount):
+        self.armor = amount
+
+    def getTotalArmor(self):
+        return self.totalarmor
+
+    def setTotalArmor(self, amount):
+        self.totalarmor = amount
+
+#MulTiPle INheRiTAncE?!?! Suck it JAVA
+class PrezAI(DroneAI, ArmorManager):
+    def __init__(self):
+        DroneAI.__init__(self)
+        ArmorManager.__init__(self, 50)
+
+    def update(self, screen, object_list, self_loc):
+        DroneAI.update(self, screen, object_list, self_loc)
+        pgx.Texthelper.write(screen, [("center", 180), str(self.getArmor()), 2.5], color=(255,0,0))
+        
 
 class SpikeAI():
     def __init__(self):
         self.timer = -random.randint(0,300)
 
-    def update(self, object_list, self_loc):
+    def update(self, screen, object_list, self_loc):
         self.timer += 1
         if self.timer >= 0:
             AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
@@ -251,7 +280,7 @@ class AlienMineAI():
         self.time = 0
         self.frame = 1
 
-    def update(self, object_list, self_loc):
+    def update(self, screen, object_list, self_loc):
         self.time += 1
         if self.time >= AlienMineAI.frameTick:
             self.time = 0
@@ -275,6 +304,9 @@ class AlienMineAI():
 class ShipExtras():
     def __init__(self):
         self.inventory = [0,0,0,0]
+
+    def update(self, screen, object_list, object_loc):
+        pass
 
     def getInventory(self):
         return self.inventory

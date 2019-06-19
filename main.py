@@ -95,7 +95,7 @@ def main():
     d_stars = [100, 101, 102, 103, 104, 105]
     d_fighters = [130, 131, 132, 133]
     #list of things to be eliminated before officially clearing a sector ->
-    d_debris = d_parts + d_sats + d_asteroids + d_aliens + d_fighters + [7]
+    d_debris = d_parts + d_sats + d_asteroids + d_aliens + d_fighters + [7, 666]
     ship_id = [1, 5]
     status = "menuinit"
     flame = False
@@ -510,6 +510,9 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "The president has come for us. You must go defeat her.")
                 sector19 = getObjects(19, width, height)
+                if sector19 == ["PLEASE GENERATE"]:
+                    sector19 = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
+                                       d_asteroids, d_fighters, sectornum)
                 sector19 += [width*0.5, height*0.5, 0, 0, 666, RotationState(0, 0), PrezAI(), 1]
                 saveGame(19, sector19, width, height)
                 filehelper.setElement(8, 0, 3)
@@ -648,7 +651,7 @@ def main():
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
                     try:
-                        object_list[i+6].update(object_list, i)
+                        object_list[i+6].update(screen, object_list, i)
                     except:
                        pass
             #special entity behaviors
@@ -842,7 +845,7 @@ def main():
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
                     try:
-                        object_list[i+6].update(object_list, i)
+                        object_list[i+6].update(screen, object_list, i)
                     except:
                        pass
 
