@@ -117,6 +117,7 @@ def main():
                               8: (830, 675), 9: (1060, 525), 10: (865, 535), 11: (830, 400), 12: (700, 630), 13: (690, 455), 14: (1095, 385),
                               15: (1055, 250), 16: (840, 245), 17: (965, 415), 18: (870, 105), 19: (1030, 90)}
     optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exiting options
+    deathtimer = 200 #time after death it makes the watch the aftermath
 
     # class setup
     Screenhelper(width,height)
@@ -765,15 +766,15 @@ def main():
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 SoundVault.play('death')
-                object_list[4] = 5   #sets the ship to be objID 5 for 200 ticks
-                object_list[7] = 200 #meaning the player is paralyzed
+                object_list[4] = 5   #sets the ship to be objID 5 for deathtimer ticks
+                object_list[7] = deathtimer #meaning the player is paralyzed
                 currentfuel = totalfuel
                 currentarmor = totalarmor
                 object_list[6].setInventory([0,0,0,0])
                 lasttransit = 0
                 timer_shipdeath = 0
 
-            if timer_shipdeath == 200:
+            if timer_shipdeath == deathtimer:
                 sectornum = 1
                 shipObj = object_list[:8]
                 object_list = shipObj + getObjects(sectornum, width, height)
@@ -787,7 +788,7 @@ def main():
             doPhysics(object_list)
 
             #ship durability state
-            updateShipGraphics(currentarmor, totalarmor)
+            updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
             
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
@@ -869,7 +870,7 @@ def main():
             doPhysics(object_list)
 
             #ship durability state
-            updateShipGraphics(currentarmor, totalarmor)
+            updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
             
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)

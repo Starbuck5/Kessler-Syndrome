@@ -176,7 +176,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
-    imageList = spriteSheetBreaker(loadImage("Assets\\images\\ships.png"), 24, 60, 0, 0, 1, 4)
+    imageList = spriteSheetBreaker(loadImage("Assets\\images\\ships.png"), 24, 60, 0, 0, 1, 5)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
         imageList[i] = scaleImage(imageList[i], scalar3)
@@ -184,6 +184,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(1.2, imageList[1])
     Images.add(1.3, imageList[2])
     Images.add(1.4, imageList[3])
+    Images.add(1.5, imageList[4])
 
     #adding downed fighters
     imageList = spriteSheetBreaker(loadImage("Assets\\images\\fighters.gif"), 42, 22, 0, 0, 2, 2)
