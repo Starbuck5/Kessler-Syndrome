@@ -720,7 +720,9 @@ def main():
                 if object_list[i+4] in d_debris:
                     numdebris += 1
             if numdebris == 0 and clearedSector[sectornum] == False:
-                object_list[6].addInventory([0,0,0,50]) #adds 50 credits to ship inventory
+                addCredits = 50
+                addCredits += (sectornum-5)//3*35 #later sectors have greater rewareds
+                object_list[6].addInventory([0,0,0,addCredits]) #adds credits to ship inventory
                 SoundVault.play('money')
                 clearedSector[sectornum] = True
                 sectorsCleared = 0
@@ -735,7 +737,7 @@ def main():
                 elif sectorsCleared != 1:
                     AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                     loadSound("Assets\\sounds\\click.ogg"),
-                                    "Sector cleared. Credits acquired.")
+                                    "Sector cleared. " + str(addCredits) + " Credits acquired.")
 
             # deaderizer
             object_list = deaderizer(object_list)
