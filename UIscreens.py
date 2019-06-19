@@ -40,7 +40,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
         if upgradeType == "fuel":
             editingIndex = 1
             pointName = "fp"
-        if upgradeType == "torpedoe":
+        if upgradeType == "torpedo":
             editingIndex = 2
             pointName = "ammo"
         driveHead = editingIndex * maxLevel
@@ -524,11 +524,11 @@ def home(screen):
         shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "fuel", "fuelUpgrade", currentStats, totalStats)
 
     elif shopStatus == "ammoUpgradeinit":
-        drawUpgradeScreen(screen, shipLv, homeInventory, True, "torpedoe", "N/A", currentStats, totalStats)
+        drawUpgradeScreen(screen, shipLv, homeInventory, True, "torpedo", "N/A", currentStats, totalStats)
         shopStatus = "ammoUpgrade"
 
     elif shopStatus == "ammoUpgrade":
-        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedoe", "ammoUpgrade", currentStats, totalStats)
+        shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedo", "ammoUpgrade", currentStats, totalStats)
 
     elif shopStatus == "scavengeUpgradeinit":
         shopStatus = drawSpecialUpgrade(screen, True, shipLv, 3, "Upgrade Scavenging Module", [10, 2, 2, 35], "scavengeUpgrade", homeInventory)
