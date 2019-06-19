@@ -116,7 +116,7 @@ def main():
     sector_map_coordinates = {1: (960, 990), 2: (820, 970), 3: (1110, 980), 4: (810, 840), 5: (970, 830), 6: (965, 690), 7: (1115, 680),
                               8: (830, 675), 9: (1060, 525), 10: (865, 535), 11: (830, 400), 12: (700, 630), 13: (690, 455), 14: (1095, 385),
                               15: (1055, 250), 16: (840, 245), 17: (965, 415), 18: (870, 105), 19: (1030, 90)}
-    optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exitting options
+    optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exiting options
 
     # class setup
     Screenhelper(width,height)
@@ -218,6 +218,10 @@ def main():
                     screen.blit(optionsScreenshot, (0, 0))
                 timer_popupmenu = 0
                 filehelper.set(file_settings, 0)
+                if file_settings[5]:
+                    GameConstants.drag = [1,5]
+                else:
+                    GameConstants.drag = []
                 if (not file_settings[4]):
                     DEVMODE = False #if you disable cheats devmode is turned off
 
