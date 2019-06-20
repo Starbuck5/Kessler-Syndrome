@@ -256,14 +256,14 @@ class PrezAI(DroneAI, ArmorManager):
     def update(self, screen, object_list, self_loc):
         DroneAI.update(self, screen, object_list, self_loc)
         pgx.Texthelper.write(screen, [("center", 70), "President of the World", 2], color = (110,0, 30))
-        pgx.draw.rect(screen, (200,0, 30), [200, 100, 1520, 30])
+        pgx.draw.rect(screen, (200,0, 30), ["left.385", 100, 1150, 30])
         armorfraction = self.getArmor() / self.getTotalArmor()
-        pgx.draw.rect(screen, (110,0, 30), [200, 100, int(1520*armorfraction), 30])
+        pgx.draw.rect(screen, (110,0, 30), ["left.385", 100, int(1150*armorfraction), 30])
 
         if self.getArmor() < 0:
             object_list[self_loc+7] = -1
             inp = object_list[self_loc:self_loc+4]
-            for i in range(3):
+            for i in range(6):
                 object_list += particlemaker(*inp)
         
 
