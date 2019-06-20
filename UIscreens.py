@@ -159,7 +159,7 @@ def homeinitUI(screen, inventory):
     Texthelper.write(screen, [("center", 540+165), "resume", 3])
     pygame.display.flip()
 
-def homeUI(screen, shipInventory, homeInventory):
+def homeUI(screen, shipInventory, homeInventory, freeStuff):
     status = "home"
     graphics.drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
@@ -183,6 +183,17 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
+
+    if freeStuff:
+        spacing = 60
+        if Texthelper.writeButtonBox(screen, [("left+100", 200), "Free Metal", 3], color = (125, 15, 198)):
+            homeInventory[0] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing), "Free Gas", 3], color = (125, 15, 198)):
+            homeInventory[1] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing * 2), "Free Circuts", 3], color = (125, 15, 198)):
+            homeInventory[2] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing * 3), "Free Credits", 3], color = (125, 15, 198)):
+            homeInventory[3] += 10
 
     #Quests
     #refueling the airmans ship
@@ -480,7 +491,7 @@ def setupShop(shipLv, shipInventory, homeInventory, currentStats, totalStats, co
     shopStorage.color = color
 
 #subsection of the great big main loop that deals with the various shops of zvezda
-def home(screen):
+def home(screen, freeStuff):
     shopStatus = shopStorage.shopStatus
     shipLv = shopStorage.shipLv
     shipInventory = shopStorage.shipInventory
@@ -548,7 +559,7 @@ def home(screen):
         shopStatus = "home"
     
     elif shopStatus == "home":
-        shopStatus = homeUI(screen, shipInventory, homeInventory)
+        shopStatus = homeUI(screen, shipInventory, homeInventory, freeStuff)
     
     shopStorage.shopStatus = shopStatus
     pygame.display.flip()
@@ -663,29 +674,34 @@ def optionsUI(screen, file_settings):
 
     Texthelper.write(screen, [("center", 200), "Options", 6])
 
-    Texthelper.write(screen, [(600, 400), "Resolution:", 3])
+    x = 500 #settings coords
+    x2 = 1000
+    
+    Texthelper.write(screen, [(x, 400), "Resolution:", 3])
     OptionsInput.width.update(screen)
     OptionsInput.height.update(screen)
     Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    drawSettingsOption(screen, "Cheats", 600, 1000, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
+    drawSettingsOption(screen, "Cheats", x, x2, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
 
-    drawSettingsOption(screen, "Fullscreen", 600, 1000, 400 + spacing * 2, file_settings, 2)
+    drawSettingsOption(screen, "Fullscreen", x, x2, 400 + spacing * 2, file_settings, 2)
 
-    drawSettingsOption(screen, "Ship Drag", 600, 1000, 400 + spacing * 3, file_settings, 5)
+    drawSettingsOption(screen, "Ship Drag", x, x2, 400 + spacing * 3, file_settings, 5)
 
-    drawSettingsOption(screen, "FPS Counter", 600, 1000, 400 + spacing * 4, file_settings, 6)
+    drawSettingsOption(screen, "FPS Counter", x, x2, 400 + spacing * 4, file_settings, 6)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 5.5), "Reset Gamedata", 3], color = (178, 34, 34)):
+    drawSettingsOption(screen, "Text Scrolling", x, x2, 400 + spacing * 5, file_settings, 7, ontext = "Fast", offtext = "Slow")
+
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 6.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 7), "Restore Default Settings", 3]):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 8), "Restore Default Settings", 3]):
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
@@ -718,6 +734,8 @@ def cheatsMenuUI(screen, cheats_settings):
     drawSettingsOption(screen, "Map Visibility", 600, 1100, 400 + spacing * 4, cheats_settings, 4)
 
     drawSettingsOption(screen, "Hitboxes", 600, 1100, 400 + spacing * 5, cheats_settings, 5, ontext = "Visible", offtext = "Not Visible")
+
+    drawSettingsOption(screen, "Free Stuff", 600, 1100, 400 + spacing * 6, cheats_settings, 6)
 
     if not any(cheats_settings):
         Texthelper.write(screen, [("center", 800), "What's the point of cheats if everything's turned off?", 3], color = (125, 15, 198))

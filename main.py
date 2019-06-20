@@ -129,6 +129,10 @@ def main():
     Texthelper.SAFEASPECT = (16,9)
     GameConstants.width = width
     GameConstants.height = height
+    if file_settings[7]:
+        AnnouncementBox.INTEXTSPEED = 1
+    else:
+        AnnouncementBox.INTEXTSPEED = 4
 
     #graphics setup
     graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
@@ -227,6 +231,10 @@ def main():
                     GameConstants.drag = []
                 if (not file_settings[4]):
                     DEVMODE = False #if you disable cheats devmode is turned off
+                if file_settings[7]:
+                    AnnouncementBox.INTEXTSPEED = 1
+                else:
+                    AnnouncementBox.INTEXTSPEED = 4
 
         if status == "cheatsmenu":
             screen.fill(color)
@@ -328,7 +336,7 @@ def main():
             status = "home"
             
         if status == "home":
-            status = home(screen)
+            status = home(screen, DEVMODE and cheats_settings[6])
             if status != "home": #so when the code is exiting this part
                 pygame.mouse.set_visible(False)
                 totalarmor, totalfuel, totalammunition = shopStorage.totalStats
