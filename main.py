@@ -734,8 +734,9 @@ def main():
                 if object_list[i+4] in d_debris:
                     numdebris += 1
             if numdebris == 0 and clearedSector[sectornum] == False:
-                addCredits = 50
-                addCredits += (sectornum-5)//3*35 #later sectors have greater rewareds
+                addCredits = (sectornum-5)//3*35
+                addCredits = max(addCredits, 0)
+                addCredits += 50
                 object_list[6].addInventory([0,0,0,addCredits]) #adds credits to ship inventory
                 SoundVault.play('money')
                 clearedSector[sectornum] = True
@@ -770,21 +771,25 @@ def main():
                     ammunition = totalammunition
                 
             #ship death
-            if currentarmor <= 0 or currentfuel <= 0:
+            if (currentarmor <= 0 or currentfuel <= 0) and timer_shipdeath > deathtimer:
                 saveGame(sectornum, object_list[8:], width, height)
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 SoundVault.play('death')
                 object_list[4] = 5   #sets the ship to be objID 5 for deathtimer ticks
                 object_list[7] = deathtimer #meaning the player is paralyzed
-                currentfuel = totalfuel
-                currentarmor = totalarmor
                 object_list[6].setInventory([0,0,0,0])
                 lasttransit = 0
                 timer_shipdeath = 0
 
+            if timer_shipdeath < deathtimer:
+                currentfuel = max(currentfuel, 0)
+                currentarmor = max(currentarmor, 0)
+
             if timer_shipdeath == deathtimer:
                 sectornum = 1
+                currentfuel = totalfuel
+                currentarmor = totalarmor
                 shipObj = object_list[:8]
                 object_list = shipObj + getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
