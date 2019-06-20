@@ -674,29 +674,34 @@ def optionsUI(screen, file_settings):
 
     Texthelper.write(screen, [("center", 200), "Options", 6])
 
-    Texthelper.write(screen, [(600, 400), "Resolution:", 3])
+    x = 500 #settings coords
+    x2 = 1000
+    
+    Texthelper.write(screen, [(x, 400), "Resolution:", 3])
     OptionsInput.width.update(screen)
     OptionsInput.height.update(screen)
     Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    drawSettingsOption(screen, "Cheats", 600, 1000, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
+    drawSettingsOption(screen, "Cheats", x, x2, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
 
-    drawSettingsOption(screen, "Fullscreen", 600, 1000, 400 + spacing * 2, file_settings, 2)
+    drawSettingsOption(screen, "Fullscreen", x, x2, 400 + spacing * 2, file_settings, 2)
 
-    drawSettingsOption(screen, "Ship Drag", 600, 1000, 400 + spacing * 3, file_settings, 5)
+    drawSettingsOption(screen, "Ship Drag", x, x2, 400 + spacing * 3, file_settings, 5)
 
-    drawSettingsOption(screen, "FPS Counter", 600, 1000, 400 + spacing * 4, file_settings, 6)
+    drawSettingsOption(screen, "FPS Counter", x, x2, 400 + spacing * 4, file_settings, 6)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 5.5), "Reset Gamedata", 3], color = (178, 34, 34)):
+    drawSettingsOption(screen, "Text Scrolling", x, x2, 400 + spacing * 5, file_settings, 7, ontext = "Fast", offtext = "Slow")
+
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 6.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 7), "Restore Default Settings", 3]):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 8), "Restore Default Settings", 3]):
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate

@@ -129,6 +129,10 @@ def main():
     Texthelper.SAFEASPECT = (16,9)
     GameConstants.width = width
     GameConstants.height = height
+    if file_settings[7]:
+        AnnouncementBox.INTEXTSPEED = 1
+    else:
+        AnnouncementBox.INTEXTSPEED = 4
 
     #graphics setup
     graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
@@ -227,6 +231,10 @@ def main():
                     GameConstants.drag = []
                 if (not file_settings[4]):
                     DEVMODE = False #if you disable cheats devmode is turned off
+                if file_settings[7]:
+                    AnnouncementBox.INTEXTSPEED = 1
+                else:
+                    AnnouncementBox.INTEXTSPEED = 4
 
         if status == "cheatsmenu":
             screen.fill(color)
