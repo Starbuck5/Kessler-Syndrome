@@ -200,7 +200,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(110, image)
 
     #adding president's ship
-    Images.addRotate(666, scaleImage(loadImage("Assets\\images\\protoprez2.gif"), scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(666, scaleImage(loadImage("Assets\\images\\protoprez3.gif"), scalarscalar), colorkey=(255,255,255))
 
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]

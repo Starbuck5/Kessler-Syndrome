@@ -255,7 +255,16 @@ class PrezAI(DroneAI, ArmorManager):
 
     def update(self, screen, object_list, self_loc):
         DroneAI.update(self, screen, object_list, self_loc)
-        pgx.Texthelper.write(screen, [("center", 180), str(self.getArmor()), 2.5], color=(255,0,0))
+        pgx.Texthelper.write(screen, [("center", 70), "President of the World", 2], color = (110,0, 30))
+        pgx.draw.rect(screen, (200,0, 30), [200, 100, 1520, 30])
+        armorfraction = self.getArmor() / self.getTotalArmor()
+        pgx.draw.rect(screen, (110,0, 30), [200, 100, int(1520*armorfraction), 30])
+
+        if self.getArmor() < 0:
+            object_list[self_loc+7] = -1
+            inp = object_list[self_loc:self_loc+4]
+            for i in range(3):
+                object_list += particlemaker(*inp)
         
 
 class SpikeAI():

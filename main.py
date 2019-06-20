@@ -13,7 +13,7 @@ import Collisions
 from Collisions import explosion_sounds
 
 upgrades = Filehelper("assets\\data\\upgrades.txt")
-                                                
+                          
 def main():
     file_settings = filehelper.get(0) #grabs settings from file
 
@@ -343,7 +343,7 @@ def main():
             # changing variable setup
 
             start_sector = -1
-            for i in range(1, 19):
+            for i in range(1, 20):
                 if len(getObjects(i, width, height)) > 1:
                     if getObjects(i, width, height)[4] in ship_id:
                         start_sector = i
@@ -642,6 +642,10 @@ def main():
                         #if debris hits anything thats not a star
                         elif object_list[4 + (i2 * 8)] == 4 and object_list[4+i*8] not in (d_stars + [4]):
                             object_list[i2*8+7] = -1
+                        elif object_list[4+i2*8] == 2 and object_list[4+i*8] == 666:
+                            object_list[i2*8+7] = -1
+                            explosion_sounds()
+                            object_list[i*8+6].applyDamage(10)
                         object_list += printerlist_add                            
                     i2 += 1            
             # collision detection
