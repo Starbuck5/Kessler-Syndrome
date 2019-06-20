@@ -287,6 +287,21 @@ def main():
             #    print("SECTOR", i)
             #    print(getObjects(i, 1920, 1080))
             #    print("\n")
+            try: #tries to save game all the ways pauseinit does
+                filehelper.set([currentarmor, currentfuel, ammunition], 4)
+                saveGame(sectornum, object_list, width, height)
+                discovery = list("8" * len(sector_map_coordinates))
+                for i in discoverSector.keys():
+                    if discoverSector[i]:
+                        discovery[i - 1] = "1"
+                filehelper.setElement("".join(discovery), 1, 2)
+                cleared = list(cleared) 
+                for i in range(1, 20):
+                    if clearedSector[i]:
+                        cleared[i - 1] = "1"
+                filehelper.setElement("".join(cleared), 1, 1)
+            except:
+                pass
             pygame.quit()
             raise SystemExit
 
@@ -919,9 +934,7 @@ def main():
         
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                raise SystemExit
+                status = "exiting"
 
 
 #checks if it needs to run setupper
