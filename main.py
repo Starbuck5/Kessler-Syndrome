@@ -40,7 +40,7 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat5.tif"), 0.9*sat_scalar),
                  "d", "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
-                 loadImage("Assets\\images\\solarpanel.tif"), temp_image,
+                 scaleImage(loadImage("Assets\\images\\solarpanel.tif"), scalarscalar), temp_image,
                  scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
@@ -100,10 +100,12 @@ def main():
     status = "menuinit"
     flame = False
     sectornum = 1
-    portalcoordsRevised = [[[0, height/2], [60, height/2-80], [60, height/2+80]],
-                           [[width/2, 0], [width/2-80, 60],[width/2+80, 60]],
-                           [[width, height/2], [width-60, height/2-80], [width-60, height/2+80]],
-                           [[width/2, height], [width/2+80, height-60], [width/2-80, height-60]]]
+    pdim1 = 85 * scalarscalar
+    pdim2 = 60 * scalarscalar
+    portalcoordsRevised = [[[0, height/2], [pdim2, height/2-pdim1], [pdim2, height/2+pdim1]],
+                           [[width/2, 0], [width/2-pdim1, pdim2],[width/2+pdim1, pdim2]],
+                           [[width, height/2], [width-pdim2, height/2-pdim1], [width-pdim2, height/2+pdim1]],
+                           [[width/2, height], [width/2+pdim1, height-pdim2], [width/2-pdim1, height-pdim2]]]
     portalRects = []
     for i in range(len(portalcoordsRevised)):
         portalRects.append(pointsToRect(portalcoordsRevised[i]))
