@@ -313,7 +313,7 @@ def main():
             status = "home"
             
         if status == "home":
-            status = home(screen)
+            status = home(screen, DEVMODE and cheats_settings[6])
             if status != "home": #so when the code is exiting this part
                 pygame.mouse.set_visible(False)
                 totalarmor, totalfuel, totalammunition = shopStorage.totalStats

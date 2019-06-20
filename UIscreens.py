@@ -159,7 +159,7 @@ def homeinitUI(screen, inventory):
     Texthelper.write(screen, [("center", 540+165), "resume", 3])
     pygame.display.flip()
 
-def homeUI(screen, shipInventory, homeInventory):
+def homeUI(screen, shipInventory, homeInventory, freeStuff):
     status = "home"
     graphics.drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
@@ -183,6 +183,17 @@ def homeUI(screen, shipInventory, homeInventory):
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
+
+    if freeStuff:
+        spacing = 60
+        if Texthelper.writeButtonBox(screen, [("left+100", 200), "Free Metal", 3], color = (125, 15, 198)):
+            homeInventory[0] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing), "Free Gas", 3], color = (125, 15, 198)):
+            homeInventory[1] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing * 2), "Free Circuts", 3], color = (125, 15, 198)):
+            homeInventory[2] += 10
+        if Texthelper.writeButtonBox(screen, [("left+100", 200 + spacing * 3), "Free Credits", 3], color = (125, 15, 198)):
+            homeInventory[3] += 10
 
     #Quests
     #refueling the airmans ship
@@ -480,7 +491,7 @@ def setupShop(shipLv, shipInventory, homeInventory, currentStats, totalStats, co
     shopStorage.color = color
 
 #subsection of the great big main loop that deals with the various shops of zvezda
-def home(screen):
+def home(screen, freeStuff):
     shopStatus = shopStorage.shopStatus
     shipLv = shopStorage.shipLv
     shipInventory = shopStorage.shipInventory
@@ -548,7 +559,7 @@ def home(screen):
         shopStatus = "home"
     
     elif shopStatus == "home":
-        shopStatus = homeUI(screen, shipInventory, homeInventory)
+        shopStatus = homeUI(screen, shipInventory, homeInventory, freeStuff)
     
     shopStorage.shopStatus = shopStatus
     pygame.display.flip()
@@ -718,6 +729,8 @@ def cheatsMenuUI(screen, cheats_settings):
     drawSettingsOption(screen, "Map Visibility", 600, 1100, 400 + spacing * 4, cheats_settings, 4)
 
     drawSettingsOption(screen, "Hitboxes", 600, 1100, 400 + spacing * 5, cheats_settings, 5, ontext = "Visible", offtext = "Not Visible")
+
+    drawSettingsOption(screen, "Free Stuff", 600, 1100, 400 + spacing * 6, cheats_settings, 6)
 
     if not any(cheats_settings):
         Texthelper.write(screen, [("center", 800), "What's the point of cheats if everything's turned off?", 3], color = (125, 15, 198))
