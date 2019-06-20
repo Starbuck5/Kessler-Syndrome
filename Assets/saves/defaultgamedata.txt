@@ -1,4 +1,4 @@
-[?, 1080, True, 0, False, True, False]#game info: width, height, fullscreen, gamestate, cheats, ship drag, FPS counter
+[?, 1080, True, 0, False, True, False, False]#game info: width, height, fullscreen, gamestate, cheats, ship drag, FPS counter, fast text scrolling
 
 [player, 1888888888888888888, 1888888888888888888]#player info: name, sector clearing, sector visitation
 

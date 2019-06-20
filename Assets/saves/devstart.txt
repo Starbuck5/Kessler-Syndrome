@@ -1,5 +1,5 @@
-[1920, 1080, True, 2, True, True, True]#game info: width, height, fullscreen, gamestate, cheats, ship drag, FPS counter
-
+[1920, 1080, True, 2, True, True, True, False]#game info: width, height, fullscreen, gamestate, cheats, ship drag, FPS counter
+, fast text scrolling
 [player, 1888888888888888888, 1888888888888888888]#player info: name, sector clearing, sector visitation
 
 [0, 30, 0, 0]#inventory: metal, gas, circuits, credits
