@@ -58,6 +58,15 @@ def keyboard_queued():
             chars_out.append(event.unicode)
     return chars_out
 
+#keyboard that is finally the intended way to do keyboard input, I believe
+def keydowns():
+    systemEvents = AllEvents.TICKINPUT
+    chars_out = []
+    for event in systemEvents:
+        if event.type == pygame.KEYDOWN:
+            chars_out.append(event.key)
+    return chars_out
+    
 #returns some stuff about the mouse
 def mouse():
     if pygame.mouse.get_focused():
@@ -362,8 +371,8 @@ class AnnouncementBox():
         
         if not self.printing:
             Texthelper.write(screen, [(768, 120+boxheight), "Press Enter to Continue", 1.5])
-            inputvar = keyboard()
-            if "enter" in inputvar:
+            inputvar = keydowns()
+            if pygame.K_RETURN in inputvar:
                 self.ending = True
                 self.time = 1
 
@@ -371,6 +380,9 @@ class AnnouncementBox():
         self.time += 1
         if self.printing:
             self.bounds[1] = int(self.time/self.INTEXTSPEED)
+        inputvar = keydowns()
+        if self.printing and pygame.K_RETURN in inputvar: #allows you to skip by pressing enter
+            self.bounds[1] = sum(self.lineelements)
         if self.ending:
             self.bounds[0] = int(self.time/self.OUTTEXTSPEED)
             if self.bounds[0] >= self.bounds[1]:

@@ -718,10 +718,12 @@ def getObjects(sectornum, width, height):
 #deletes everyinstance of toDelete type in the delSector - only changes the file doesn't change anything in play
 def deleteObject(toDelete, delSector, width, height):
     object_list = getObjects(delSector, width, height)
+    deletedex = ""
     for i in range(0, len(object_list), 8):
         if object_list[i+4] == toDelete:
             deletedex = i
-    del object_list[deletedex:deletedex+8]
+    if deletedex != "":
+        del object_list[deletedex:deletedex+8]
     saveGame(delSector, object_list, width, height)
 
 #mini program to replace the star fields of pre-generated sectors when star generation is changed

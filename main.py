@@ -521,7 +521,7 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
                 filehelper.setElement(7, 0, 3)
-            if filehelper.get(0)[3] == 7:
+            if filehelper.get(0)[3] == 7 and clearedSector[19] and sectornum == 1:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "I'm in! We've transmitted an account of the President's crimes to the whole world.")
