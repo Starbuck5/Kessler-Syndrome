@@ -438,17 +438,17 @@ def leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats,
     fighterGeneration = [11, 12, 13, 14, 15, 16, 17, 18, 19]
     additionalEntities = 0 #allows different sectors to generate greater numbers of entities than the base
     if sectornum in droneGeneration:
-        ASTEROID = 20
-        SATS = 35
-        PARTS = 10
-        MINES = 20
+        ASTEROID = 15
+        SATS = 40
+        PARTS = 15
+        MINES = 15
         DRONES = 15
         additionalEntities = 4
     elif sectornum in mineGeneration:
-        ASTEROID = 25
-        SATS = 40
-        PARTS = 10
-        MINES = 25
+        ASTEROID = 20
+        SATS = 45
+        PARTS = 15
+        MINES = 20
         DRONES = 0
         additionalEntities = 2
     else:
