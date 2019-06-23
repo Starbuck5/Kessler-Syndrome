@@ -20,6 +20,9 @@ def main():
     #sets adjustable settings
     width = int(file_settings[0])
     height = int(file_settings[1])
+    if platform.system() == "Darwin": #if on mac
+        width = int(width*0.5)
+        height = int(height*0.5)
     max_asteroids = 8
     if file_settings[5]:
         GameConstants.drag = [1,5]

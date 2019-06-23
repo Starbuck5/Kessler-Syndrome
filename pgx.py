@@ -4,6 +4,7 @@ from textwrap import wrap
 import pickle
 import codecs
 import os
+import platform
 
 #keyboard for continuous keypresses
 def keyboard():

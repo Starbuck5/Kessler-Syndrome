@@ -1,5 +1,3 @@
-import platform
-
 from pgx import *
 import graphics
 import game
