@@ -5,6 +5,9 @@ import pickle
 import codecs
 import os
 import platform
+import sys
+
+BASEPATH = os.path.abspath(os.path.dirname(sys.argv[0])) 
 
 #keyboard for continuous keypresses
 def keyboard():
@@ -101,7 +104,7 @@ def stretchImage(image, size):
 
 def handlePath(path):
     path = path.split("\\")
-    return os.path.join(*path)
+    return os.path.join(BASEPATH, *path)
 
 def loadImage(path):
     path = handlePath(path)
