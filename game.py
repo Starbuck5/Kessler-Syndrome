@@ -93,6 +93,16 @@ class AITools():
         object_list += [xpos, ypos, xmom, ymom, 123, RotationState(random.randint(0,360),
                         random.randint(-10,10)), AlienMineAI(), 1]
 
+    def releaseDrone(object_list, self_loc, angle):
+        xpos = object_list[self_loc]
+        ypos = object_list[self_loc+1]
+        angle = -(angle-90)
+        thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
+        xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel / 3
+        ymom = object_list[self_loc+3] + thrust_vector[1] * AITools.missile_accel / 3
+        object_list += [xpos, ypos, xmom, ymom, 120, RotationState(random.randint(0,360),
+                        random.randint(-10,10)), DroneAI(), 1]
+
     #takes in the objectlist and two locations, uses the missile accel to find the angle for
     #the shooter to hit the target, taking into account both of their momentums
     def getInterceptAngle(object_list, self_loc, target_loc):
@@ -129,47 +139,106 @@ class DroneAI():
         self.progression = 0
         self.shotCounter = 0
         self.direction = random.randint(0,1)
+        self.speed = 2
         if self.direction == 0:
             self.direction = -1
 
+    def attack(self, screen, object_list, self_loc):
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*self.speed
+        droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*self.speed
+        newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
+        rotationMom = newRotation - droneShip[5].getRotation()
+        newRotationMom = rotationMom - 360
+        if abs(newRotationMom) < abs(rotationMom):
+            rotationMom = newRotationMom
+        if rotationMom > 5:
+            rotationMom = 5
+        elif rotationMom < -5:
+            rotationMom = -5
+        if abs(rotationMom) == 5:
+            droneShip[2] = droneShip[2]/2
+            droneShip[3] = droneShip[3]/2
+        droneShip[5].setMomentum(rotationMom)
+        return droneShip
+
+    def shooting(self, screen, object_list, self_loc):
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
+        droneShip[2] = 0
+        droneShip[3] = 0
+        droneShip[5].setMomentum(0)
+        if self.shotCounter % 25 == 0:
+            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+        self.shotCounter += 1
+        return droneShip
+
+    def enclose(self, screen, object_list, self_loc):
+        distance = AITools.distanceBetween(object_list, 0, self_loc)
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*self.speed
+        droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*self.speed
+        xMom = (humanShip[0] - droneShip[0])/distance
+        if (droneShip[1] - humanShip[1]) > 0:
+            newRotation = math.degrees(math.acos(xMom))
+        else:
+            newRotation = 360 - math.degrees(math.acos(xMom))
+        newRotation += (30*self.direction)
+        rotationMom = newRotation - droneShip[5].getRotation()
+        newRotationMom = rotationMom - 360
+        if abs(newRotationMom) < abs(rotationMom):
+            rotationMom = newRotationMom
+        if rotationMom > 5:
+            rotationMom = 5
+        elif rotationMom < -5:
+            rotationMom = -5
+        droneShip[5].setMomentum(rotationMom)
+        return droneShip
+
+    def releasingMine(self, screen, object_list, self_loc):
+        distance = AITools.distanceBetween(object_list, 0, self_loc)
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*self.speed
+        droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*self.speed
+        xMom = (humanShip[0] - droneShip[0])/distance
+        if (droneShip[1] - humanShip[1]) > 0:
+            newRotation = math.degrees(math.acos(xMom))
+        else:
+            newRotation = 360 - math.degrees(math.acos(xMom))
+        angle = newRotation
+        AITools.releaseMine(object_list, self_loc, angle)
+        return droneShip
+
+    def retreat(self, screen, object_list, self_loc):
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        droneShip[5].setMomentum(0)
+        droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*self.speed
+        droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*self.speed
+        return droneShip
+
     def update(self, screen, object_list, self_loc):
         distance = AITools.distanceBetween(object_list, 0, self_loc)
+        newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
 
         #pulling entities out of the list for ease of change
         droneShip = object_list[self_loc:self_loc+8]
         humanShip = object_list[0:8]
+        rotationDistance = abs(newRotation - droneShip[5].getRotation())
         
         if self.progression == 0:
-            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
-            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
-            newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
-            rotationMom = newRotation - droneShip[5].getRotation()
-            newRotationMom = rotationMom - 360
-            if abs(newRotationMom) < abs(rotationMom):
-                rotationMom = newRotationMom
-            if rotationMom > 5:
-                rotationMom = 5
-            elif rotationMom < -5:
-                rotationMom = -5
-            if abs(rotationMom) == 5:
-                droneShip[2] = droneShip[2]/2
-                droneShip[3] = droneShip[3]/2
-            droneShip[5].setMomentum(rotationMom)
-            rotationDistance = abs(newRotation - droneShip[5].getRotation())
+            droneShip = self.attack(screen, object_list, self_loc)
             if distance <= 100:
                 self.progression = 3
             elif distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
                 self.progression = 1
 
         elif self.progression == 1:
-            newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
-            droneShip[2] = 0
-            droneShip[3] = 0
-            droneShip[5].setMomentum(0)
-            if self.shotCounter % 25 == 0:
-                AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
-            self.shotCounter += 1
-            rotationDistance = abs(newRotation - droneShip[5].getRotation())
+            droneShip = self.shooting(screen, object_list, self_loc)
             if self.shotCounter == 100:
                 self.shotCounter = 0
                 self.progression = 2
@@ -179,24 +248,8 @@ class DroneAI():
                 self.progression = 0
 
         elif self.progression == 2:
-            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*1.5
-            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*1.5
-            xMom = (humanShip[0] - droneShip[0])/distance
-            if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(xMom))
-            else:
-                newRotation = 360 - math.degrees(math.acos(xMom))
-            newRotation += (30*self.direction)
-            rotationMom = newRotation - droneShip[5].getRotation()
-            newRotationMom = rotationMom - 360
-            if abs(newRotationMom) < abs(rotationMom):
-                rotationMom = newRotationMom
-            if rotationMom > 5:
-                rotationMom = 5
-            elif rotationMom < -5:
-                rotationMom = -5
-            droneShip[5].setMomentum(rotationMom)
-            if distance <= 100:
+            droneShip = self.enclose(screen, object_list, self_loc)
+            if distance <= 150:
                 droneShip[5].setMomentum(0)
                 self.progression = 3
                 self.direction = random.randint(0,1)
@@ -206,21 +259,11 @@ class DroneAI():
                 self.progression = 0
 
         elif self.progression == 3:
-            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*2
-            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*2
-            xMom = (humanShip[0] - droneShip[0])/distance
-            if (droneShip[1] - humanShip[1]) > 0:
-                newRotation = math.degrees(math.acos(xMom))
-            else:
-                newRotation = 360 - math.degrees(math.acos(xMom))
-            angle = newRotation
-            AITools.releaseMine(object_list, self_loc, angle)
+            droneShip = self.releasingMine(screen, object_list, self_loc)
             self.progression = 4
                 
         elif self.progression == 4:
-            droneShip[5].setMomentum(0)
-            droneShip[2] = math.cos(math.radians(droneShip[5].getRotation()))*1.5
-            droneShip[3] = math.sin(math.radians(droneShip[5].getRotation()))*1.5
+            droneShip = self.retreat(screen, object_list, self_loc)
             if distance >= 400:
                 self.progression = 0
                 
@@ -252,9 +295,58 @@ class PrezAI(DroneAI, ArmorManager):
     def __init__(self):
         DroneAI.__init__(self)
         ArmorManager.__init__(self, 50)
+        self.speed = 4
 
     def update(self, screen, object_list, self_loc):
-        DroneAI.update(self, screen, object_list, self_loc)
+        distance = AITools.distanceBetween(object_list, 0, self_loc)
+        newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
+
+        #pulling entities out of the list for ease of change
+        droneShip = object_list[self_loc:self_loc+8]
+        humanShip = object_list[0:8]
+        rotationDistance = abs(newRotation - droneShip[5].getRotation())
+        
+        if self.progression == 0:
+            droneShip = DroneAI.attack(self, screen, object_list, self_loc)
+            if distance <= 100:
+                self.progression = 3
+            elif distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
+                angle = droneShip[5].getRotation() + (90*self.direction)
+                AITools.releaseDrone(object_list, self_loc, angle)
+                self.progression = 1
+
+        elif self.progression == 1:
+            droneShip = DroneAI.shooting(self, screen, object_list, self_loc)
+            if self.shotCounter == 100:
+                self.shotCounter = 0
+                self.progression = 2
+            elif distance <= 100:
+                self.progression = 3
+            elif rotationDistance >= 20 and 360 - rotationDistance >= 20:
+                self.progression = 0
+
+        elif self.progression == 2:
+            droneShip = DroneAI.enclose(self, screen, object_list, self_loc)
+            if distance <= 150:
+                droneShip[5].setMomentum(0)
+                self.progression = 3
+                self.direction = random.randint(0,1)
+                if self.direction == 0:
+                    self.direction = -1
+            elif distance >= 400:
+                self.progression = 0
+
+        elif self.progression == 3:
+            droneShip = DroneAI.releasingMine(self, screen, object_list, self_loc)
+            self.progression = 4
+                
+        elif self.progression == 4:
+            droneShip = DroneAI.retreat(self, screen, object_list, self_loc)
+            if distance >= 400:
+                self.progression = 0
+
+        object_list[self_loc:self_loc+8] = droneShip
+        
         pgx.Texthelper.write(screen, [("center", 70), "President of the World", 2], color = (110,0, 30))
         pgx.draw.rect(screen, (200,0, 30), ["left.385", 100, 1150, 30])
         armorfraction = self.getArmor() / self.getTotalArmor()
