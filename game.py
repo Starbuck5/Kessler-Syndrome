@@ -42,15 +42,15 @@ class RotationState():
     def getRotating(self):
         return self.rotating
 
-    def rotate(self):
-        self.pos += self.mom/7 #the divided by moderates the speed of rotation
+    def rotate(self, pdt=1):
+        self.pos += self.mom/7*pdt #the divided by moderates the speed of rotation
         if self.pos >= 360:
             self.pos -= 360
         if self.pos <= -360:
             self.pos += 360
 
-    def rotateBy(self, value):
-        self.pos += value
+    def rotateBy(self, value, pdt=1):
+        self.pos += value * pdt
 
 class AITools():
     #constants directly set by main
@@ -433,16 +433,17 @@ def particlemaker(xpos, ypos, xmom, ymom):
     return printerlist_add
 
 #physics wrapper
-def doPhysics(object_list):
+#dt is measured in
+def doPhysics(object_list, pdt):
     specedPhysics(object_list, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
-                  GameConstants.step_drag)
+                  GameConstants.step_drag, pdt)
 
 #physics handling
-def specedPhysics(object_list, width, height, max_speed, drag, step_drag):
+def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):   
     for i in range(0, len(object_list), 8):
         #decaying objects
         if object_list[4 + i] in [2, 8, 5, 4, 9, 122]: #stuff in list should have a decrement to their life force
-            object_list[7 + i] -= 1
+            object_list[7 + i] -= int(1*pdt)
 
         #speed limit for ship
         if object_list[4+i] == 1 or object_list[4+i] == 5:
@@ -456,8 +457,8 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag):
                 object_list[3 + i] = -1 * max_speed
             
         # positioner
-        object_list[i] += object_list[2 + i]
-        object_list[1 + i] -= object_list[3 + i]
+        object_list[i] += int(object_list[2 + i]*pdt)
+        object_list[1 + i] -= int(object_list[3 + i]*pdt)
 
         # edges section
         if object_list[i] > width:
@@ -474,8 +475,8 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag):
             stepper = abs(object_list[2 +i]) + abs(object_list[3 +i])
             if stepper == 0:
                 stepper = 1
-            step_drag_x = abs(object_list[2 +i]) / stepper * step_drag
-            step_drag_y = abs(object_list[3 +i]) / stepper * step_drag   
+            step_drag_x = abs(object_list[2 +i]) / stepper * step_drag * pdt
+            step_drag_y = abs(object_list[3 +i]) / stepper * step_drag * pdt 
             if object_list[2 +i] > 0 and object_list[2 +i] > step_drag_x:
                 object_list[2 +i] -= step_drag_x
             elif step_drag_x > object_list[2 +i] > 0:
@@ -495,7 +496,7 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag):
 
         #rotation - now with objects!
         if object_list[5+i].getRotating():
-            object_list[5+i].rotate()
+            object_list[5+i].rotate(pdt)
         
         
 #helps out by setting entities to reasonable speeds

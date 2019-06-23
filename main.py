@@ -20,6 +20,9 @@ def main():
     #sets adjustable settings
     width = int(file_settings[0])
     height = int(file_settings[1])
+    if platform.system() == "Darwin": #if on mac
+        width = int(width*0.5)
+        height = int(height*0.5)
     max_asteroids = 8
     if file_settings[5]:
         GameConstants.drag = [1,5]
@@ -442,18 +445,21 @@ def main():
             # input handling
             inputvar = keyboard()
             ticks = pygame.time.get_ticks()
+            dt = clock.get_rawtime()
+            pdt = dt/10 #percent delta time, helps regulate physics
+            
             if inputvar:
                 if object_list[4] == 1:
                     thrust_vector = (math.cos(math.radians(object_list[5].getRotation()-90)),
                                      math.sin(math.radians(object_list[5].getRotation()+90)))
                     if "w" in inputvar or "uparrow" in inputvar:
-                        object_list[2] += step_x * thrust_vector[0]
-                        object_list[3] += step_y * thrust_vector[1]
+                        object_list[2] += step_x * thrust_vector[0] * pdt
+                        object_list[3] += step_y * thrust_vector[1] * pdt
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        object_list[5].rotateBy(step_r)
+                        object_list[5].rotateBy(step_r, pdt)
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        object_list[5].rotateBy(-step_r)
+                        object_list[5].rotateBy(-step_r, pdt)
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         SoundVault.play('shot')
@@ -824,7 +830,7 @@ def main():
                 object_list[4] = 1
 
             #physics!
-            doPhysics(object_list)
+            doPhysics(object_list, pdt)
 
             #ship durability state
             updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
@@ -906,7 +912,7 @@ def main():
                 status = "menuinit"
 
             #physics!
-            doPhysics(object_list)
+            doPhysics(object_list, pdt)
 
             #ship durability state
             updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
