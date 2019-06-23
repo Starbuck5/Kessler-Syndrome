@@ -271,12 +271,13 @@ class InputGetter():
 
     def _handleThisShit(self, inputtype):
         last_input = self.last_input
-        inputvar = keyboard_queued()    
+        inputvar = keyboard_queued()
+        downs = keydowns()
         if inputvar and last_input == ["getready"]:
             self.rawtext = "" 
         if inputvar != last_input:
             for i in range(len(inputvar)):
-                if inputvar[i] == "\x08":
+                if pygame.K_DELETE in downs or pygame.K_BACKSPACE in downs:
                     self.rawtext = self.rawtext[:-1]
                 if inputtype == "int":
                     if len(inputvar[i]) == 1 and inputvar[i].isdigit() == True:
