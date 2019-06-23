@@ -450,13 +450,13 @@ def main():
                     thrust_vector = (math.cos(math.radians(object_list[5].getRotation()-90)),
                                      math.sin(math.radians(object_list[5].getRotation()+90)))
                     if "w" in inputvar or "uparrow" in inputvar:
-                        object_list[2] += step_x * thrust_vector[0]
-                        object_list[3] += step_y * thrust_vector[1]
+                        object_list[2] += step_x * thrust_vector[0] * pdt
+                        object_list[3] += step_y * thrust_vector[1] * pdt
                         flame = True
                     if "e" in inputvar or "rightarrow" in inputvar:
-                        object_list[5].rotateBy(step_r)
+                        object_list[5].rotateBy(step_r, pdt)
                     if "q" in inputvar or "leftarrow" in inputvar:
-                        object_list[5].rotateBy(-step_r)
+                        object_list[5].rotateBy(-step_r, pdt)
                     if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
                         ammunition -= 1
                         SoundVault.play('shot')

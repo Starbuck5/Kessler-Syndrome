@@ -49,8 +49,8 @@ class RotationState():
         if self.pos <= -360:
             self.pos += 360
 
-    def rotateBy(self, value):
-        self.pos += value
+    def rotateBy(self, value, pdt=1):
+        self.pos += value * pdt
 
 class AITools():
     #constants directly set by main
@@ -344,7 +344,7 @@ def particlemaker(xpos, ypos, xmom, ymom):
 #dt is measured in
 def doPhysics(object_list, pdt):
     specedPhysics(object_list, GameConstants.width, GameConstants.height, GameConstants.max_speed, GameConstants.drag,
-                  GameConstants.step_drag, dt)
+                  GameConstants.step_drag, pdt)
 
 #physics handling
 def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):   
