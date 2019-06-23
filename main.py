@@ -442,6 +442,9 @@ def main():
             # input handling
             inputvar = keyboard()
             ticks = pygame.time.get_ticks()
+            dt = clock.get_rawtime()
+            pdt = dt/10 #percent delta time, helps regulate physics
+            
             if inputvar:
                 if object_list[4] == 1:
                     thrust_vector = (math.cos(math.radians(object_list[5].getRotation()-90)),
@@ -824,7 +827,7 @@ def main():
                 object_list[4] = 1
 
             #physics!
-            doPhysics(object_list)
+            doPhysics(object_list, pdt)
 
             #ship durability state
             updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
@@ -906,7 +909,7 @@ def main():
                 status = "menuinit"
 
             #physics!
-            doPhysics(object_list)
+            doPhysics(object_list, pdt)
 
             #ship durability state
             updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)

@@ -1,7 +1,13 @@
+import platform
+
 from pgx import *
 import graphics
 import game
+
 waitTime = 175
+if platform.system() == "Darwin": #if running on a mac
+    waitTime = 0
+
 maxLevel = 20
 upgrades = Filehelper("assets\\data\\upgrades.txt")
 
