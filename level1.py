@@ -8,7 +8,8 @@ import graphics
 
 def level1(screen, width, height, scalarscalar):
     clock = pygame.time.Clock()
-    soyuz = loadImage("Assets\\images\\soyuz2.tif")  
+    soyuz = loadImage("Assets\\images\\soyuz2.tif")
+    unsh = soyuz.get_size()[1] #unscaled height
     soyuzscalar = scalarscalar
     soyuz = scaleImage(soyuz, soyuzscalar)
     soyuzsize = soyuz.get_size()
@@ -30,7 +31,7 @@ def level1(screen, width, height, scalarscalar):
     flame_list = all_flames[2:]      
 
     def randomflame(ypos):
-        if (ypos+1400) < (height - height*0.2):
+        if (ypos+1400) < 900:
            return flame_list[random.randint(0, len(flame_list)-1)]
         else:
             return startflamelist[random.randint(0, len(startflamelist)-1)]
@@ -38,8 +39,8 @@ def level1(screen, width, height, scalarscalar):
     opening_crawl = [line.rstrip('\n') for line in open(handlePath("assets\\data\\opening_crawl.txt"))]
     line_spacing = 80
     
-    xpos = width/2 - soyuzsize[0]/2
-    ypos = height
+    xpos = 944
+    ypos = 1080
     dy = height/700
     namebox = InputGetter([("center", 490), "name", 3], "str")
     running = True
@@ -54,14 +55,14 @@ def level1(screen, width, height, scalarscalar):
         for i in range(len(opening_crawl)):
             Texthelper.write(screen, [("center", ypos + line_spacing * i), opening_crawl[i], 3])
 
-        screen.blit(soyuz, (xpos, ypos + line_spacing * len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos-4*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+        draw.sblit(screen, soyuz, (xpos, ypos + line_spacing * len(opening_crawl) + 100))
+        draw.sblit(screen, randomflame(ypos), (xpos-4, ypos+unsh + line_spacing *
                                         len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+6*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+        draw.sblit(screen, randomflame(ypos), (xpos+6, ypos+unsh + line_spacing *
                                         len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+10*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+        draw.sblit(screen, randomflame(ypos), (xpos+10, ypos+unsh + line_spacing *
                                         len(opening_crawl) + 100))
-        screen.blit(randomflame(ypos), (xpos+20*soyuzscalar, ypos+soyuzsize[1] + line_spacing *
+        draw.sblit(screen, randomflame(ypos), (xpos+20, ypos+unsh + line_spacing *
                                         len(opening_crawl) + 100))
 
         

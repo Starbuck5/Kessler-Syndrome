@@ -536,13 +536,13 @@ def asteroidspeedmaker(max_asteroid_spd):
     asteroid_speedset = []
     # if else statements institute a minimum horizontal and vertical speed (separately) of half the asteroid high speed
     if random.randint(0,1) == 1:
-        asteroid_speedset.append(random.randint(int(max_asteroid_spd/2), max_asteroid_spd)/100)
+        asteroid_speedset.append(random.randint(int(max_asteroid_spd/2), int(max_asteroid_spd))/100)
     else:
-        asteroid_speedset.append(random.randint(-1*max_asteroid_spd, int(-1*max_asteroid_spd/2))/100)
+        asteroid_speedset.append(random.randint(int(-max_asteroid_spd), int(-max_asteroid_spd/2))/100)
     if random.randint(0,1) == 1:
-        asteroid_speedset.append(random.randint(int(max_asteroid_spd/2), max_asteroid_spd)/100)
+        asteroid_speedset.append(random.randint(int(max_asteroid_spd/2), int(max_asteroid_spd))/100)
     else:
-        asteroid_speedset.append(random.randint(-1*max_asteroid_spd, int(-1*max_asteroid_spd/2))/100)
+        asteroid_speedset.append(random.randint(int(-max_asteroid_spd), int(-max_asteroid_spd/2))/100)
     return asteroid_speedset
 
 #generates the stars for backgrounds
