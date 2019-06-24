@@ -67,9 +67,7 @@ class AITools():
     #releases a shot in the direction specified
     #currently starts from x,y - so usually the center of the entity
     #optional arg allows it to shoot entities of different types
-    def shoot(object_list, self_loc, angle, shot_type=2, lifespan=-1):
-        xpos = object_list[self_loc]
-        ypos = object_list[self_loc+1]
+    def shoot(xpos, ypos, object_list, self_loc, angle, shot_type=2, lifespan=-1):
         angle = -(angle-90)
         thrust_vector = (math.sin(math.radians(angle)), math.cos(math.radians(angle)))
         xmom = object_list[self_loc+2] + thrust_vector[0] * AITools.missile_accel
@@ -131,8 +129,10 @@ class AITools():
 
     #combines the getInterceptAngle and shoot functions into one ~hopefully~ seamless package
     def shootAt(object_list, self_loc, target_loc, shot_type=2, lifespan=-1):
+        xpos = object_list[self_loc]
+        ypos = object_list[self_loc+1]
         angle = AITools.getInterceptAngle(object_list, self_loc, target_loc)
-        shoot(object_list, self_loc, angle, shot_type, lifespan)
+        shoot(xpos, ypos, object_list, self_loc, angle, shot_type, lifespan)
 
 class DroneAI():
     def __init__(self):
@@ -163,7 +163,7 @@ class DroneAI():
         droneShip[5].setMomentum(rotationMom)
         return droneShip
 
-    def shooting(self, screen, object_list, self_loc):
+    def shooting(self, screen, object_list, self_loc, xpos, ypos):
         droneShip = object_list[self_loc:self_loc+8]
         humanShip = object_list[0:8]
         newRotation = AITools.getInterceptAngle(object_list, self_loc, 0)
@@ -171,7 +171,7 @@ class DroneAI():
         droneShip[3] = 0
         droneShip[5].setMomentum(0)
         if self.shotCounter % 25 == 0:
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+            AITools.shoot(xpos, ypos, object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
         self.shotCounter += 1
         return droneShip
 
@@ -186,7 +186,7 @@ class DroneAI():
             newRotation = math.degrees(math.acos(xMom))
         else:
             newRotation = 360 - math.degrees(math.acos(xMom))
-        newRotation += (30*self.direction)
+        newRotation += (45*self.direction)
         rotationMom = newRotation - droneShip[5].getRotation()
         newRotationMom = rotationMom - 360
         if abs(newRotationMom) < abs(rotationMom):
@@ -238,7 +238,9 @@ class DroneAI():
                 self.progression = 1
 
         elif self.progression == 1:
-            droneShip = self.shooting(screen, object_list, self_loc)
+            xpos = droneShip[0]
+            ypos = droneShip[1]
+            droneShip = self.shooting(screen, object_list, self_loc, xpos, ypos)
             if self.shotCounter == 100:
                 self.shotCounter = 0
                 self.progression = 2
@@ -296,6 +298,7 @@ class PrezAI(DroneAI, ArmorManager):
         DroneAI.__init__(self)
         ArmorManager.__init__(self, 50)
         self.speed = 4
+        self.RightLeft = 0
 
     def update(self, screen, object_list, self_loc):
         distance = AITools.distanceBetween(object_list, 0, self_loc)
@@ -312,12 +315,37 @@ class PrezAI(DroneAI, ArmorManager):
                 self.progression = 3
             elif distance <= 300 and (rotationDistance < 10 or 360 - rotationDistance < 10):
                 angle = droneShip[5].getRotation() + (90*self.direction)
-                AITools.releaseDrone(object_list, self_loc, angle)
+                droneAICount = 0
+                numExaminations = int(len(object_list)/8)
+                for i in range(numExaminations):
+                    if object_list[(i*8)+4] == 120:
+                        droneAICount += 1
+                if droneAICount <= 5:
+                    AITools.releaseDrone(object_list, self_loc, angle)
                 self.progression = 1
 
         elif self.progression == 1:
-            droneShip = DroneAI.shooting(self, screen, object_list, self_loc)
-            if self.shotCounter == 100:
+            xpos = droneShip[0]
+            ypos = droneShip[1]
+            angle = droneShip[5].getRotation()
+            if self.RightLeft == 0:
+                angle += 90
+                self.RightLeft = 1
+                xChange = math.cos(math.radians(angle))*45
+                yChange = math.sin(math.radians(angle))*45
+            elif self.RightLeft == 1:
+                angle -= 90
+                self.RightLeft = 2
+                xChange = math.cos(math.radians(angle))*45
+                yChange = math.sin(math.radians(angle))*45
+            elif self.RightLeft == 2:
+                self.RightLeft = 0
+                xChange = 0
+                yChange = 0
+            xpos += xChange
+            ypos += yChange
+            droneShip = DroneAI.shooting(self, screen, object_list, self_loc, xpos, ypos)
+            if self.shotCounter == 150:
                 self.shotCounter = 0
                 self.progression = 2
             elif distance <= 100:
@@ -366,10 +394,12 @@ class SpikeAI():
     def update(self, screen, object_list, self_loc):
         self.timer += 1
         if self.timer >= 0:
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+90, 122)
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+180, 122)
-            AITools.shoot(object_list, self_loc, object_list[self_loc+5].getRotation()+270, 122)
+            xpos = object_list[self_loc]
+            ypos = object_list[self_loc+1]
+            AITools.shoot(xpos, ypos, object_list, self_loc, object_list[self_loc+5].getRotation(), 122)
+            AITools.shoot(xpos, ypos, object_list, self_loc, object_list[self_loc+5].getRotation()+90, 122)
+            AITools.shoot(xpos, ypos, object_list, self_loc, object_list[self_loc+5].getRotation()+180, 122)
+            AITools.shoot(xpos, ypos, object_list, self_loc, object_list[self_loc+5].getRotation()+270, 122)
             self.timer = -300
 
 
@@ -399,7 +429,9 @@ class AlienMineAI():
     #releases a bunch of spikes and destroys the entity
     def explode(self, object_list, self_loc):
         for i in range(15):
-            AITools.shoot(object_list, self_loc, i*24, 122)
+            xpos = object_list[self_loc]
+            ypos = object_list[self_loc+1]
+            AITools.shoot(xpos, ypos, object_list, self_loc, i*24, 122)
         object_list[self_loc + 7] = -1
 
 class ShipExtras():
@@ -457,8 +489,8 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):
                 object_list[3 + i] = -1 * max_speed
             
         # positioner
-        object_list[i] += object_list[2 + i]*pdt
-        object_list[1 + i] -= object_list[3 + i]*pdt
+        object_list[i] += int(object_list[2 + i]*pdt)
+        object_list[1 + i] -= int(object_list[3 + i]*pdt)
 
         # edges section
         if object_list[i] > width:
