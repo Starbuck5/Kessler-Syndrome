@@ -457,8 +457,8 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):
                 object_list[3 + i] = -1 * max_speed
             
         # positioner
-        object_list[i] += int(object_list[2 + i]*pdt)
-        object_list[1 + i] -= int(object_list[3 + i]*pdt)
+        object_list[i] += object_list[2 + i]*pdt
+        object_list[1 + i] -= object_list[3 + i]*pdt
 
         # edges section
         if object_list[i] > width:

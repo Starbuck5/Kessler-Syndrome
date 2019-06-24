@@ -445,7 +445,8 @@ def main():
             # input handling
             inputvar = keyboard()
             ticks = pygame.time.get_ticks()
-            dt = clock.get_rawtime()
+            dt = clock.get_fps()
+            dt = 1/dt * 1000
             pdt = dt/10 #percent delta time, helps regulate physics
             
             if inputvar:
