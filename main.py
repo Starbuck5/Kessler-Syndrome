@@ -370,6 +370,37 @@ def main():
             status = creditsUI(screen, sdlnum)
             pygame.display.flip()
 
+        if status == "arcadeinit":
+            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), ShipExtras(), 1] #constructing a ship
+            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
+                                  d_asteroids, d_fighters, 1)
+            arcade_level = 1
+
+            ShipLv = [1,1,1,0]
+            fuelHelp = upgrades.get(ShipLv[1]+20)
+            totalfuel = fuelHelp[4]
+            currentfuel = totalfuel
+            armorHelp = upgrades.get(ShipLv[0])
+            totalarmor = armorHelp[4]
+            currentarmor = totalarmor
+            totalammunition = 0
+            if ShipLv[2] == 0:
+                totalammunition = 0
+            else:
+                ammunitionHelp = upgrades.get(ShipLv[2]+40)
+                totalammunition = ammunitionHelp[4]
+            ammunition = totalammunition
+
+            #initializes printouts of fuel and armor and ammo
+            graphics.InfoBars.init(graphics.FlashyBox(["right-280", 990, 280, 70], 0.2, (255,0,0)),
+                                   graphics.FlashyBox(["right-280", 920, 280, 70], 0.2, (255,0,0)))
+
+            previous_tick = 0
+            previous_tick2 = 0
+            pygame.mouse.set_visible(False)
+
+            status = "arcade"
+
         if status == "gameinit":       
             # changing variable setup
 
@@ -857,37 +888,6 @@ def main():
                 Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
             pygame.display.flip()
             # printer
-
-        if status == "arcadeinit":
-            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), ShipExtras(), 1] #constructing a ship
-            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
-                                  d_asteroids, d_fighters, 1)
-            arcade_level = 1
-
-            ShipLv = [1,1,1,0]
-            fuelHelp = upgrades.get(ShipLv[1]+20)
-            totalfuel = fuelHelp[4]
-            currentfuel = totalfuel
-            armorHelp = upgrades.get(ShipLv[0])
-            totalarmor = armorHelp[4]
-            currentarmor = totalarmor
-            totalammunition = 0
-            if ShipLv[2] == 0:
-                totalammunition = 0
-            else:
-                ammunitionHelp = upgrades.get(ShipLv[2]+40)
-                totalammunition = ammunitionHelp[4]
-            ammunition = totalammunition
-
-            #initializes printouts of fuel and armor and ammo
-            graphics.InfoBars.init(graphics.FlashyBox(["right-280", 990, 280, 70], 0.2, (255,0,0)),
-                                   graphics.FlashyBox(["right-280", 920, 280, 70], 0.2, (255,0,0)))
-
-            previous_tick = 0
-            previous_tick2 = 0
-            pygame.mouse.set_visible(False)
-
-            status = "arcade"
 
         if status == "arcade":
             screen.fill(color)
