@@ -158,9 +158,11 @@ class SoundVault():
     def play(name):
         SoundVault.storage[name].play()
 
-def loadSound(path):
+def loadSound(path, volume=100):
     path = handlePath(path)
-    return pygame.mixer.Sound(file=path)
+    sound = pygame.mixer.Sound(file=path)
+    sound.set_volume(volume/100)
+    return sound
 
 pygame.mixer.init()
 SoundVault('button', "Assets\\sounds\\click.ogg", volume=0.5)
@@ -326,7 +328,6 @@ class AnnouncementBox():
     #image = portrait next to text, sound = whatever should play, text = text
     def __init__(self, image, sound, text):
         self.image = stretchImage(image, (108*Texthelper.scalar, 108*Texthelper.scalar))
-        sound.set_volume(0.75)
         self.sound = sound
         self.text = text
         self.linedtext = wrap(text, AnnouncementBox.BREAKPOS) # wraps text by linebreak
