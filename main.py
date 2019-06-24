@@ -436,6 +436,10 @@ def main():
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                 loadSound("Assets\\announcements\\1r.ogg"),
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
+                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                ("Hi i'm your ship's computer. I'm here to assist you. That expressive gentleman was "
+                                 "our supervisor, the warden"))
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
             
@@ -527,6 +531,9 @@ def main():
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
+                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                "You should continue clearing sectors for now.")                
                 filehelper.setElement(7, 0, 3)
             if filehelper.get(0)[3] == 7 and clearedSector[19] and sectornum == 1:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
