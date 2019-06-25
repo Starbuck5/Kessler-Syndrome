@@ -385,6 +385,14 @@ class PrezAI(DroneAI, ArmorManager):
             inp = object_list[self_loc:self_loc+4]
             for i in range(6):
                 object_list += particlemaker(*inp)
+            repetitions = len(object_list)
+            safethings = [1,100,101,102,103,104,105,106,107,108,109,2,4,666]
+            for i in range(0, repetitions, 8):
+                if object_list[i+4] not in safethings and object_list[i+4]>10:
+                    inp = object_list[i:i+4]
+                    object_list[7+i] = -1
+                    object_list += particlemaker(*inp)
+                
         
 
 class SpikeAI():
