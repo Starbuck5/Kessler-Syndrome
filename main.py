@@ -738,10 +738,10 @@ def main():
             #special entity behaviors
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
-                    #try:
-                    object_list[i+6].update(screen, object_list, i)
-                    #except:
-                       #pass
+                    try:
+                       object_list[i+6].update(screen, object_list, i)
+                    except:
+                       pass
             #special entity behaviors
 
             #portals
