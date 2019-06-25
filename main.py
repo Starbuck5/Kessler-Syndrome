@@ -126,6 +126,7 @@ def main():
                               15: (1055, 250), 16: (840, 245), 17: (965, 415), 18: (870, 105), 19: (1030, 90)}
     optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exiting options
     deathtimer = 200 #time after death it makes the watch the aftermath
+    shotTimer = 360 #ticks between shots (essentially how fast you can shoot)
 
     # class setup
     Screenhelper(width,height)
@@ -249,6 +250,10 @@ def main():
             if status != "cheatsmenu":
                 timer_popupmenu = 0
                 filehelper.set(cheats_settings, 5)
+                if cheats_settings[7] and DEVMODE:
+                    shotTimer = 20
+                else:
+                    shotTimer = 360
 
         if status == "mapscreeninit":
             pygame.mouse.set_visible(True)
@@ -499,7 +504,7 @@ def main():
                         object_list[5].rotateBy(step_r, pdt)
                     if "q" in inputvar or "leftarrow" in inputvar:
                         object_list[5].rotateBy(-step_r, pdt)
-                    if "space" in inputvar and (ticks - previous_tick) > 360 and ammunition > 0:
+                    if "space" in inputvar and (ticks - previous_tick) > shotTimer and ammunition > 0:
                         ammunition -= 1
                         SoundVault.play('shot')
                         xmom_miss = object_list[2] + (thrust_vector[0] * missile_accel)
@@ -518,7 +523,7 @@ def main():
                 if "m" in inputvar and timer_popupmenu > 25 and status == "game":
                     timer_popupmenu = 0
                     status = "mapscreeninit"
-                if ("escape" in inputvar or "p" in inputvar or "windows" in inputvar) and len(inputvar) == 1:
+                if ("escape" in inputvar or "p" in inputvar) and len(inputvar) == 1:
                     if timer_popupmenu > 25:
                         timer_popupmenu = 0
                         if status == "game":
@@ -528,6 +533,10 @@ def main():
                 lasttransit += 1
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360 and file_settings[4]:
                     DEVMODE = not DEVMODE #switches booleans
+                    if DEVMODE and cheats_settings[7]:
+                        shotTimer = 20
+                    else:
+                        shotTimer = 360
                     previous_tick2 = ticks
                 if "t" in inputvar and timer_portal_toggle > 30:
                     portal_toggle = not portal_toggle
