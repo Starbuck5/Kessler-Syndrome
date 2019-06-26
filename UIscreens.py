@@ -546,7 +546,7 @@ def home(screen, freeStuff):
         shopStatus = drawUpgradeScreen(screen, shipLv, homeInventory, False, "torpedo", "ammoUpgrade", currentStats, totalStats)
 
     elif shopStatus == "scavengeUpgradeinit":
-        shopStatus = drawSpecialUpgrade(screen, True, shipLv, 3, "Upgrade Scavenging Module", [10, 2, 2, 35], "scavengeUpgrade", homeInventory)
+        shopStatus = drawSpecialUpgrade(screen, True, shipLv, 3, "Upgrade Scavenging Module", [20, 2, 5, 150], "scavengeUpgrade", homeInventory)
 
     elif shopStatus == "scavengeUpgrade":
         shopStatus = drawSpecialUpgrade(screen, False, shipLv, 3, "Upgrade Scavenging Module", [10, 2, 2, 35], shopStatus, homeInventory)

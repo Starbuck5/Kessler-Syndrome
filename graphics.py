@@ -148,7 +148,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5*scalarscalar))
 
     #aliens
-    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 1.5*scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 2*scalarscalar), colorkey=(255,255,255))
     Images.addRotate(121, scaleImage(loadImage("Assets\\images\\spiker.gif"), 2*scalarscalar), colorkey=(255,255,255))
     Images.addRotate(122, scaleImage(loadImage("Assets\\images\\alienshot.gif"), scalarscalar), colorkey=(255,255,255))
     #aliens - alien mines
