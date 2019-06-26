@@ -50,6 +50,10 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
+    tutorialpics = []
+    for i in range(1, 9):
+        tutorialpics.append(loadImage("Assets\\tutorial\\tutorial" + str(i) + ".png"))
+        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5)
 
     # settings
     GameConstants.max_speed = 4 * scalarscalar
@@ -127,6 +131,7 @@ def main():
     optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exiting options
     deathtimer = 200 #time after death it makes the watch the aftermath
     shotTimer = 360 #ticks between shots (essentially how fast you can shoot)
+    tutorialIndex = 0 #which image of tutorial to show
 
     # class setup
     Screenhelper(width,height)
@@ -166,21 +171,42 @@ def main():
             Texthelper.write(screen, [(300, 540-200), "Kessler Syndrome", 7])
             
             # buttons
-            if Texthelper.writeButtonBox(screen, [(410, 490), "Play", 3]):
+            spacing = 60
+            x = 410
+            y = 490
+            if Texthelper.writeButtonBox(screen, [(x, y), "Play", 3]):
                 status = "gameinit"
-            if Texthelper.writeButtonBox(screen, [(410, 550), "Arcade Mode [Beta]", 3]):
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing), "Arcade Mode [Beta]", 3]):
                 status = "arcadeinit"
-            if Texthelper.writeButtonBox(screen, [(410, 610), "Options", 3]):
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 2), "Tutorial", 3]):
+                status = "tutorial"
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(410, 670), "Credits", 3]):
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 4), "Credits", 3]):
                 status = "credits"
-            if Texthelper.writeButtonBox(screen, [(410, 730), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 5), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 status = "exiting"         
 
             screen.blit(earthpic, (1500,800))
             pygame.display.flip()
-            
+        
+        if status == "tutorial":
+            screen.fill(color)
+            pgx.draw.sblit(screen, tutorialpics[tutorialIndex], (0, 0))
+
+            Texthelper.write(screen, [("center", 1030), "Page " + str(tutorialIndex + 1) + " of " + str(len(tutorialpics)), 3])
+            if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]) and tutorialIndex > 0:
+                tutorialIndex -= 1
+            if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Next", 3]) and tutorialIndex < len(tutorialpics) - 1:
+                tutorialIndex += 1
+
+            pygame.display.flip()
+
+            inputvar = keyboard()
+            if "escape" in inputvar:
+                status = "menuinit"
+
         if status == "pauseinit":
             optionsScreenshot = screen.copy()
             filehelper.set([currentarmor, currentfuel, ammunition], 4)
