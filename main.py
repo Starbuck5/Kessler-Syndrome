@@ -52,8 +52,8 @@ def main():
     earthpic = loadImage("Assets\\images\\earth.tif")
     tutorialpics = []
     for i in range(1, 9):
-        tutorialpics.append(loadImage("Assets\\tutorial\\tutorial" + str(i) + ".png"))
-        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5)
+        tutorialpics.append(loadImage("Assets\\tutorial\\slide" + str(i) + ".png"))
+        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.54)
 
     # settings
     GameConstants.max_speed = 4 * scalarscalar
@@ -179,6 +179,7 @@ def main():
             if Texthelper.writeButtonBox(screen, [(x, y + spacing), "Arcade Mode [Beta]", 3]):
                 status = "arcadeinit"
             if Texthelper.writeButtonBox(screen, [(x, y + spacing * 2), "Tutorial", 3]):
+                tutorialIndex = 0
                 status = "tutorial"
             if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Options", 3]):
                 status = "optionsinit"
@@ -196,10 +197,15 @@ def main():
             pgx.draw.sblit(screen, tutorialpics[tutorialIndex], (0, 0))
 
             Texthelper.write(screen, [("center", 1030), "Page " + str(tutorialIndex + 1) + " of " + str(len(tutorialpics)), 3])
+
             if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]) and tutorialIndex > 0:
                 tutorialIndex -= 1
-            if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Next", 3]) and tutorialIndex < len(tutorialpics) - 1:
-                tutorialIndex += 1
+            if tutorialIndex == len(tutorialpics) - 1:
+                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Done", 3]):
+                    status = "menuinit"
+            else:
+                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Next", 3]):
+                    tutorialIndex += 1
 
             pygame.display.flip()
 
