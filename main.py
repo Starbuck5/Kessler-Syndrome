@@ -50,10 +50,11 @@ def main():
                  scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
     earthpic = loadImage("Assets\\images\\earth.tif")
+    tutorialslides = 8 #number of tutorial slides
     tutorialpics = []
-    for i in range(1, 9):
+    for i in range(1, tutorialslides + 1):
         tutorialpics.append(loadImage("Assets\\tutorial\\slide" + str(i) + ".png"))
-        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.54)
+        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5 * scalarscalar)
 
     # settings
     GameConstants.max_speed = 4 * scalarscalar
