@@ -177,17 +177,17 @@ def main():
             y = 490
             if Texthelper.writeButtonBox(screen, [(x, y), "Play", 3]):
                 status = "gameinit"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing), "Arcade Mode [Beta]", 3]):
-                status = "arcadeinit"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 2), "Tutorial", 3]):
+            #if Texthelper.writeButtonBox(screen, [(x, y + spacing), "Arcade Mode [Beta]", 3]):
+            #    status = "arcadeinit"
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 1), "Tutorial", 3]):
                 tutorialIndex = 0
                 status = "tutorial"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Options", 3]):
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 2), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 4), "Credits", 3]):
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Credits", 3]):
                 status = "credits"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 5), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 4), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 status = "exiting"         
 
             screen.blit(earthpic, (1500,800))
