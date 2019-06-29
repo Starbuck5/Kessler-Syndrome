@@ -7,17 +7,24 @@ from pgx import filehelper
 
 def setup():
     pygame.init()
+
+    scrInfo = pygame.display.Info()
+    suggestedRes = scrInfo.current_w, scrInfo.current_h
+    if suggestedRes[0] < 0:
+        suggestedRes = pygame.display.list_modes()[0]
+    
+    widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
+    heightBox = InputGetter([(230,75), str(suggestedRes[1]), 1.5], "int")
+
     pygame.display.set_caption("Kessler First Time Setup")
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode([600, 450])
+    
     Texthelper.width = 600
     Texthelper.height = 450
     Texthelper.scalar = 1.5
     Texthelper.SAFEASPECT = (4,3)
-
-    suggestedRes = pygame.display.list_modes()[0]
-    widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
-    heightBox = InputGetter([(230,75), str(suggestedRes[1]), 1.5], "int")
+    
     full = True
 
     color = (20,110,230)
