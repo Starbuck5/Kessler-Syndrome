@@ -7,13 +7,8 @@ import os
 import platform
 import sys
 
-#https://stackoverflow.com/questions/404744/determining-application-path-in-a-python-exe-generated-by-pyinstaller
-#thanks normanius
 if getattr(sys, 'frozen', False):
-    # If the application is run as a bundle, the pyInstaller bootloader
-    # extends the sys module by a flag frozen=True and sets the app 
-    # path into variable _MEIPASS'.
-    BASEPATH = sys._MEIPASS
+    BASEPATH = os.path.dirname(sys.executable)
 else:
     BASEPATH = os.path.dirname(os.path.abspath(__file__))
 
