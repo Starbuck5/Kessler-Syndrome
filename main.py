@@ -77,11 +77,6 @@ def main():
     logo = loadImage("Assets\\images\\earth2.png")
     logo.set_colorkey((255,0,0))
     pygame.display.set_icon(logo)
-    if width == 0 or height == 0:
-        screen_sizes = pygame.display.list_modes()
-        screen_sizes = screen_sizes[0]
-        width = screen_sizes[0]
-        height = screen_sizes[1]
     if file_settings[2]:
         screen = pygame.display.set_mode([width, height], pygame.NOFRAME | pygame.FULLSCREEN)
     else:
