@@ -4,13 +4,14 @@ from pgx import InputGetter
 from pgx import collect_inputs
 from pgx import AllEvents
 from pgx import filehelper
+from pgx import platform
 
 def setup():
     pygame.init()
 
     scrInfo = pygame.display.Info()
     suggestedRes = scrInfo.current_w, scrInfo.current_h
-    if suggestedRes[0] < 0:
+    if suggestedRes[0] < 0 or platform.system() == "Darwin":
         suggestedRes = pygame.display.list_modes()[0]
     
     widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
