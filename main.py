@@ -1,6 +1,8 @@
 import math
 import random
 import pygame
+import logging
+import traceback
 
 from pgx import *
 import pgx
@@ -148,7 +150,8 @@ def main():
     
     running = True
     while running:
-        clock.tick(100)
+        #clock.tick(100)
+        clock.tick()
         collect_inputs() #syncs up event queue in pgx
         timer_popupmenu += 1
         timer_popupmenu = min(timer_popupmenu, 10000)
@@ -1005,5 +1008,11 @@ def main():
 if filehelper.get(0)[0] == "?":
     import setupper
     setupper.setup()
+
+try:  
+    main()
+except Exception as E:
+    logging.basicConfig(filename='errors.log',level=logging.ERROR)    
+    logging.error(traceback.format_tb(E.__traceback__) + [str(E)])
+    pygame.quit()
     
-main()
