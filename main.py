@@ -922,7 +922,7 @@ def main():
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
             graphics.drawInventory(screen, object_list[6].getInventory())
             if file_settings[6]:
-                Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
+                Texthelper.write(screen, [("right-65", 5), str(round(clock.get_fps())), 2]) 
             flame = False
             if DEVMODE:
                 Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
@@ -973,7 +973,7 @@ def main():
             graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
             graphics.drawInventory(screen, object_list[6].getInventory())
             if file_settings[6]:
-                Texthelper.write(screen, [("right-50", 10), str(round(clock.get_fps())), 2]) 
+                Texthelper.write(screen, [("right-65", 5), str(round(clock.get_fps())), 2])  
             flame = False
             if DEVMODE:
                 Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
