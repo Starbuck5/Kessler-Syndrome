@@ -505,8 +505,16 @@ def main():
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
-                                ("Hi i'm your ship's computer. I'm here to assist you. That expressive gentleman was "
-                                 "our supervisor, the warden"))
+                                ("Hi, i'm your ship's computer. I'm here to assist you. That expressive gentleman was "
+                                 "our supervisor, the warden."))
+                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                ("If you haven't looked at the tutorial, you should - press p to pause and then go to "
+                                 "the main menu."))
+                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                loadSound("Assets\\sounds\\click.ogg"),
+                                ("First things first, you should try to move around, then press T to open the portals, "
+                                 "then you can get started clearing sectors."))
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
             
