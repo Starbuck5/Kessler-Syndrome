@@ -524,7 +524,9 @@ class Texthelper():
 
     #backend for writebox and writebuttonbox
     def _drawbox(screen, rect, color):
-        pygame.draw.rect(screen, color, rect, int(2*Texthelper.scalar))
+        width = int(2*Texthelper.scalar)
+        width = width if width > 0 else 1
+        pygame.draw.rect(screen, color, rect, width)
 
     #takes a sanitized text_input
     def _textlength(text_input):
