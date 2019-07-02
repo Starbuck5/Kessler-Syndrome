@@ -19,7 +19,7 @@ def level1(screen, width, height, scalarscalar, clock):
     mountains = loadImage("Assets\\images\\cutsceneback.tif")
     mountainsize = mountains.get_size()
     mountains = pygame.transform.scale(mountains, (width, int(width/mountainsize[0]*mountainsize[1])))
-    mountains = mountains.convert()
+    mountains = mountains.convert_alpha()
     mountainsize = mountains.get_size()
 
     flamesheet = loadImage("Assets\\images\\flames.tif")
