@@ -494,7 +494,7 @@ def main():
                     clearedSector[i] = True
                     
             if file_settings[3] == 0:
-                level1(screen, width, height, scalarscalar)
+                level1(screen, width, height, scalarscalar, clock)
                 file_settings[3] = 1
                 filehelper.set(file_settings, 0)
                 file_settings = filehelper.get(0)

@@ -6,8 +6,7 @@ from graphics import change_color
 from game import generateStars
 import graphics
 
-def level1(screen, width, height, scalarscalar):
-    clock = pygame.time.Clock()
+def level1(screen, width, height, scalarscalar, clock):
     soyuz = loadImage("Assets\\images\\soyuz2.tif")
     unsh = soyuz.get_size()[1] #unscaled height
     soyuzscalar = scalarscalar
@@ -20,6 +19,7 @@ def level1(screen, width, height, scalarscalar):
     mountains = loadImage("Assets\\images\\cutsceneback.tif")
     mountainsize = mountains.get_size()
     mountains = pygame.transform.scale(mountains, (width, int(width/mountainsize[0]*mountainsize[1])))
+    mountains = mountains.convert()
     mountainsize = mountains.get_size()
 
     flamesheet = loadImage("Assets\\images\\flames.tif")
@@ -41,11 +41,14 @@ def level1(screen, width, height, scalarscalar):
     
     xpos = 944
     ypos = 1080
-    dy = height/700
+    dy = 0.5
     namebox = InputGetter([("center", 490), "name", 3], "str")
     running = True
     while running:
         clock.tick(100)
+        dt = clock.get_fps()
+        dt = 1/dt * 1000
+        pdt = dt/10 #percent delta time, helps regulate physics
         screen.fill((0,0,0))
 
         graphics.printer(screen, star_list, 0, "na", scalarscalar, False)
@@ -82,7 +85,7 @@ def level1(screen, width, height, scalarscalar):
             
         collect_inputs()
         
-        ypos -= dy        
+        ypos -= dy*pdt
         pygame.display.flip()
 
         
