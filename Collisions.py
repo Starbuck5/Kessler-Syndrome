@@ -31,6 +31,7 @@ def getHitbox(object_list, object_location, graphlist):
         hitBox = [xpos, ypos, 60, 60]
     elif objectID == 0: #zvezda
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation(), False)
+        hitBox.inflate_ip(hitBox[0]*0.25, hitBox[1]*0.25)
     elif 9 < objectID < 40: #pixel things
         hitBox = graphics.Images.getHitbox(xpos, ypos, objectID, rotation.getRotation())
     elif objectID == 7: #alien mines
