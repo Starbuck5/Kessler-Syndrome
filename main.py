@@ -604,7 +604,7 @@ def main():
             if filehelper.get(0)[3] == 6:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
-                                ("Lets go team! Now the whole world will find out the President's crimes. "
+                                ("Let's go team! Now the whole world will find out the President's crimes. "
                                  "What did she do again?"))
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
@@ -625,7 +625,7 @@ def main():
                                 "Large inbound contact detected, seems to be holding position in sector 19.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
-                                "The president has come for us. You must go defeat her.")
+                                "The president has come for us. You must go and defeat her.")
                 sector19 = getObjects(19, width, height)
                 if sector19 == ["PLEASE GENERATE"]:
                     sector19 = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
@@ -817,11 +817,11 @@ def main():
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                                     loadSound("Assets\\sounds\\click.ogg"),
-                                                    "Is someone out there? I've been stuck out here for so long")
+                                                    "Is someone out there? I've been stuck out here for so long.")
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                                     loadSound("Assets\\sounds\\click.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
-                                                     "eternally grateful"))
+                                                     "eternally grateful."))
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                                     loadSound("Assets\\sounds\\click.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
