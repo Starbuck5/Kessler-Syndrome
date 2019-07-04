@@ -581,7 +581,6 @@ def main():
         
         if status == "game":
             screen.fill(color)
-            AnnouncementBox.play(screen)
             Font.timerhelper() #once a game loop update to a scramble timer
             
             # quest handling
@@ -931,6 +930,7 @@ def main():
             flame = False
             if DEVMODE:
                 Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
+            AnnouncementBox.play(screen)
             pygame.display.flip()
             # printer
 
