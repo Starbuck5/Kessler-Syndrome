@@ -10,7 +10,6 @@ import pygame
 import pgx
 
 from pygame import gfxdraw
-from pygame import Surface
 
 #accepts a surface that supports palettes (gifs) and changes the color palette based on preference
 #current and new colors are tuples of rgba (r, g, b, a)

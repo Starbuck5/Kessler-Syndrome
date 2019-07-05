@@ -412,7 +412,9 @@ class Texthelper():
         asw, ash = Texthelper.SAFEASPECT
         supposedwidth = Texthelper.height/ash*asw
         blackbarsize = (supposedwidth - Texthelper.width)/2
-        return x - blackbarsize
+        if x>Texthelper.width+blackbarsize:
+            blackbarsize *= 2
+        return (x - blackbarsize if x-blackbarsize > 0 else x)
             
     #part of the input sanitizing process: figures out how to center text mainly
     #styles of coordinate input:
@@ -424,7 +426,7 @@ class Texthelper():
         text_location = text_input[0]
         location_list = [text_location[0], text_location[1]]
         text_input2 = text_input[0:] #very important line
-        if isinstance(location_list[0], str) and ("-" in location_list[0] or "+" in location_list[0]):
+        if isinstance(location_list[0], str) and ("-" in location_list[0] or "+" in location_list[0]): #EX: right-110
             if "left" in location_list[0]:
                 index = 5 
                 startnum = 0     
@@ -440,7 +442,7 @@ class Texthelper():
                 location_list[0] = startnum - offset
             else:
                 raise ValueError("you appear to have entered an incorrect coordinate format")
-        elif isinstance(location_list[0], str):
+        elif isinstance(location_list[0], str): #EX: 'center', 'center.600', 'left.20', 'right'
             if "center" in location_list[0]:
                 if location_list[0][-1].isdigit():
                      num = int(location_list[0][location_list[0].rfind(".")+1:])
@@ -467,7 +469,7 @@ class Texthelper():
                     location_list[0] = Texthelper.width - Texthelper._textlength(text_input)                
             else:
                 raise ValueError("invalid string keyword for coordinates")            
-        else:
+        else: #EX: 520
             location_list[0] *= Texthelper.scalar
             location_list[0] = Texthelper.__compensateForAspect(location_list[0])
         location_list[1] *= Texthelper.scalar            
