@@ -763,6 +763,15 @@ class draw:
         endpos = draw._interpretcoords(endpos)
         pygame.draw.aaline(Surface, color, startpos, endpos, blend)
 
+    def circle(Surface, color, pos, radius, width=0):
+        pos = draw._interpretcoords(pos)
+        pos = round(pos[0]), round(pos[1])
+        adjusted_radius = round(Texthelper.scalar * radius)
+        radius = adjusted_radius if adjusted_radius > 0 else 1
+        adjusted_width = round(Texthelper.scalar * width)
+        width = adjusted_width if (adjusted_width > 0 or width == 0) else 1
+        pygame.draw.circle(Surface, color, pos, radius, width)
+
     #static version of normal blit except it moves coordinates based on screen size
     #because it uses texthelper the location tuple/list can use fancy things like center
     def sblit(baseSurface, secondSurface, location):

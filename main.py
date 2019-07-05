@@ -13,7 +13,65 @@ import Collisions
 from Collisions import explosion_sounds
 
 upgrades = Filehelper("assets\\data\\upgrades.txt")
-                          
+
+def randomDarkColor():
+    color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+    while color[0] + color[1] + color[2] > 150:
+        color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+    return color
+
+#for animated earth picture in main menu
+#weird mix of static and instantiated class
+class MenuDebris():
+    center = (0,0)
+    radius = 0
+    
+    def init(center, radius):
+        MenuDebris.center = center
+        MenuDebris.radius = radius
+
+    def drawAll(screen, orbitingdebris):
+        for i in range(len(orbitingdebris)):
+            if not orbitingdebris[i].behind:
+                orbitingdebris[i].draw(screen)
+
+    def drawAllHidden(screen, orbitingdebris):
+        for i in range(len(orbitingdebris)):
+            if orbitingdebris[i].behind:
+                orbitingdebris[i].draw(screen)            
+
+    def updateAll(orbitingdebris):
+        for i in range(len(orbitingdebris)):
+            orbitingdebris[i].update()
+        
+    def __init__(self):
+        self.angle = random.randint(0, 360)
+        #self.speed = random.randint(4,10)
+        self.speed = random.randint(1,4)
+        self.color = randomDarkColor()
+        pos_offset = random.randint(-10*MenuDebris.radius, 10*MenuDebris.radius)/10
+        x_offset = pos_offset * math.cos(math.radians(self.angle))
+        y_offset = pos_offset * math.sin(math.radians(self.angle))
+        self.position = (MenuDebris.center[0]+x_offset, MenuDebris.center[1]+y_offset)
+        self.behind = random.choice([True, False])
+
+    def draw(self, screen):
+        draw.circle(screen, self.color, self.position, 4)
+    
+    def update(self):
+        pos_offset = self.speed
+        x_offset = pos_offset * math.cos(math.radians(self.angle))
+        y_offset = pos_offset * math.sin(math.radians(self.angle))
+        self.position = (self.position[0]+x_offset, self.position[1]+y_offset)
+
+        xdiff = self.position[0] - MenuDebris.center[0]
+        ydiff = self.position[1] - MenuDebris.center[1]
+        center_distance = (xdiff**2 + ydiff**2)**0.5
+        if center_distance > MenuDebris.radius:
+            self.angle += 180
+            self.angle %= 360
+            self.behind = not self.behind
+                      
 def main():
     file_settings = filehelper.get(0) #grabs settings from file
 
@@ -49,7 +107,7 @@ def main():
                  scaleImage(loadImage("Assets\\images\\solarpanel.tif"), scalarscalar), temp_image,
                  scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
-    earthpic = loadImage("Assets\\images\\earth.tif")
+    earthpic = scaleImage(loadImage("Assets\\images\\earth.tif"), 2*scalarscalar)
     tutorialslides = 8 #number of tutorial slides
     tutorialpics = []
     for i in range(1, tutorialslides + 1):
@@ -160,9 +218,20 @@ def main():
         if status == "menuinit":
             pygame.mouse.set_visible(True)
             screen.fill(color)
+            orbiting_debris = []
+            MenuDebris.init((960,400), int(300*scalarscalar))
+            for i in range(260):
+                orbiting_debris.append(MenuDebris())
             status = "menu" 
 
         if status == "menu": #if game is in menu
+            screen.fill(color)
+
+            MenuDebris.drawAllHidden(screen, orbiting_debris)
+            draw.sblit(screen, earthpic, (760, 200))
+            MenuDebris.drawAll(screen, orbiting_debris)
+            MenuDebris.updateAll(orbiting_debris)
+
             # actual text
             Texthelper.write(screen, [(300, 540-200), "Kessler Syndrome", 7])
             
@@ -183,9 +252,8 @@ def main():
             if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Credits", 3]):
                 status = "credits"
             if Texthelper.writeButtonBox(screen, [(x, y + spacing * 4), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
-                status = "exiting"         
-
-            screen.blit(earthpic, (1500,800))
+                status = "exiting"
+                
             pygame.display.flip()
         
         if status == "tutorial":
@@ -552,9 +620,7 @@ def main():
                         object_list += object_list_addition
                         previous_tick = ticks
                 if "shift" in inputvar and "c" in inputvar and (ticks - previous_tick2) > 360:
-                    color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-                    while color[0] + color[1] + color[2] > 150:
-                        color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+                    color = randomDarkColor()
                     previous_tick2 = ticks
                 if "m" in inputvar and timer_popupmenu > 25 and status == "game":
                     timer_popupmenu = 0
