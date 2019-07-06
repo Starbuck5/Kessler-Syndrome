@@ -46,8 +46,7 @@ class MenuDebris():
         
     def __init__(self):
         self.angle = random.randint(0, 360)
-        #self.speed = random.randint(4,10)
-        self.speed = random.randint(1,4)
+        self.speed = random.randint(2,6)
         self.color = randomDarkColor()
         pos_offset = random.randint(-10*MenuDebris.radius, 10*MenuDebris.radius)/10
         x_offset = pos_offset * math.cos(math.radians(self.angle))
@@ -107,7 +106,7 @@ def main():
                  scaleImage(loadImage("Assets\\images\\solarpanel.tif"), scalarscalar), temp_image,
                  scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
-    earthpic = scaleImage(loadImage("Assets\\images\\earth.tif"), 2*scalarscalar)
+    earthpic = scaleImage(loadImage("Assets\\images\\earth.tif"), 3*scalarscalar)
     tutorialslides = 8 #number of tutorial slides
     tutorialpics = []
     for i in range(1, tutorialslides + 1):
@@ -202,6 +201,7 @@ def main():
 
     #graphics setup
     graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
+    earthpic.convert_alpha()
     
     
     running = True
@@ -219,7 +219,7 @@ def main():
             pygame.mouse.set_visible(True)
             screen.fill(color)
             orbiting_debris = []
-            MenuDebris.init((960,400), int(300*scalarscalar))
+            MenuDebris.init((960,655), int(450*scalarscalar))
             for i in range(260):
                 orbiting_debris.append(MenuDebris())
             status = "menu" 
@@ -228,31 +228,28 @@ def main():
             screen.fill(color)
 
             MenuDebris.drawAllHidden(screen, orbiting_debris)
-            draw.sblit(screen, earthpic, (760, 200))
+            draw.sblit(screen, earthpic, (660, 355))
             MenuDebris.drawAll(screen, orbiting_debris)
             MenuDebris.updateAll(orbiting_debris)
 
             # actual text
-            Texthelper.write(screen, [(300, 540-200), "Kessler Syndrome", 7])
+            Texthelper.write(screen, [("center", 200), "Kessler Syndrome", 7], color=(110,110,110))
             
             # buttons
-            spacing = 60
-            x = 410
-            y = 490
-            if Texthelper.writeButtonBox(screen, [(x, y), "Play", 3]):
+            if Texthelper.writeButtonBox(screen, [("center", 600), "Play", 10]):
                 status = "gameinit"
-            #if Texthelper.writeButtonBox(screen, [(x, y + spacing), "Arcade Mode [Beta]", 3]):
-            #    status = "arcadeinit"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 1), "Tutorial", 3]):
+            if Texthelper.writeButtonBox(screen, [("center", 980), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+                status = "exiting"
+                
+            Texthelper.write(screen, [("center.1500", 500), "Alternatively:", 3])
+            if Texthelper.writeButtonBox(screen, [("center.1500", 580), "Tutorial", 3]):
                 tutorialIndex = 0
                 status = "tutorial"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 2), "Options", 3]):
+            if Texthelper.writeButtonBox(screen, [("center.1500", 640), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 3), "Credits", 3]):
+            if Texthelper.writeButtonBox(screen, [("center.1500", 700), "Credits", 3]):
                 status = "credits"
-            if Texthelper.writeButtonBox(screen, [(x, y + spacing * 4), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
-                status = "exiting"
                 
             pygame.display.flip()
         
