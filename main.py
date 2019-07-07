@@ -221,7 +221,7 @@ def main():
             pygame.mouse.set_visible(True)
             screen.fill(color)
             orbiting_debris = []
-            MenuDebris.init((960,655), 450)
+            MenuDebris.init((960,605), 450)
             for i in range(260):
                 orbiting_debris.append(MenuDebris())
             status = "menu" 
@@ -229,30 +229,34 @@ def main():
         if status == "menu": #if game is in menu
             screen.fill(color)
 
-            draw.sblit(screen, proppic, (195,500))
-
             MenuDebris.drawAllHidden(screen, orbiting_debris)
-            draw.sblit(screen, earthpic, (660, 355))
+            draw.sblit(screen, earthpic, (660, 305))
             MenuDebris.drawAll(screen, orbiting_debris)
             MenuDebris.updateAll(orbiting_debris)
 
             # actual text
-            Texthelper.write(screen, [("center", 200), "Kessler Syndrome", 7], color=(110,110,110))
+            Texthelper.write(screen, [("center", 120), "Kessler Syndrome", 8], color=(110,110,110))
             
             # buttons
-            if Texthelper.writeButtonBox(screen, [("center", 600), "Play", 10]):
+            if Texthelper.writeButtonBox(screen, [("center", 550), "Play", 10]):
                 status = "gameinit"
-            if Texthelper.writeButtonBox(screen, [("center", 980), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
+            if Texthelper.writeButtonBox(screen, [("center", 960), "Quit to desktop", 3]): #if "quit to desktop" is clicked           
                 status = "exiting"
-                
-            Texthelper.write(screen, [("center.1550", 500), "Alternatively:", 3])
-            if Texthelper.writeButtonBox(screen, [("center.1550", 580), "Tutorial", 3]):
+
+            menu_xoffset = 320
+            if width/height < 16/9:
+                menu_xoffset = 260
+
+            draw.sblit(screen, proppic, ("center-"+str(menu_xoffset+380),450))
+            
+            Texthelper.write(screen, [("center+"+str(menu_xoffset), 450), "Alternatively:", 3])
+            if Texthelper.writeButtonBox(screen, [("center+"+str(menu_xoffset+110), 530), "Tutorial", 3]):
                 tutorialIndex = 0
                 status = "tutorial"
-            if Texthelper.writeButtonBox(screen, [("center.1550", 640), "Options", 3]):
+            if Texthelper.writeButtonBox(screen, [("center+"+str(menu_xoffset+110), 590), "Options", 3]):
                 status = "optionsinit"
                 OptionsInput.backStatus = "menuinit"
-            if Texthelper.writeButtonBox(screen, [("center.1550", 700), "Credits", 3]):
+            if Texthelper.writeButtonBox(screen, [("center+"+str(menu_xoffset+110), 650), "Credits", 3]):
                 status = "credits"
                 
             pygame.display.flip()
