@@ -266,8 +266,11 @@ def main():
 
             Texthelper.write(screen, [("center", 1030), "Page " + str(tutorialIndex + 1) + " of " + str(len(tutorialpics)), 3])
 
-            if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]) and tutorialIndex > 0:
-                tutorialIndex -= 1
+            if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]):
+                if tutorialIndex > 0:
+                    tutorialIndex -= 1
+                else:
+                    status = "menuinit"
             if tutorialIndex == len(tutorialpics) - 1:
                 if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Done", 3]):
                     status = "menuinit"
