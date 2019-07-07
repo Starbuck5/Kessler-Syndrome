@@ -878,6 +878,10 @@ def main():
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                                     loadSound("Assets\\announcements\\5r.ogg", 75),
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
+                                    AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
+                                                    loadSound("Assets\\sounds\\click.ogg"),
+                                                    ("It appears that there may still be mines from the human-alien war"
+                                                     " up here. Exercise caution."))
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                                     loadSound("Assets\\sounds\\click.ogg"),
