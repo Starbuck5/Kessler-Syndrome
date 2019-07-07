@@ -780,9 +780,9 @@ def dock(xpos, ypos, image):
     ymom = -0.5
     return (newXpos, newYpos, xmom, ymom, rotation)
 
-def updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer):
+def updateShipGraphics(currentarmor, totalarmor, dead):
     armorPercent = currentarmor / totalarmor * 100
-    if timer_shipdeath < deathtimer:
+    if dead:
         graphics.SHIPSTATE = 5
     elif armorPercent <= 30:
         graphics.SHIPSTATE = 4

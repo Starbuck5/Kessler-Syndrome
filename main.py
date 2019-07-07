@@ -175,7 +175,6 @@ def main():
         portalRects.append(pointsToRect(portalcoordsRevised[i]))
     lasttransit = 0
     timer_popupmenu = 0
-    timer_shipdeath = 9500
     portal_toggle = False
     timer_portal_toggle = 0
     #locations for all sector icons on map screen, in order
@@ -184,6 +183,7 @@ def main():
                               15: (1055, 250), 16: (840, 245), 17: (965, 415), 18: (870, 105), 19: (1030, 90)}
     optionsScreenshot = "" #saves a screenshot of the game so the pause menu looks correct after exiting options
     deathtimer = 200 #time after death it makes the watch the aftermath
+    dead = False #helps trigger the end of death sequence stuffs
     shotTimer = 360 #ticks between shots (essentially how fast you can shoot)
     tutorialIndex = 0 #which image of tutorial to show
 
@@ -210,8 +210,6 @@ def main():
         collect_inputs() #syncs up event queue in pgx
         timer_popupmenu += 1
         timer_popupmenu = min(timer_popupmenu, 10000)
-        timer_shipdeath += 1
-        timer_shipdeath = min(timer_shipdeath, 10000)
         timer_portal_toggle += 1
         timer_portal_toggle = min(timer_portal_toggle, 10000)
      
@@ -954,7 +952,7 @@ def main():
                     ammunition = totalammunition
                 
             #ship death
-            if (currentarmor <= 0 or currentfuel <= 0) and timer_shipdeath > deathtimer:
+            if (currentarmor <= 0 or currentfuel <= 0) and not dead:
                 saveGame(sectornum, object_list[8:], width, height)
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
                 object_list += particlemaker(object_list[0], object_list[1], object_list[2], object_list[3])
@@ -963,13 +961,13 @@ def main():
                 object_list[7] = deathtimer #meaning the player is paralyzed
                 object_list[6].setInventory([0,0,0,0])
                 lasttransit = 0
-                timer_shipdeath = 0
+                dead = True
 
-            if timer_shipdeath < deathtimer:
+            if dead:
                 currentfuel = max(currentfuel, 0)
                 currentarmor = max(currentarmor, 0)
 
-            if timer_shipdeath == deathtimer:
+            if dead and object_list[4] == 1:
                 sectornum = 1
                 currentfuel = totalfuel
                 currentarmor = totalarmor
@@ -979,13 +977,13 @@ def main():
                 object_list[1] = height/2 - height*0.2
                 object_list[2] = 0
                 object_list[3] = 0
-                object_list[4] = 1
+                dead = False
 
             #physics!
             doPhysics(object_list, pdt)
 
             #ship durability state
-            updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
+            updateShipGraphics(currentarmor, totalarmor, dead)
             
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
@@ -1037,7 +1035,7 @@ def main():
             doPhysics(object_list, pdt)
 
             #ship durability state
-            updateShipGraphics(currentarmor, totalarmor, timer_shipdeath, deathtimer)
+            updateShipGraphics(currentarmor, totalarmor, dead)
             
             # printer
             graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
