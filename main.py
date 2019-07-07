@@ -113,7 +113,8 @@ def main():
     tutorialpics = []
     for i in range(1, tutorialslides + 1):
         tutorialpics.append(loadImage("Assets\\tutorial\\slide" + str(i) + ".png"))
-        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5 * scalarscalar)
+        tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5)
+        tutorialpics[i - 1] = fitImage(tutorialpics[i - 1], (width,height))
 
     # settings
     GameConstants.max_speed = 4 * scalarscalar
@@ -261,7 +262,7 @@ def main():
         
         if status == "tutorial":
             screen.fill(color)
-            pgx.draw.sblit(screen, tutorialpics[tutorialIndex], (0, 0))
+            screen.blit(tutorialpics[tutorialIndex], (0, 0))
 
             Texthelper.write(screen, [("center", 1030), "Page " + str(tutorialIndex + 1) + " of " + str(len(tutorialpics)), 3])
 

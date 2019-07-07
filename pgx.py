@@ -105,6 +105,19 @@ def stretchImage(image, size):
     image = pygame.transform.scale(image, (round(size[0]), round(size[1])))
     return image
 
+def fitImage(image, size):
+    returnImage = pygame.Surface(size)
+    scale = max(image.get_size()[0]/size[0], image.get_size()[1]/size[1])
+    scale = 1/scale
+    image = scaleImage(image, scale)
+    if image.get_size()[0] == size[0]:
+        returnImage.blit(image, (0,(size[1]-image.get_size()[1])/2))
+    elif image.get_size()[1] == size[1]:
+        returnImage.blit(image, ((size[0]-image.get_size()[0])/2,0))
+    else:
+        raise RuntimeError("it seems fitImage was unable to scale the image :(")
+    return returnImage
+
 def handlePath(path):
     path = path.split("\\")
     return os.path.join(BASEPATH, *path)
