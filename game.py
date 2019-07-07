@@ -483,7 +483,7 @@ def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):
     for i in range(0, len(object_list), 8):
         #decaying objects
         if object_list[4 + i] in [2, 8, 5, 4, 9, 122]: #stuff in list should have a decrement to their life force
-            object_list[7 + i] -= int(1*pdt)
+            object_list[7 + i] -= pdt
 
         #speed limit for ship
         if object_list[4+i] == 1 or object_list[4+i] == 5:
