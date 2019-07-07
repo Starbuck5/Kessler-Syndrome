@@ -433,6 +433,9 @@ class Texthelper():
             elif "right" in location_list[0]:
                 index = 6 
                 startnum = Texthelper.width
+            elif "center" in location_list[0]:
+                index = 7
+                startnum = Texthelper.width/2
             else:
                 raise ValueError("invalid string keyword for relative coordinates")
             offset = int(location_list[0][index:]) * Texthelper.scalar
