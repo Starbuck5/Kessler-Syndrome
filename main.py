@@ -328,7 +328,7 @@ def main():
 
             inputvar = keyboard()
             if "escape" in inputvar:
-                status = "pauseinit"
+                status = OptionsInput.backStatus
 
             if status != "options":
                 if status == "pauseinit":
