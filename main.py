@@ -692,7 +692,7 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "I'm in! We've transmitted an account of the President's crimes to the whole world.")
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\w_trouble.ogg", 90),
                                 "Oh boy you're in trouble now.")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
