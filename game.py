@@ -684,11 +684,11 @@ def solarPanelDrops(shipLv):
     if random.randint(1,100) <= 20:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
-            drops[2] += 2
-        elif 61 <= percentHelper <= 90:
-            drops[2] += 3
+            pass
+        elif 61 <= percentHelper <= 80:
+            drops[2] += 1
         else:
-            drops[2] += 6
+            drops[2] += 2
     if random.randint(1,100) <= 10:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
@@ -721,12 +721,12 @@ def satelliteDrops(shipLv):
             drops[1] += 6
     if random.randint(1,100) <= 20:
         percentHelper = random.randint(1,100)
-        if percentHelper <= 60:
-            drops[2] += 2
+        if percentHelper <= 40:
+            drops[2] += 1
         elif 61 <= percentHelper <= 90:
-            drops[2] += 4
+            drops[2] += 2
         else:
-            drops[2] += 6
+            drops[2] += 3
     if random.randint(1,100) <= 70:
         percentHelper = random.randint(1,100)
         if percentHelper <= 60:
@@ -735,6 +735,44 @@ def satelliteDrops(shipLv):
             drops[3] += 10
         else:
             drops[3] += 20
+    if shipLv[3] > 0: #scavenging module
+        drops = [round(drop*1.5) for drop in drops]
+    return drops
+
+def fighterDrops(shipLv):
+    drops = [0, 0, 0, 0]
+    if random.randint(1,100) <= 80:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[0] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[0] += 4
+        else:
+            drops[0] += 6
+    if random.randint(1,100) <= 40:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 40:
+            drops[1] += 4
+        elif 61 <= percentHelper <= 90:
+            drops[1] += 6
+        else:
+            drops[1] += 8
+    if random.randint(1,100) <= 20:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 60:
+            drops[2] += 2
+        elif 61 <= percentHelper <= 90:
+            drops[2] += 4
+        else:
+            drops[2] += 6
+    if random.randint(1,100) <= 70:
+        percentHelper = random.randint(1,100)
+        if percentHelper <= 40:
+            drops[3] += 10
+        elif 61 <= percentHelper <= 85:
+            drops[3] += 20
+        else:
+            drops[3] += 30
     if shipLv[3] > 0: #scavenging module
         drops = [round(drop*1.5) for drop in drops]
     return drops

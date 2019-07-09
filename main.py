@@ -205,6 +205,7 @@ def main():
     #graphics setup
     graphics.init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar)
     earthpic.convert_alpha()
+    proppic.convert()
     
     
     running = True
@@ -754,7 +755,7 @@ def main():
                             printerlist_add += particlemaker(object_list[(i2 * 8)], object_list[1+(i2 * 8)],
                                                              object_list[2+(i2 * 8)], object_list[3+(i2 * 8)])
                             object_list[(i2*8)+7] = -1
-                            drops = satelliteDrops(ShipLv)
+                            drops = fighterDrops(ShipLv)
                             if drops[3]: #if currency is dropped
                                 SoundVault.play('money')
                             object_list[6].addInventory(drops)                           
