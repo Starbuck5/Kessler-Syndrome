@@ -238,8 +238,9 @@ def crayprinter(screen, xpos, ypos, object_number, rotation, decayLife, scalar3,
                                 [xpos, ypos+20*scalar3],
                                 [xpos-6*scalar3, ypos+5*scalar3]]
             flame_pointlist = Rotate(xpos, ypos, flame_pointlist, rotation.getRotation())
-            pygame.gfxdraw.aapolygon(screen, flame_pointlist, (255,100,0))
-            pygame.gfxdraw.filled_polygon(screen, flame_pointlist, (255,100,0))
+            flame_color = (255,100,0) if pgx.filehelper.get(3)[4] < 1 else (138, 43, 226)
+            pygame.gfxdraw.aapolygon(screen, flame_pointlist, flame_color)
+            pygame.gfxdraw.filled_polygon(screen, flame_pointlist, flame_color)
         flame = False
         
     elif object_number == 2 or object_number == 8: #draws missiles (id 8 are alien missiles)
