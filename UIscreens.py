@@ -104,7 +104,7 @@ def drawUpgradeScreen(screen, ShipLv, inventory, mode, upgradeType, status, curr
     return status
 
 #drawSpecialUpgrade pulls these based on shipLv index being modified
-upgrade_explanations = [0, 0, 0, "Increases drops by 50%"] 
+upgrade_explanations = [0, 0, 0, "Increases drops by 50%", "Decreases fuel usage by 30%"] 
 
 #these upgrade screens only have one upgrade from 0 to 1 in the shipLv list
 def drawSpecialUpgrade(screen, mode, shipLv, index, title, cost, status, inventory):
@@ -466,6 +466,13 @@ def garageUI(screen, ShipLv, homeInventory, mode):
             status = "scavengeUpgradeinit"
     else:
         Texthelper.write(screen, [("center", 675), "superior scavenging module", 3])
+
+    if ShipLv[4] == 0:
+        Texthelper.write(screen, [(1200, 740), "[onetime]", 1])
+        if Texthelper.writeButton(screen, [("center", 755), "upgrade main engines", 3]):
+            status = "engineUpgradeinit"
+    else:
+        Texthelper.write(screen, [("center", 755), "superior engine", 3])
         
     
 
@@ -494,6 +501,9 @@ def setupShop(shipLv, shipInventory, homeInventory, currentStats, totalStats, co
     shopStorage.totalStats = totalStats
     shopStorage.color = color
 
+scavengeUpgradeCost = [20, 2, 5, 150]
+engineUpgradeCost = [30, 5, 7, 400]
+
 #subsection of the great big main loop that deals with the various shops of zvezda
 def home(screen, freeStuff):
     shopStatus = shopStorage.shopStatus
@@ -504,8 +514,6 @@ def home(screen, freeStuff):
     totalStats = shopStorage.totalStats
     color = shopStorage.color
     screen.fill(color)
-
-    scavengeUpgradeCost = [20, 2, 5, 150]
     
     ####MARKET#SECTION####
     if shopStatus == "marketinit":
@@ -552,6 +560,12 @@ def home(screen, freeStuff):
 
     elif shopStatus == "scavengeUpgrade":
         shopStatus = drawSpecialUpgrade(screen, False, shipLv, 3, "Upgrade Scavenging Module", scavengeUpgradeCost, shopStatus, homeInventory)
+
+    elif shopStatus == "engineUpgradeinit":
+        shopStatus = drawSpecialUpgrade(screen, True, shipLv, 4, "Upgrade Main Engine", engineUpgradeCost, "engineUpgrade", homeInventory)
+
+    elif shopStatus == "engineUpgrade":
+        shopStatus = drawSpecialUpgrade(screen, False, shipLv, 4, "Upgrade Main Engine", engineUpgradeCost, shopStatus, homeInventory)
 
     elif shopStatus == "garageinit":
         garageUI(screen, shipLv, homeInventory, True)

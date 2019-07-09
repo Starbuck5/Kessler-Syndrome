@@ -954,7 +954,7 @@ def main():
             
             # fuel consumption
             if flame:
-                currentfuel -= 1
+                currentfuel -= (1 - ShipLv[4]*0.3)
 
             #HACKZ
             if DEVMODE:
