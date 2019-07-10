@@ -380,6 +380,7 @@ class PrezAI(DroneAI, ArmorManager):
         armorfraction = self.getArmor() / self.getTotalArmor()
         pgx.draw.rect(screen, (110,0, 30), ["left.385", 100, int(1150*armorfraction), 30])
 
+        #dying stuff
         if self.getArmor() < 0:
             object_list[self_loc+7] = -1
             inp = object_list[self_loc:self_loc+4]
@@ -392,6 +393,9 @@ class PrezAI(DroneAI, ArmorManager):
                     inp = object_list[i:i+4]
                     object_list[7+i] = -1
                     object_list += particlemaker(*inp)
+                    #object telling the game to go the victory screen
+                    #spawns a 699 entity, which decays into a 700 entity, which then triggers the victory screen in main
+                    object_list += [0,0,0,0,699,RotationState("NA", "NA"),"NA",100] 
                 
         
 
@@ -482,7 +486,7 @@ def doPhysics(object_list, pdt):
 def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):   
     for i in range(0, len(object_list), 8):
         #decaying objects
-        if object_list[4 + i] in [2, 8, 5, 4, 9, 122]: #stuff in list should have a decrement to their life force
+        if object_list[4 + i] in [2, 8, 5, 4, 9, 122, 699]: #stuff in list should have a decrement to their life force
             object_list[7 + i] -= pdt
 
         #speed limit for ship
@@ -645,6 +649,9 @@ def deaderizer(object_list):
             if object_list[4+indexadj] == 5:
                 object_list[7+indexadj] = 1
                 object_list[4+indexadj] = 1
+            elif object_list[4+indexadj] == 699:
+                object_list[7+indexadj] = 1
+                object_list[4+indexadj] = 700              
             else:
                 del object_list[indexadj:8+indexadj]
         else:

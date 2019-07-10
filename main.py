@@ -851,6 +851,9 @@ def main():
                        object_list[i+6].update(screen, object_list, i)
                     except:
                        pass
+                if object_list[i+4] == 700:
+                    status = "victoryinit"
+                    object_list[i+7] = -1
             #special entity behaviors
 
             #portals
@@ -1081,6 +1084,39 @@ def main():
                 pygame.mouse.set_visible(False)
             if status == "menuinit":
                 Font.endScramble()
+
+        if status == "victoryinit":
+            pygame.mouse.set_visible(True)
+            Screenhelper.greyOut(screen)
+            Font.set_scramble_paused(True) #pauses any scrambling going on
+
+            #tries to save all the game progress stuff, but it's no big deal if it can't
+            try:
+                filehelper.set([currentarmor, currentfuel, ammunition], 4)            
+                #saving objectlist, sector achievements data
+                saveGame(sectornum, object_list, width, height)
+                discovery = list("8" * len(sector_map_coordinates))
+                for i in discoverSector.keys():
+                    if discoverSector[i]:
+                        discovery[i - 1] = "1"
+                filehelper.setElement("".join(discovery), 1, 2)
+                cleared = list(cleared) 
+                for i in range(1, 20):
+                    if clearedSector[i]:
+                        cleared[i - 1] = "1"
+                filehelper.setElement("".join(cleared), 1, 1)
+            except:
+                pass
+            
+            status = "victory"
+            
+        if status == "victory":
+            Texthelper.write(screen, [("center", 350), "You won the game!", 6])
+            Texthelper.write(screen, [("center", 500), "Thanks for playing", 4])
+            Texthelper.write(screen, [("center", 570), "I hope you enjoyed the game", 4])
+            if Texthelper.writeButton(screen, [("center", 700), "continue", 3]):
+                status = "game"
+            pygame.display.flip()
         
         for event in AllEvents.TICKINPUT:
             if event.type == pygame.QUIT:
