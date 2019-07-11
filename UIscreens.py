@@ -788,8 +788,9 @@ def creditsUI(screen, sdlnum):
     Texthelper.write(screen, [(475, 500), "Colby Smith", 3], color=(138,43,226))
     Texthelper.write(screen, [(475, 550), "Julian Baldwin", 3], color=(255,120,0))
     Texthelper.write(screen, [(475, 600), "Nick Bradley", 3], color=(35,132,37))
-    Texthelper.write(screen, [("right-580", 530), "Voice Actors", 4])
-    Texthelper.write(screen, [("right-505", 610), "Palmer Moe", 3], color=(255,40,0))
+    Texthelper.write(screen, [("right-660", 530), "Voice Actors", 4])
+    Texthelper.write(screen, [("right-585", 610), "Palmer Moe", 3], color=(255,40,0))
+    Texthelper.write(screen, [("right-585", 660), "August Grossblatt", 3], color=(255,99,71))
     Texthelper.write(screen, [("right-950",900), "Sound effects credited in Assets/sounds/assetsources.txt", 1.5])
     if Texthelper.writeButton(screen, [("center", 1000), "Back", 3]):
         status = "menuinit" 

@@ -580,17 +580,17 @@ def main():
                                 loadSound("Assets\\announcements\\1r.ogg", 75),
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\ai-intro1.ogg"),
                                 ("Hi, i'm your ship's computer. I'm here to assist you. That expressive gentleman was "
                                  "our supervisor, the warden."))
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\ai-intro2.ogg"),
                                 ("If you haven't looked at the tutorial, you should - press p to pause and then go to "
                                  "the main menu."))
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\ai-intro3.ogg"),
                                 ("First things first, you should try to move around, then press T to open the portals, "
-                                 "then you can get started clearing sectors."))
+                                 "from there, you can get started clearing sectors."))
                 file_settings[3] = 2
                 filehelper.set(file_settings, 0)
             
@@ -695,7 +695,7 @@ def main():
                                 loadSound("Assets\\announcements\\w_trouble.ogg", 90),
                                 "Oh boy you're in trouble now.")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\ai-president.ogg"),
                                 "Large inbound contact detected, seems to be holding position in sector 19.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
@@ -892,7 +892,7 @@ def main():
                                                     loadSound("Assets\\announcements\\5r.ogg", 75),
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
                                     AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                                    loadSound("Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\announcements\\ai-warning.ogg"),
                                                     ("It appears that there may still be mines from the human-alien war"
                                                      " up here. Exercise caution."))
                                 if sectornum == 11:
@@ -949,7 +949,7 @@ def main():
                                      " Don't get lazy now!"))
                 elif sectorsCleared != 1:
                     AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                    loadSound("Assets\\sounds\\click.ogg"),
+                                    loadSound("Assets\\announcements\\sector-cleared.ogg"),
                                     "Sector cleared. " + str(addCredits) + " Credits acquired.")
 
             # deaderizer
