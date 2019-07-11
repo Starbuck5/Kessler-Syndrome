@@ -163,7 +163,7 @@ def homeinitUI(screen, inventory):
     Texthelper.write(screen, [("center", 540+165), "resume", 3])
     pygame.display.flip()
 
-def homeUI(screen, shipInventory, homeInventory, freeStuff):
+def homeUI(screen, shipInventory, homeInventory, freeStuff, currentStats, totalStats):
     status = "home"
     graphics.drawInventory(screen, homeInventory)
     Texthelper.write(screen, [("center", 540-180), "home base", 6])
@@ -187,6 +187,11 @@ def homeUI(screen, shipInventory, homeInventory, freeStuff):
     if Texthelper.writeButton(screen, [("center", 540+165), "Resume", 3]):
         status = "game"
         pygame.mouse.set_visible(False)
+
+    #draws fuel and armor and shots
+    currentarmor, currentfuel, ammunition = currentStats
+    totalarmor, totalfuel, totalammunition = totalStats
+    graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
 
     if freeStuff:
         spacing = 60
@@ -579,7 +584,7 @@ def home(screen, freeStuff):
         shopStatus = "home"
     
     elif shopStatus == "home":
-        shopStatus = homeUI(screen, shipInventory, homeInventory, freeStuff)
+        shopStatus = homeUI(screen, shipInventory, homeInventory, freeStuff, currentStats, totalStats)
     
     shopStorage.shopStatus = shopStatus
     pygame.display.flip()
