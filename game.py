@@ -296,7 +296,7 @@ class ArmorManager():
 class PrezAI(DroneAI, ArmorManager):
     def __init__(self):
         DroneAI.__init__(self)
-        ArmorManager.__init__(self, 50)
+        ArmorManager.__init__(self, 100)
         self.speed = 4
         self.RightLeft = 0
 
@@ -345,7 +345,7 @@ class PrezAI(DroneAI, ArmorManager):
             xpos += xChange
             ypos += yChange
             droneShip = DroneAI.shooting(self, screen, object_list, self_loc, xpos, ypos)
-            if self.shotCounter == 150:
+            if self.shotCounter == 100:
                 self.shotCounter = 0
                 self.progression = 2
             elif distance <= 100:
