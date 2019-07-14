@@ -150,6 +150,9 @@ def main():
     SoundVault("death", "Assets\\sounds\\powerfailure.ogg", volume=0.2)
     SoundVault("portal", "Assets\\sounds\\electric.ogg", volume=0.15)
     SoundVault("shot", "Assets\\sounds\\shot.ogg", volume=0.25)
+    pygame.mixer.music.load(handlePath("Assets\\sounds\\disco.ogg"))
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(-1, 2.2)
 
     # variable setup
     playerinfo = filehelper.get(1)
@@ -479,37 +482,6 @@ def main():
             status = creditsUI(screen, sdlnum)
             pygame.display.flip()
 
-        if status == "arcadeinit":
-            object_list = [0.5*width, 0.5*height, 0, 0, 1, RotationState(0,0), ShipExtras(), 1] #constructing a ship
-            object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
-                                  d_asteroids, d_fighters, 1)
-            arcade_level = 1
-
-            ShipLv = [1,1,1,0]
-            fuelHelp = upgrades.get(ShipLv[1]+20)
-            totalfuel = fuelHelp[4]
-            currentfuel = totalfuel
-            armorHelp = upgrades.get(ShipLv[0])
-            totalarmor = armorHelp[4]
-            currentarmor = totalarmor
-            totalammunition = 0
-            if ShipLv[2] == 0:
-                totalammunition = 0
-            else:
-                ammunitionHelp = upgrades.get(ShipLv[2]+40)
-                totalammunition = ammunitionHelp[4]
-            ammunition = totalammunition
-
-            #initializes printouts of fuel and armor and ammo
-            graphics.InfoBars.init(graphics.FlashyBox(["right-280", 990, 280, 70], 0.2, (255,0,0)),
-                                   graphics.FlashyBox(["right-280", 920, 280, 70], 0.2, (255,0,0)))
-
-            previous_tick = 0
-            previous_tick2 = 0
-            pygame.mouse.set_visible(False)
-
-            status = "arcade"
-
         if status == "gameinit":       
             # changing variable setup
 
@@ -596,7 +568,7 @@ def main():
             
             status = "game"
 
-        if status == "game" or status == "arcade":            
+        if status == "game":            
             # input handling
             inputvar = keyboard()
             ticks = pygame.time.get_ticks()
@@ -653,7 +625,6 @@ def main():
                     timer_portal_toggle = 0
             # input handling
         
-        if status == "game":
             screen.fill(color)
             Font.timerhelper() #once a game loop update to a scramble timer
             
@@ -711,7 +682,6 @@ def main():
                 filehelper.setElement(8, 0, 3)
             # quest handling
 
-        if status == "game" or status == "arcade":
             # collision detection
             Collisions.prime(object_list, screen, graphlist, DEVMODE, cheats_settings)
             numExaminations = int(len(object_list)/8)
@@ -843,7 +813,6 @@ def main():
                     i2 += 1            
             # collision detection
 
-        if status == "game":
             #special entity behaviors
             for i in range(0, len(object_list), 8):
                 if not isinstance(object_list[i+6], str):
@@ -1014,76 +983,6 @@ def main():
             AnnouncementBox.play(screen)
             pygame.display.flip()
             # printer
-
-        if status == "arcade":
-            screen.fill(color)
-            AnnouncementBox.play(screen)
-            Font.timerhelper() #once a game loop update to a scramble timer
-
-            #special entity behaviors
-            for i in range(0, len(object_list), 8):
-                if not isinstance(object_list[i+6], str):
-                    #try:
-                    object_list[i+6].update(screen, object_list, i)
-                    #except:
-                      # pass
-
-            # deaderizer
-            object_list = deaderizer(object_list)
-
-            #progression
-            numdebris = 0
-            for i in range(0, len(object_list), 8):
-                if object_list[i+4] in d_debris:
-                    numdebris += 1
-            if numdebris == 0:
-                arcade_level += 1
-                object_list = leveler(object_list, max_asteroids, max_asteroid_spd, width, height, d_sats, d_parts,
-                                  d_asteroids, d_fighters, arcade_level)                        
-            # fuel consumption
-            if flame:
-                currentfuel -= 1
-
-            #ship death
-            if currentarmor <= 0 or currentfuel <= 0:
-                status = "menuinit"
-
-            #physics!
-            doPhysics(object_list, pdt)
-
-            #ship durability state
-            updateShipGraphics(currentarmor, totalarmor, dead)
-            
-            # printer
-            graphics.printer(screen, object_list, scalar3, graphlist, scalarscalar, flame)
-            graphics.InfoBars.draw(screen, currentfuel, totalfuel, currentarmor, totalarmor, ammunition, totalammunition)
-            graphics.drawInventory(screen, object_list[6].getInventory())
-            if file_settings[6]:
-                Texthelper.write(screen, [("right-65", 5), str(round(clock.get_fps())), 2]) 
-            flame = False
-            if DEVMODE:
-                Texthelper.write(screen, [("left+10", 1050), "Cheats On", 2], color = (125, 15, 198))
-            pygame.display.flip()
-
-        if status == "arcadepauseinit":
-            optionsScreenshot = screen.copy()
-            pygame.mouse.set_visible(True)
-            Screenhelper.greyOut(screen)
-            Font.set_scramble_paused(True) #pauses any scrambling going on
-            drawPauseUI(screen, "arcadepauseinit", True)
-            status = "arcadepaused"
-
-        if status == "arcadepaused":
-            status = drawPauseUI(screen, "arcadepauseinit", False)
-            inputvar = keyboard()
-            if ("p" in inputvar or "escape" in inputvar) and timer_popupmenu > 25:
-                status = "arcade"
-                timer_popupmenu = 0
-            if status != "paused":
-                Font.set_scramble_paused(False) #resumes any scrambling going on
-                pygame.mouse.set_visible(False)
-            if status == "menuinit":
-                Font.endScramble()
 
         if status == "victoryinit":
             pygame.mouse.set_visible(True)
