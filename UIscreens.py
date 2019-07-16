@@ -667,8 +667,8 @@ class OptionsInput():
     backStatus = "OptionsInput.backStatus needs to be set before use"
 
     def __init__(self, resolution):
-        OptionsInput.width = InputGetter([(1000, 400), str(resolution[0]), 3], "int")
-        OptionsInput.height = InputGetter([(1000 + 250, 400), str(resolution[1]), 3], "int")
+        OptionsInput.width = InputGetter([(1000, 350), str(resolution[0]), 3], "int")
+        OptionsInput.height = InputGetter([(1000 + 250, 350), str(resolution[1]), 3], "int")
 
 def optionsUIinit(screen, file_settings):
     pygame.mouse.set_visible(True)
@@ -702,40 +702,42 @@ def optionsUI(screen, file_settings):
     x = 500 #settings coords
     x2 = 1000
     
-    Texthelper.write(screen, [(x, 400), "Resolution:", 3])
+    Texthelper.write(screen, [(x, 350), "Resolution:", 3])
     OptionsInput.width.update(screen)
     OptionsInput.height.update(screen)
-    Texthelper.write(screen, [(1000 + 175, 400), "x", 3])
+    Texthelper.write(screen, [(1000 + 175, 350), "x", 3])
     file_settings[0] = OptionsInput.width.getIntText()
     file_settings[1] = OptionsInput.height.getIntText()
 
-    drawSettingsOption(screen, "Cheats", x, x2, 400 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
+    drawSettingsOption(screen, "Cheats", x, x2, 350 + spacing * 1, file_settings, 4, ontext = "Enabled", offtext = "Disabled")
 
-    drawSettingsOption(screen, "Fullscreen", x, x2, 400 + spacing * 2, file_settings, 2)
+    drawSettingsOption(screen, "Fullscreen", x, x2, 350 + spacing * 2, file_settings, 2)
 
-    drawSettingsOption(screen, "Ship Drag", x, x2, 400 + spacing * 3, file_settings, 5)
+    drawSettingsOption(screen, "Ship Drag", x, x2, 350 + spacing * 3, file_settings, 5)
 
-    drawSettingsOption(screen, "FPS Counter", x, x2, 400 + spacing * 4, file_settings, 6)
+    drawSettingsOption(screen, "FPS Counter", x, x2, 350 + spacing * 4, file_settings, 6)
 
-    drawSettingsOption(screen, "Text Scrolling", x, x2, 400 + spacing * 5, file_settings, 7, ontext = "Fast", offtext = "Slow")
+    drawSettingsOption(screen, "Text Scrolling", x, x2, 350 + spacing * 5, file_settings, 7, ontext = "Fast", offtext = "Slow")
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 6.5), "Reset Gamedata", 3], color = (178, 34, 34)):
+    drawSettingsOption(screen, "Music", x, x2, 350 + spacing * 6, file_settings, 8, ontext = "On", offtext = "Off")
+
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 7.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
-    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 8), "Restore Default Settings", 3]):
+    if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 9), "Restore Default Settings", 3]):
         default = Filehelper("Assets\\saves\\defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
         for i in range(len(file_settings)): #has to be like this becuase of scope
             file_settings[i] = default_settings[i]
 
-    Texthelper.write(screen, [("center", 1000), "some settings may not update until game is restarted", 1])
+    Texthelper.write(screen, [("center", 1050), "some settings may not update until game is restarted", 1])
 
-    if Texthelper.writeButton(screen, [("center", 900), "Back", 2]):
+    if Texthelper.writeButton(screen, [("center", 950), "Back", 2]):
         screen.fill((0, 0, 0))
         status = OptionsInput.backStatus
 

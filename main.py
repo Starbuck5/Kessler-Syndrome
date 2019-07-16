@@ -20,6 +20,14 @@ def randomDarkColor():
         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     return color
 
+def start_music():
+    pygame.mixer.music.load(handlePath("Assets\\sounds\\disco.ogg"))
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(-1, 2.2)
+
+def stop_music():
+    pygame.mixer.music.pause()
+
 #for animated earth picture in main menu
 #weird mix of static and instantiated class
 class MenuDebris():
@@ -150,9 +158,9 @@ def main():
     SoundVault("death", "Assets\\sounds\\powerfailure.ogg", volume=0.2)
     SoundVault("portal", "Assets\\sounds\\electric.ogg", volume=0.15)
     SoundVault("shot", "Assets\\sounds\\shot.ogg", volume=0.25)
-    pygame.mixer.music.load(handlePath("Assets\\sounds\\disco.ogg"))
-    pygame.mixer.music.set_volume(0.3)
-    pygame.mixer.music.play(-1, 2.2)
+
+    if file_settings[8]:
+        start_music()
 
     # variable setup
     playerinfo = filehelper.get(1)
@@ -324,6 +332,7 @@ def main():
 
         if status == "optionsinit":
             optionsUIinit(screen, file_settings)
+            old_music = file_settings[8] #whether music was on or not before going into options
             status = "options"
 
         if status == "options":
@@ -349,6 +358,11 @@ def main():
                     AnnouncementBox.INTEXTSPEED = 1
                 else:
                     AnnouncementBox.INTEXTSPEED = 4
+
+                if file_settings[8] and not old_music:
+                    start_music()
+                if not file_settings[8]:
+                    stop_music()
 
         if status == "cheatsmenu":
             screen.fill(color)
