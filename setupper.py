@@ -5,6 +5,7 @@ from pgx import collect_inputs
 from pgx import AllEvents
 from pgx import filehelper
 from pgx import platform
+from pgx import loadImage
 
 def setup():
     pygame.init()
@@ -17,6 +18,9 @@ def setup():
     widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
     heightBox = InputGetter([(230,75), str(suggestedRes[1]), 1.5], "int")
 
+    logo = loadImage("Assets\\images\\earth2.png")
+    logo.set_colorkey((255,0,0))
+    pygame.display.set_icon(logo)
     pygame.display.set_caption("Kessler First Time Setup")
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode([600, 450])
