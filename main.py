@@ -190,6 +190,9 @@ def main():
     timer_popupmenu = 0
     portal_toggle = False
     timer_portal_toggle = 0
+    lastflame = False
+    flame_sound = pygame.mixer.Sound(file=handlePath("Assets\\sounds\\rocket.ogg"))
+    flame_sound.set_volume(0.1)
     #locations for all sector icons on map screen, in order
     sector_map_coordinates = {1: (960, 990), 2: (820, 970), 3: (1110, 980), 4: (810, 840), 5: (970, 830), 6: (965, 690), 7: (1115, 680),
                               8: (830, 675), 9: (1060, 525), 10: (865, 535), 11: (830, 400), 12: (700, 630), 13: (690, 455), 14: (1095, 385),
@@ -941,6 +944,14 @@ def main():
             # fuel consumption
             if flame:
                 currentfuel -= (1 - ShipLv[4]*0.3)
+
+            if flame and not lastflame:
+                flame_sound.play(-1)
+
+            if not flame and lastflame:
+                flame_sound.stop()
+                
+            lastflame = flame
 
             #HACKZ
             if DEVMODE:
