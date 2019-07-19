@@ -22,7 +22,7 @@ def randomDarkColor():
 
 def start_music():
     pygame.mixer.music.load(handlePath("Assets\\sounds\\disco.ogg"))
-    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1, 2.2)
 
 def stop_music():
