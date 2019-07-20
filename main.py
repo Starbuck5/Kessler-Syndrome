@@ -649,35 +649,35 @@ def main():
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman1.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 500 credits for your trouble.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman2.ogg"),
                                 "So fellow traveler, what did you do to get banished up here?")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman3.ogg"),
                                 "You've got dirt on the president of the world you say? That's splendid!")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman4.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
                 object_list[6].addInventory([0,0,0,500])
                 filehelper.setElement(5, 0, 3)
             if filehelper.get(0)[3] == 6:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman5.ogg"),
                                 ("Let's go team! Now the whole world will find out the President's crimes. "
                                  "What did she do again?"))
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman6.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman7.ogg"),
                                 "You should continue clearing sectors for now.")                
                 filehelper.setElement(7, 0, 3)
             if filehelper.get(0)[3] == 7 and clearedSector[19] and sectornum == 1:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman8.ogg"),
                                 "I'm in! We've transmitted an account of the President's crimes to the whole world.")
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
                                 loadSound("Assets\\announcements\\w_trouble.ogg", 90),
@@ -686,7 +686,7 @@ def main():
                                 loadSound("Assets\\announcements\\ai-president.ogg"),
                                 "Large inbound contact detected, seems to be holding position in sector 19.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\sounds\\click.ogg"),
+                                loadSound("Assets\\announcements\\airman9.ogg"),
                                 "The president has come for us. You must go and defeat her.")
                 sector19 = getObjects(19, width, height)
                 if sector19 == ["PLEASE GENERATE"]:
@@ -883,14 +883,14 @@ def main():
                                                      " up here. Exercise caution."))
                                 if sectornum == 11:
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\announcements\\airman10.ogg"),
                                                     "Is someone out there? I've been stuck out here for so long.")
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\announcements\\airman11.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
                                                      "eternally grateful."))
                                     AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\sounds\\click.ogg"),
+                                                    loadSound("Assets\\announcements\\airman12.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
                                     file_settings[3] = 3
                                     filehelper.set(file_settings, 0)
