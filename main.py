@@ -650,7 +650,7 @@ def main():
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
-                                "Thanks for the help " + filehelper.get(1)[0] + ". Have 100 credits for your trouble.")
+                                "Thanks for the help " + filehelper.get(1)[0] + ". Have 500 credits for your trouble.")
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 "So fellow traveler, what did you do to get banished up here?")
@@ -661,7 +661,7 @@ def main():
                                 loadSound("Assets\\sounds\\click.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
-                object_list[6].addInventory([0,0,0,100])
+                object_list[6].addInventory([0,0,0,500])
                 filehelper.setElement(5, 0, 3)
             if filehelper.get(0)[3] == 6:
                 AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
