@@ -22,4 +22,6 @@ Dystopian future where the Earth can't launch things into space because it is to
 Aliens came and polluted our orbitals to trap us down on Earth. Humans defeated them, but at great cost.
 Why can't they use robots to clean up? They could, but they prefer to punish people... b/c totalitarian government.
 
+Runs from source on Mac and PC in python 3.6 (any python 3 should work) and pygame 1.9.6
+
 Inspired by Asteroids and Motherload
