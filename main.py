@@ -117,7 +117,7 @@ def main():
     earthpic = scaleImage(loadImage("Assets\\images\\earth.tif"), 3*scalarscalar)
     proppic = scaleImage(loadImage("Assets\\images\\doingmypart.png"), 3*scalarscalar)
     proppic.set_colorkey((255,255,255))
-    tutorialslides = 8 #number of tutorial slides
+    tutorialslides = 7 #number of tutorial slides
     tutorialpics = []
     for i in range(1, tutorialslides + 1):
         tutorialpics.append(loadImage("Assets\\tutorial\\slide" + str(i) + ".png"))
