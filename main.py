@@ -281,16 +281,17 @@ def main():
 
             Texthelper.write(screen, [("center", 1030), "Page " + str(tutorialIndex + 1) + " of " + str(len(tutorialpics)), 3])
 
-            if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]):
+            keyinput = keydowns()
+            if Texthelper.writeButtonBox(screen, [("left.20", 1030), "Back", 3]) or pygame.K_BACKSPACE in keyinput:
                 if tutorialIndex > 0:
                     tutorialIndex -= 1
                 else:
                     status = "menuinit"
             if tutorialIndex == len(tutorialpics) - 1:
-                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Done", 3]):
+                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Done", 3]) or pygame.K_RETURN in keyinput:
                     status = "menuinit"
             else:
-                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Next", 3]):
+                if Texthelper.writeButtonBox(screen, [("right.1900", 1030), "Next", 3]) or pygame.K_RETURN in keyinput:
                     tutorialIndex += 1
 
             pygame.display.flip()
