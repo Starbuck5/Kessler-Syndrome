@@ -970,13 +970,13 @@ def main():
                 SoundVault.play('death')
                 object_list[4] = 5   #sets the ship to be objID 5 for deathtimer ticks
                 object_list[7] = deathtimer #meaning the player is paralyzed
-                object_list[6].setInventory([0,0,0,0])
                 lasttransit = 0
                 dead = True
 
             if dead:
                 currentfuel = max(currentfuel, 0)
                 currentarmor = max(currentarmor, 0)
+                object_list[6].setInventory([0,0,0,0])
 
             if dead and object_list[4] == 1:
                 sectornum = 1
