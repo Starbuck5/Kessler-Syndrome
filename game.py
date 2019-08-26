@@ -139,7 +139,7 @@ class DroneAI():
         self.progression = 0
         self.shotCounter = 0
         self.direction = random.randint(0,1)
-        self.speed = 2
+        self.speed = 2 * pgx.Texthelper.scalar
         if self.direction == 0:
             self.direction = -1
 
@@ -297,7 +297,7 @@ class PrezAI(DroneAI, ArmorManager):
     def __init__(self):
         DroneAI.__init__(self)
         ArmorManager.__init__(self, 100)
-        self.speed = 4
+        self.speed = 4 * pgx.Texthelper.scalar
         self.RightLeft = 0
 
     def update(self, screen, object_list, self_loc):
@@ -398,7 +398,6 @@ class PrezAI(DroneAI, ArmorManager):
                     object_list += [0,0,0,0,699,RotationState("NA", "NA"),"NA",100] 
                 
         
-
 class SpikeAI():
     def __init__(self):
         self.timer = -random.randint(0,300)
