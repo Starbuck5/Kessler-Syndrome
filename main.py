@@ -630,7 +630,7 @@ def main():
                             status = "pauseinit"
                         if status == "arcade":
                             status = "arcadepauseinit"
-                lasttransit += 1
+                lasttransit += pdt
                 if "shift" in inputvar and "d" in inputvar and (ticks - previous_tick2) > 360 and file_settings[4]:
                     DEVMODE = not DEVMODE #switches booleans
                     if DEVMODE and cheats_settings[7]:
