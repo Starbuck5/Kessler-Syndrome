@@ -774,19 +774,28 @@ def cheatsMenuUI(screen, cheats_settings):
 def creditsUI(screen, sdlnum):
     status = "credits"
     badge = graphics.Images.get("pygamebadge")
-    draw.sblit(screen, badge, ("right-500", 140))
+    draw.sblit(screen, badge, ("right-600", 70))
+    
     Texthelper.write(screen, [("right-500", 950), "running on SDL version " + sdlnum, 1.5])
+    Texthelper.write(screen, [("right-950",900), "Sound effects credited in Assets/sounds/assetsources.txt", 1.5])
+    
     Texthelper.write(screen, [(370, 220), "Created by", 5])
     Texthelper.write(screen, [(475, 300), "Charlie Hayden", 3], color=(30,144,255))
+    
     Texthelper.write(screen, [(370, 420), "With help from", 4])
     Texthelper.write(screen, [(475, 500), "Colby Smith", 3], color=(138,43,226))
     Texthelper.write(screen, [(475, 550), "Julian Baldwin", 3], color=(255,120,0))
     Texthelper.write(screen, [(475, 600), "Nick Bradley", 3], color=(35,132,37))
-    Texthelper.write(screen, [("right-660", 530), "Voice Actors", 4])
-    Texthelper.write(screen, [("right-585", 610), "Palmer Moe", 3], color=(255,40,0))
-    Texthelper.write(screen, [("right-585", 660), "August Grossblatt", 3], color=(255,99,71))
-    Texthelper.write(screen, [("right-585", 710), "Charlie Hayden", 3], color=(30,144,255))
-    Texthelper.write(screen, [("right-950",900), "Sound effects credited in Assets/sounds/assetsources.txt", 1.5])
+    
+    Texthelper.write(screen, [("right-660", 420), "Voice Actors", 4])
+    Texthelper.write(screen, [("right-585", 500), "Palmer Moe", 3], color=(255,40,0))
+    Texthelper.write(screen, [("right-585", 550), "August Grossblatt", 3], color=(255,99,71))
+    Texthelper.write(screen, [("right-585", 600), "Charlie Hayden", 3], color=(30,144,255))
+
+    Texthelper.write(screen, [(370, 720), "Music", 4])
+    Texthelper.write(screen, [(475, 800), "Disco by Strange Day", 3], color=(255,255,0))
+    Texthelper.write(screen, [(600, 840), "soundcloud.com/strange-day", 2], color=(255,255,0))
+        
     if Texthelper.writeButton(screen, [("center", 1000), "Back", 3]):
         status = "menuinit" 
     return status
