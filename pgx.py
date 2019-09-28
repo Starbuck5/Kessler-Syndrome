@@ -180,7 +180,7 @@ def loadSound(path, volume=100):
     sound.set_volume(volume/100)
     return sound
 
-pygame.mixer.init()
+pygame.mixer.init(buffer=512)
 SoundVault('button', "Assets\\sounds\\click.ogg", volume=0.5)
 
 class Font():
