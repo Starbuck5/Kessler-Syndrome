@@ -35,10 +35,19 @@ def keyboard():
     if pygame.key.get_focused():
         raw_input = pygame.key.get_pressed()
         for i in range(len(raw_input)):
-            if raw_input[i] == 1:
+            if raw_input[i]:
                 inputvar.append(keyboard_list[i])
-    else:
-        inputvar = ""
+
+        if pygame.version.vernum[0] > 1:
+            if raw_input[pygame.K_LEFT]:
+                inputvar.append("leftarrow")
+            if raw_input[pygame.K_RIGHT]:
+                inputvar.append("rightarrow")
+            if raw_input[pygame.K_UP]:
+                inputvar.append("uparrow")
+            if raw_input[pygame.K_DOWN]:
+                inputvar.append("downarrow")
+
     return inputvar
 
 #because processing events deletes them in the process, centralized space to get them from

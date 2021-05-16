@@ -142,9 +142,9 @@ def main():
     # pygame setup
     pygame.init()
     pygame.display.set_caption("Kessler Syndrome")
-    logo = loadImage("Assets\\images\\earth2.png")
-    logo.set_colorkey((255,0,0))
+    logo = loadImage("Assets\\images\\icon.png")
     pygame.display.set_icon(logo)
+    
     if file_settings[2]:
         screen = pygame.display.set_mode([width, height], pygame.NOFRAME | pygame.FULLSCREEN)
     else:
@@ -983,6 +983,7 @@ def main():
                 sectornum = 1
                 currentfuel = totalfuel
                 currentarmor = totalarmor
+                ammunition = totalammunition
                 shipObj = object_list[:8]
                 object_list = shipObj + getObjects(sectornum, width, height)
                 object_list[0] = width/2 - width*0.3
