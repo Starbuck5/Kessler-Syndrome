@@ -351,8 +351,8 @@ def isoverfull(inputgetter, cap):
     return False
 
 TRADELIST = ["metal", "gas", "circuits"]
-BUYVALUE = [10, 40, 120]
-SELLVALUE = [5, 20, 60]
+BUYVALUE = [10, 40, 90]
+SELLVALUE = [5, 20, 45]
 
 class marketStorage():
     metal = ""
