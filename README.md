@@ -1,4 +1,4 @@
-# Kessler-Syndrome
+# 🌠 Kessler-Syndrome 🛸
 
 Game idea:
 Protagonist framed for crimes on Earth, exiled to space to collect orbital debris. 
