@@ -1,16 +1,20 @@
-import pygame
 import random
 from textwrap import wrap
 import pickle
 import codecs
 import os
+import re
 import platform
 import sys
+
+import pygame
 
 if getattr(sys, 'frozen', False):
     BASEPATH = os.path.dirname(sys.executable)
 else:
     BASEPATH = os.path.dirname(os.path.abspath(__file__))
+
+BASEPATH = os.path.join(BASEPATH, "assets")
 
 #keyboard for continuous keypresses
 def keyboard():
@@ -130,7 +134,10 @@ def fitImage(image, size):
     return returnImage
 
 def handlePath(path):
-    path = path.split("\\")
+    path = re.split("[(\\\\)|(/)]", path)
+    if path[0].lower() == "assets":
+        path = path[1:]
+    print(os.path.join(BASEPATH, *path))
     return os.path.join(BASEPATH, *path)
 
 def loadImage(path):
@@ -192,7 +199,7 @@ def loadSound(path, volume=100):
     return sound
 
 pygame.mixer.init(buffer=512)
-SoundVault('button', "Assets\\sounds\\click.ogg", volume=0.5)
+SoundVault('button', "sounds/click.ogg", volume=0.5)
 
 class Font():
     char_index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
@@ -208,7 +215,7 @@ class Font():
     missingTexture = 1 #1 is placeholder for image
     
     def getReady(): #'poor mans __init__'
-        Font.fontsheet = loadImage("Assets\\fonts\\font.gif")
+        Font.fontsheet = loadImage("fonts/font.gif")
         fontsheet = Font.fontsheet
         Font.splitSheet(fontsheet)
         Font.missingTexture = Font._makeMissingTexture()
@@ -770,7 +777,7 @@ class Filehelper():
         pickled = lines[line]
         return pickle.loads(codecs.decode(pickled.encode(), "base64"))
 
-filehelper = Filehelper("Assets\\saves\\gamedata.txt") #makes lowercase filehelper used throughtout work with the class
+filehelper = Filehelper("saves/gamedata.txt") #makes lowercase filehelper used throughtout work with the class
 
 #special scaled draws reliant on Texthelper scaling
 class draw:

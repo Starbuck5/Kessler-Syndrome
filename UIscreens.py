@@ -7,7 +7,7 @@ if platform.system() == "Darwin": #if running on a mac
     waitTime = 0
 
 maxLevel = 20
-upgrades = Filehelper("assets\\data\\upgrades.txt")
+upgrades = Filehelper("data/upgrades.txt")
 
 def timedFlip(mode):
     if mode:
@@ -715,13 +715,13 @@ def optionsUI(screen, file_settings):
 
     if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 7.5), "Reset Gamedata", 3], color = (178, 34, 34)):
         status = "menuinit"
-        default = Filehelper("Assets\\saves\\defaultgamedata.txt")
+        default = Filehelper("saves/defaultgamedata.txt")
         default.copyTo(filehelper)
 
         filehelper.setElement("2", 0, 3)
 
     if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 9), "Restore Default Settings", 3]):
-        default = Filehelper("Assets\\saves\\defaultgamedata.txt")
+        default = Filehelper("saves/efaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
         for i in range(len(file_settings)): #has to be like this becuase of scope

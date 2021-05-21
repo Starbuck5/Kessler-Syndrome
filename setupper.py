@@ -1,4 +1,5 @@
 import pygame
+
 from pgx import Texthelper
 from pgx import InputGetter
 from pgx import collect_inputs
@@ -18,7 +19,7 @@ def setup():
     widthBox = InputGetter([(110,75), str(suggestedRes[0]), 1.5], "int")
     heightBox = InputGetter([(230,75), str(suggestedRes[1]), 1.5], "int")
 
-    logo = loadImage("Assets\\images\\earth2.png")
+    logo = loadImage("images/icon.png")
     logo.set_colorkey((255,0,0))
     pygame.display.set_icon(logo)
     pygame.display.set_caption("Kessler First Time Setup")

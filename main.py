@@ -1,5 +1,6 @@
 import math
 import random
+
 import pygame
 
 from pgx import *
@@ -12,7 +13,7 @@ import graphics
 import Collisions
 from Collisions import explosion_sounds
 
-upgrades = Filehelper("assets\\data\\upgrades.txt")
+upgrades = Filehelper("data/upgrades.txt")
 
 def randomDarkColor():
     color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
@@ -21,7 +22,7 @@ def randomDarkColor():
     return color
 
 def start_music():
-    pygame.mixer.music.load(handlePath("Assets\\sounds\\disco.ogg"))
+    pygame.mixer.music.load(handlePath("sounds/disco.ogg"))
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1, 2.2)
 
@@ -100,27 +101,27 @@ def main():
     alien_size = [1.2 * scalarscalar, 1.8 * scalarscalar]
 
     #graphical setup
-    temp_image = scaleImage(loadImage("Assets\\images\\supplies.gif"), scalarscalar)
+    temp_image = scaleImage(loadImage("images/supplies.gif"), scalarscalar)
     temp_image.set_colorkey((255,255,255))
-    sat6 = scaleImage(loadImage("Assets\\images\\sat6.png"), 0.7*sat_scalar)
+    sat6 = scaleImage(loadImage("images/sat6.png"), 0.7*sat_scalar)
     sat6.set_colorkey((255,255,255))
-    graphlist = [scaleImage(loadImage("Assets\\images\\sat1.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\images\\sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\images\\sat3.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\images\\sat4.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\images\\sat5.tif"), 0.9*sat_scalar),
+    graphlist = [scaleImage(loadImage("images/sat1.tif"), sat_scalar),
+                 scaleImage(loadImage("images/sat2.tif"), sat_scalar),
+                 scaleImage(loadImage("images/sat3.tif"), sat_scalar),
+                 scaleImage(loadImage("images/sat4.tif"), sat_scalar),
+                 scaleImage(loadImage("images/sat5.tif"), 0.9*sat_scalar),
                  sat6,
                  "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
-                 scaleImage(loadImage("Assets\\images\\solarpanel.tif"), scalarscalar), temp_image,
-                 scaleImage(loadImage("Assets\\images\\sat3w.tif"), sat_scalar),
-                 scaleImage(loadImage("Assets\\images\\sat4w.tif"), sat_scalar)]
-    earthpic = scaleImage(loadImage("Assets\\images\\earth.tif"), 3*scalarscalar)
-    proppic = scaleImage(loadImage("Assets\\images\\doingmypart.png"), 3*scalarscalar)
+                 scaleImage(loadImage("images/solarpanel.tif"), scalarscalar), temp_image,
+                 scaleImage(loadImage("images/sat3w.tif"), sat_scalar),
+                 scaleImage(loadImage("images/sat4w.tif"), sat_scalar)]
+    earthpic = scaleImage(loadImage("images/earth.tif"), 3*scalarscalar)
+    proppic = scaleImage(loadImage("images/doingmypart.png"), 3*scalarscalar)
     proppic.set_colorkey((255,255,255))
     tutorialslides = 7 #number of tutorial slides
     tutorialpics = []
     for i in range(1, tutorialslides + 1):
-        tutorialpics.append(loadImage("Assets\\tutorial\\slide" + str(i) + ".png"))
+        tutorialpics.append(loadImage(f"tutorial/slide{i}.png"))
         tutorialpics[i - 1] = scaleImage(tutorialpics[i - 1], 1.5)
         tutorialpics[i - 1] = fitImage(tutorialpics[i - 1], (width,height))
 
@@ -142,7 +143,7 @@ def main():
     # pygame setup
     pygame.init()
     pygame.display.set_caption("Kessler Syndrome")
-    logo = loadImage("Assets\\images\\icon.png")
+    logo = loadImage("images/icon.png")
     pygame.display.set_icon(logo)
     
     if file_settings[2]:
@@ -152,12 +153,12 @@ def main():
     clock = pygame.time.Clock()
 
     #sound setup
-    SoundVault("explosion1", "Assets\\sounds\\Bomb1.ogg", volume=0.1)
-    SoundVault("explosion2", "Assets\\sounds\\Bomb2.ogg", volume=0.1)
-    SoundVault("money", "Assets\\sounds\\clink.ogg")
-    SoundVault("death", "Assets\\sounds\\powerfailure.ogg", volume=0.2)
-    SoundVault("portal", "Assets\\sounds\\electric.ogg", volume=0.15)
-    SoundVault("shot", "Assets\\sounds\\shot.ogg", volume=0.25)
+    SoundVault("explosion1", "sounds/Bomb1.ogg", volume=0.1)
+    SoundVault("explosion2", "sounds/Bomb2.ogg", volume=0.1)
+    SoundVault("money", "sounds/clink.ogg")
+    SoundVault("death", "sounds/powerfailure.ogg", volume=0.2)
+    SoundVault("portal", "sounds/electric.ogg", volume=0.15)
+    SoundVault("shot", "sounds/shot.ogg", volume=0.25)
 
     if file_settings[8]:
         start_music()
@@ -191,7 +192,7 @@ def main():
     portal_toggle = False
     timer_portal_toggle = 0
     lastflame = False
-    flame_sound = pygame.mixer.Sound(file=handlePath("Assets\\sounds\\rocket.ogg"))
+    flame_sound = pygame.mixer.Sound(file=handlePath("sounds/rocket.ogg"))
     flame_sound.set_volume(0.1)
     #locations for all sector icons on map screen, in order
     sector_map_coordinates = {1: (960, 990), 2: (820, 970), 3: (1110, 980), 4: (810, 840), 5: (970, 830), 6: (965, 690), 7: (1115, 680),
@@ -566,19 +567,19 @@ def main():
                 file_settings = filehelper.get(0)
 
             if file_settings[3] == 1:
-                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                loadSound("Assets\\announcements\\warden1.ogg", 75),
+                AnnouncementBox(loadImage("announcements/warden.png"),
+                                loadSound("announcements/warden1.ogg", 75),
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
-                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\announcements\\ai-intro1.ogg"),
+                AnnouncementBox(loadImage("announcements/ai.png"),
+                                loadSound("announcements/ai-intro1.ogg"),
                                 ("Hi, i'm your ship's computer. I'm here to assist you. That expressive gentleman was "
                                  "our supervisor, the warden."))
-                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\announcements\\ai-intro2.ogg"),
+                AnnouncementBox(loadImage("announcements/ai.png"),
+                                loadSound("announcements/ai-intro2.ogg"),
                                 ("If you haven't looked at the tutorial, you should - press p to pause and then go to "
                                  "the main menu."))
-                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\announcements\\ai-intro3.ogg"),
+                AnnouncementBox(loadImage("announcements/ai.png"),
+                                loadSound("announcements/ai-intro3.ogg"),
                                 ("First things first, you should try to move around, then press T to open the portals, "
                                  "from there, you can get started clearing sectors."))
                 file_settings[3] = 2
@@ -649,45 +650,45 @@ def main():
             # quest handling
             if filehelper.get(0)[3] == 4:
                 object_list += [0.43*width, 0.39*height, 0, 0, 110, RotationState("NA", "NA"), "NA", 1]
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman1.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman1.ogg"),
                                 "Thanks for the help " + filehelper.get(1)[0] + ". Have 500 credits for your trouble.")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman2.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman2.ogg"),
                                 "So fellow traveler, what did you do to get banished up here?")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman3.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman3.ogg"),
                                 "You've got dirt on the president of the world you say? That's splendid!")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman4.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman4.ogg"),
                                 ("If you could get me 10 circuits I could hack the gps, the global propaganda system, "
                                  "and the president would really be pissed then!"))
                 object_list[6].addInventory([0,0,0,500])
                 filehelper.setElement(5, 0, 3)
             if filehelper.get(0)[3] == 6:
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman5.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman5.ogg"),
                                 ("Let's go team! Now the whole world will find out the President's crimes. "
                                  "What did she do again?"))
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman6.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman6.ogg"),
                                 "Conspiring with aliens! The humanity! She must be stopped! I'll get to work on the hack.")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman7.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman7.ogg"),
                                 "You should continue clearing sectors for now.")                
                 filehelper.setElement(7, 0, 3)
             if filehelper.get(0)[3] == 7 and clearedSector[19] and sectornum == 1:
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman8.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman8.ogg"),
                                 "I'm in! We've transmitted an account of the President's crimes to the whole world.")
-                AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                loadSound("Assets\\announcements\\warden-president.ogg", 90),
+                AnnouncementBox(loadImage("announcements/warden.png"),
+                                loadSound("announcements/warden-president.ogg", 90),
                                 "Oh boy you're in trouble now.")
-                AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                loadSound("Assets\\announcements\\ai-president.ogg"),
+                AnnouncementBox(loadImage("announcements/ai.png"),
+                                loadSound("announcements/ai-president.ogg"),
                                 "Large inbound contact detected, seems to be holding position in sector 19.")
-                AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                loadSound("Assets\\announcements\\airman9.ogg"),
+                AnnouncementBox(loadImage("announcements/airman.png"),
+                                loadSound("announcements/airman9.ogg"),
                                 "The president has come for us. You must go and defeat her.")
                 sector19 = getObjects(19, width, height)
                 if sector19 == ["PLEASE GENERATE"]:
@@ -866,47 +867,47 @@ def main():
                                 object_list = object_list[:8] + new_objects
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden3.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden3.ogg", 75),
                                                     "Jesus! Took you long enough to get here. Now get to work on this sector.")
                                 if sectornum == 6:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden4.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden4.ogg", 75),
                                                     ("I see you finally decided to travel further. Better pray to the "
                                                      "Virgin Mary that you don't die."))
                                 if sectornum == 9:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden5.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden5.ogg", 75),
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
-                                    AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                                    loadSound("Assets\\announcements\\ai-warning.ogg"),
+                                    AnnouncementBox(loadImage("announcements/ai.png"),
+                                                    loadSound("announcements/ai-warning.ogg"),
                                                     ("It appears that there may still be mines from the human-alien war"
                                                      " up here. Exercise caution."))
                                 if sectornum == 11:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\announcements\\airman10.ogg"),
+                                    AnnouncementBox(loadImage("announcements/airman.png"),
+                                                    loadSound("announcements/airman10.ogg"),
                                                     "Is someone out there? I've been stuck out here for so long.")
-                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\announcements\\airman11.ogg"),
+                                    AnnouncementBox(loadImage("announcements/airman.png"),
+                                                    loadSound("announcements/airman11.ogg"),
                                                     ("If you would give me some gas to get back to station I would be "
                                                      "eternally grateful."))
-                                    AnnouncementBox(loadImage("Assets\\announcements\\airman.png"),
-                                                    loadSound("Assets\\announcements\\airman12.ogg"),
+                                    AnnouncementBox(loadImage("announcements/airman.png"),
+                                                    loadSound("announcements/airman12.ogg"),
                                                     "Just go back to station and find the button to send me some fuel")
                                     file_settings[3] = 3
                                     filehelper.set(file_settings, 0)
                                 if sectornum == 12:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden6.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden6.ogg", 75),
                                                     ("Damn, you're slow. Clean this mess up before I get bored and "
                                                      "launch rockets at you!"))
                                 if sectornum == 17:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden7.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden7.ogg", 75),
                                                     "I see you found some more debris to clean up. make it quick!")
                                 if sectornum == 19:
-                                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\warden8.ogg", 75),
+                                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                                    loadSound("announcements/warden8.ogg", 75),
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
                                                      " cleaning zone. But wait... there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
@@ -930,13 +931,13 @@ def main():
                     if n:
                         sectorsCleared += 1
                 if sectorsCleared == 2: #one sector is cleared by default, so 2 means player has actually cleared a sector
-                    AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                    loadSound("Assets\\announcements\\warden2.ogg", 75),                             
+                    AnnouncementBox(loadImage("announcements/warden.png"),
+                                    loadSound("announcements/warden2.ogg", 75),                             
                                     ("Finally! You've cleared your first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
                 elif sectorsCleared != 1:
-                    AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
-                                    loadSound("Assets\\announcements\\sector-cleared.ogg"),
+                    AnnouncementBox(loadImage("announcements/ai.png"),
+                                    loadSound("announcements/sector-cleared.ogg"),
                                     "Sector cleared. " + str(addCredits) + " Credits acquired.")
 
             # deaderizer
