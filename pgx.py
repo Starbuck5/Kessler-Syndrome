@@ -359,7 +359,9 @@ class AnnouncementBox():
     INTEXTSPEED = 4 # frames per character that it displayes at
     OUTTEXTSPEED = 0.5
     #image = portrait next to text, sound = whatever should play, text = text
-    def __init__(self, image, sound, text):
+    def __init__(self, imagepath, soundpath, text):
+        image = loadImage(imagepath)
+        sound = loadSound(soundpath)
         self.image = stretchImage(image, (108*Texthelper.scalar, 108*Texthelper.scalar))
         self.sound = sound
         self.text = text
