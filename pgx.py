@@ -47,6 +47,8 @@ def keyboard():
                 inputvar.append("uparrow")
             if raw_input[pygame.K_DOWN]:
                 inputvar.append("downarrow")
+            if raw_input[pygame.K_RSHIFT] or raw_input[pygame.K_LSHIFT]:
+                inputvar.append("shift")
 
     return inputvar
 

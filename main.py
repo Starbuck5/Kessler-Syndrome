@@ -802,12 +802,12 @@ def main():
                                                 object_list[3+(i2*8)], 9, RotationState("NA", "NA"), "NA", 300]
                             object_list[(i2*8)+7] = -1
                             object_list[4] = 5
-                            object_list[7] = 200
+                            object_list[7] = 110
                             Font.scramble(200)
                             currentarmor -= 1
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 9: #ship v explosion
                             object_list[4] = 5
-                            object_list[7] = 200
+                            object_list[7] = 110
                             Font.scramble(200)
                             currentarmor -= 0.03
                         elif object_list[4 + (i * 8)] in ship_id and object_list[4 + (i2 * 8)] == 122: #ship v spike
