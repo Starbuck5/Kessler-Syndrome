@@ -115,7 +115,7 @@ def main():
                  scaleImage(loadImage("images/solarpanel.tif"), scalarscalar), temp_image,
                  scaleImage(loadImage("images/sat3w.tif"), sat_scalar),
                  scaleImage(loadImage("images/sat4w.tif"), sat_scalar)]
-    earthpic = scaleImage(loadImage("images/earth.tif"), 3*scalarscalar)
+    earthpic = scaleImage(loadImage("images/earth.png"), 3*scalarscalar)
     proppic = scaleImage(loadImage("images/doingmypart.png"), 3*scalarscalar)
     proppic.set_colorkey((255,255,255))
     tutorialslides = 7 #number of tutorial slides

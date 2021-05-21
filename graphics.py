@@ -141,9 +141,9 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add("pygamebadge", scaleImage(loadImage("images/pygame-badge-SMA-unscaled.png"), 2.5*scalarscalar))
 
     #adding miscellaneous other object images
-    Images.add(0, scaleImage(loadImage("images/zvezda.tif"), 2*scalarscalar))
+    Images.add(0, scaleImage(loadImage("images/zvezda.png"), 2*scalarscalar))
     Images.addRotate(7, scaleImage(loadImage("images/alienMines.tif"), 2*scalarscalar))
-    Images.add(9, scaleImage(loadImage("images/ionBlast.tif"), .5*scalarscalar))
+    Images.add(9, scaleImage(loadImage("images/ionblast.png"), .5*scalarscalar))
 
     #aliens
     Images.addRotate(120, scaleImage(loadImage("images/aliendrone.gif"), 2*scalarscalar), colorkey=(255,255,255))
@@ -198,7 +198,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(110, image)
 
     #adding president's ship
-    Images.addRotate(666, scaleImage(loadImage("images/protoprez3.gif"), scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(666, scaleImage(loadImage("images/president.png"), scalarscalar), colorkey=(255,255,255))
 
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]

@@ -259,11 +259,7 @@ class Font():
             Font.endScramble()
 
     def set_scramble_paused(flag): #True pauses scrambling, False resumes
-        if flag:
-            Font.SCRAMBLED = False
-        if not flag:
-            if Font.scrambleTimeLeft > -1:
-                Font.SCRAMBLED = True
+        Font.SCRAMBLED = not flag and Font.scrambleTimeLeft > -1
 
     def endScramble():
         Font.SCRAMBLED = False
@@ -786,28 +782,28 @@ class draw:
     #location is (x, y) or [x, y]
     def _interpretcoords(location):
         return Texthelper._interpretcoords([location])[0]
-    
-    def rect(Surface, color, Rect, width = 0):
-        Rect = list(Rect)
-        Rect[0], Rect[1] = draw._interpretcoords((Rect[0], Rect[1]))
-        Rect[2] *= Texthelper.scalar
-        Rect[3] *= Texthelper.scalar                                         
-        width = round(width*Texthelper.scalar)
-        pygame.draw.rect(Surface, color, Rect, width)
 
-    def aaline(Surface, color, startpos, endpos, blend=1):
+    def rect(surface, color, rect, width = 0):
+        topleft = draw._interpretcoords((rect[0], rect[1]))
+        rect = pygame.Rect(*topleft, rect[2], rect[3])
+        rect.w *= Texthelper.scalar
+        rect.h *= Texthelper.scalar                                         
+        width = round(width*Texthelper.scalar)
+        pygame.draw.rect(surface, color, rect, width)
+
+    def aaline(surface, color, startpos, endpos, blend=1):
         startpos = draw._interpretcoords(startpos)
         endpos = draw._interpretcoords(endpos)
-        pygame.draw.aaline(Surface, color, startpos, endpos, blend)
+        pygame.draw.aaline(surface, color, startpos, endpos, blend)
 
-    def circle(Surface, color, pos, radius, width=0):
+    def circle(surface, color, pos, radius, width=0):
         pos = draw._interpretcoords(pos)
         pos = round(pos[0]), round(pos[1])
         adjusted_radius = round(Texthelper.scalar * radius)
         radius = adjusted_radius if adjusted_radius > 0 else 1
         adjusted_width = round(Texthelper.scalar * width)
         width = adjusted_width if (adjusted_width > 0 or width == 0) else 1
-        pygame.draw.circle(Surface, color, pos, radius, width)
+        pygame.draw.circle(surface, color, pos, radius, width)
 
     #static version of normal blit except it moves coordinates based on screen size
     #because it uses texthelper the location tuple/list can use fancy things like center

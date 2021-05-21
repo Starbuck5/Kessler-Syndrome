@@ -7,7 +7,7 @@ from game import generateStars
 import graphics
 
 def level1(screen, width, height, scalarscalar, clock):
-    soyuz = loadImage("Assets\\images\\soyuz2.tif")
+    soyuz = loadImage("images/soyuz.png")
     unsh = soyuz.get_size()[1] #unscaled height
     soyuzscalar = scalarscalar
     soyuz = scaleImage(soyuz, soyuzscalar)
@@ -16,13 +16,13 @@ def level1(screen, width, height, scalarscalar, clock):
 
     star_list = generateStars(width, height)
 
-    mountains = loadImage("Assets\\images\\cutsceneback.tif")
+    mountains = loadImage("images/cutsceneback.png")
     mountainsize = mountains.get_size()
     mountains = pygame.transform.scale(mountains, (width, int(width/mountainsize[0]*mountainsize[1])))
     mountains = mountains.convert_alpha()
     mountainsize = mountains.get_size()
 
-    flamesheet = loadImage("Assets\\images\\flames.tif")
+    flamesheet = loadImage("images/flames.tif")
     all_flames = spriteSheetBreaker(flamesheet, 8, 15, 0, 0, 2, 4)
     for i in range(len(all_flames)):
         all_flames[i] = scaleImage(all_flames[i], soyuzscalar*2)
@@ -36,7 +36,7 @@ def level1(screen, width, height, scalarscalar, clock):
         else:
             return startflamelist[random.randint(0, len(startflamelist)-1)]
 
-    opening_crawl = [line.rstrip('\n') for line in open(handlePath("assets\\data\\opening_crawl.txt"))]
+    opening_crawl = [line.rstrip('\n') for line in open(handlePath("data/opening_crawl.txt"))]
     line_spacing = 80
     
     xpos = 944
