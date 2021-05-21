@@ -103,14 +103,12 @@ def main():
     #graphical setup
     temp_image = scaleImage(loadImage("images/supplies.gif"), scalarscalar)
     temp_image.set_colorkey((255,255,255))
-    sat6 = scaleImage(loadImage("images/sat6.png"), 0.7*sat_scalar)
-    sat6.set_colorkey((255,255,255))
-    graphlist = [scaleImage(loadImage("images/sat1.tif"), sat_scalar),
-                 scaleImage(loadImage("images/sat2.tif"), sat_scalar),
-                 scaleImage(loadImage("images/sat3.tif"), sat_scalar),
-                 scaleImage(loadImage("images/sat4.tif"), sat_scalar),
-                 scaleImage(loadImage("images/sat5.tif"), 0.9*sat_scalar),
-                 sat6,
+    graphlist = [scaleImage(loadImage("images/sat1.png"), sat_scalar),
+                 scaleImage(loadImage("images/sat2.png"), sat_scalar),
+                 scaleImage(loadImage("images/sat3.png"), sat_scalar),
+                 scaleImage(loadImage("images/sat4.png"), sat_scalar),
+                 scaleImage(loadImage("images/sat5.png"), 0.9*sat_scalar),
+                 scaleImage(loadImage("images/sat6.png"), 0.7*sat_scalar),
                  "f", "h", "j", "k", "l", "a", "s", "e", "as", "4", "3", "2", "1", "x11",
                  scaleImage(loadImage("images/solarpanel.tif"), scalarscalar), temp_image,
                  scaleImage(loadImage("images/sat3w.tif"), sat_scalar),
