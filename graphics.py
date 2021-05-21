@@ -121,9 +121,9 @@ def rotationCachingHelper(filepath, spritesheetWidth, spritesheetHeight, sprites
 #starts image caching of rotated images
 def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar):
     #adding all asteroid images/rotations
-    rotationCachingHelper("Assets\\images\\smallasteroids.gif", 40, 40, 1, 4, 70, scalar2)
-    rotationCachingHelper("Assets\\images\\mediumasteroids.gif", 50, 50, 1, 4, 80, scalar2)
-    rotationCachingHelper("Assets\\images\\largeasteroids.gif", 80, 80, 2, 4, 90, scalar2)
+    rotationCachingHelper("images/smallasteroids.gif", 40, 40, 1, 4, 70, scalar2)
+    rotationCachingHelper("images/mediumasteroids.gif", 50, 50, 1, 4, 80, scalar2)
+    rotationCachingHelper("images/largeasteroids.gif", 80, 80, 2, 4, 90, scalar2)
         
     #adding all satellites and parts images/rotations
     pixelStuff = d_parts + d_sats
@@ -132,25 +132,25 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
         Images.addRotate(pixelStuff[i], surf)
 
     #adding images for info bars
-    Images.add("fuelpic", scaleImage(loadImage("Assets\\images\\fuelcanister.tif"), 2*scalarscalar))
-    Images.add("armorpic", scaleImage(loadImage("Assets\\images\\armor.tif"), scalarscalar))
-    Images.add("shotpic", scaleImage(loadImage("Assets\\images\\missile.png"), scalarscalar), colorkey=(255,255,255))
+    Images.add("fuelpic", scaleImage(loadImage("images/fuelcanister.tif"), 2*scalarscalar))
+    Images.add("armorpic", scaleImage(loadImage("images/armor.tif"), scalarscalar))
+    Images.add("shotpic", scaleImage(loadImage("images/missile.png"), scalarscalar), colorkey=(255,255,255))
 
     #adding other icons
-    Images.add("infinity", scaleImage(loadImage("Assets\\images\\infinity.tif"), scalarscalar))
-    Images.add("pygamebadge", scaleImage(loadImage("Assets\\images\\pygame-badge-SMA-unscaled.png"), 2.5*scalarscalar))
+    Images.add("infinity", scaleImage(loadImage("images/infinity.tif"), scalarscalar))
+    Images.add("pygamebadge", scaleImage(loadImage("images/pygame-badge-SMA-unscaled.png"), 2.5*scalarscalar))
 
     #adding miscellaneous other object images
-    Images.add(0, scaleImage(loadImage("Assets\\images\\zvezda.tif"), 2*scalarscalar))
-    Images.addRotate(7, scaleImage(loadImage("Assets\\images\\alienMines.tif"), 2*scalarscalar))
-    Images.add(9, scaleImage(loadImage("Assets\\images\\ionBlast.tif"), .5*scalarscalar))
+    Images.add(0, scaleImage(loadImage("images/zvezda.tif"), 2*scalarscalar))
+    Images.addRotate(7, scaleImage(loadImage("images/alienMines.tif"), 2*scalarscalar))
+    Images.add(9, scaleImage(loadImage("images/ionBlast.tif"), .5*scalarscalar))
 
     #aliens
-    Images.addRotate(120, scaleImage(loadImage("Assets\\images\\aliendrone.gif"), 2*scalarscalar), colorkey=(255,255,255))
-    Images.addRotate(121, scaleImage(loadImage("Assets\\images\\spiker.gif"), 2*scalarscalar), colorkey=(255,255,255))
-    Images.addRotate(122, scaleImage(loadImage("Assets\\images\\alienshot.gif"), scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(120, scaleImage(loadImage("images/aliendrone.gif"), 2*scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(121, scaleImage(loadImage("images/spiker.gif"), 2*scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(122, scaleImage(loadImage("images/alienshot.gif"), scalarscalar), colorkey=(255,255,255))
     #aliens - alien mines
-    imageList = spriteSheetBreaker(loadImage("Assets\\images\\alienbomb.gif"), 19, 19, 0, 0, 1, 6)
+    imageList = spriteSheetBreaker(loadImage("images/alienbomb.gif"), 19, 19, 0, 0, 1, 6)
     for i in range(len(imageList)):
         image = imageList[i]
         image.set_colorkey((255,255,255))
@@ -160,7 +160,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
         Images.addRotate(123 + (i+1)/100, image)
         
     #adding different types of stars
-    base_star = loadImage("Assets\\images\\star.gif")
+    base_star = loadImage("images/star.gif")
     base_star_unscaled = base_star
     base_star.set_colorkey((255,255,255))
     base_star = scaleImage(base_star, scalarscalar)
@@ -174,7 +174,7 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     
     #adding ship, no rotation because it rotates in real time
     #loads up spritesheet and loads them all up under separate IDs
-    imageList = spriteSheetBreaker(loadImage("Assets\\images\\ships.png"), 24, 60, 0, 0, 1, 5)
+    imageList = spriteSheetBreaker(loadImage("images/ships.png"), 24, 60, 0, 0, 1, 5)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
         imageList[i] = scaleImage(imageList[i], scalar3)
@@ -185,20 +185,20 @@ def init(d_asteroids, d_parts, d_sats, graphlist, scalar2, scalar3, scalarscalar
     Images.add(1.5, imageList[4])
 
     #adding downed fighters
-    imageList = spriteSheetBreaker(loadImage("Assets\\images\\fighters.gif"), 42, 22, 0, 0, 2, 2)
+    imageList = spriteSheetBreaker(loadImage("images/fighters.gif"), 42, 22, 0, 0, 2, 2)
     for i in range(len(imageList)):
         imageList[i].set_colorkey((255,255,255))
         imageList[i] = scaleImage(imageList[i], 1.1*scalarscalar)
         Images.addRotate(130+i, imageList[i])
 
     #adding derelict ship, no rotation because it's always in the same orientation
-    image = scaleImage(loadImage("Assets\\images\\derelict.gif"), scalarscalar)
+    image = scaleImage(loadImage("images/derelict.gif"), scalarscalar)
     image.set_colorkey((255,255,255))
     change_color(image, (0,0,0,255), (25,25,25,255))
     Images.add(110, image)
 
     #adding president's ship
-    Images.addRotate(666, scaleImage(loadImage("Assets\\images\\protoprez3.gif"), scalarscalar), colorkey=(255,255,255))
+    Images.addRotate(666, scaleImage(loadImage("images/protoprez3.gif"), scalarscalar), colorkey=(255,255,255))
 
 #reorders the list so it will print in the correct order
 background = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
@@ -379,8 +379,8 @@ def drawSector(screen, location, number, currentsector, cleared):
 
 #used in UIscreens and the main game loop to display the inventory
 def drawInventory(screen, shipInventory):
-    Texthelper.write(screen, [("left+10",10), "metal:" + str(shipInventory[0]), 3], color = (120,120,120))
-    Texthelper.write(screen, [("left+310",10), "gas:" + str(shipInventory[1]), 3], color = (185,20,20))
-    Texthelper.write(screen, [("left+550",10), "circuits:" + str(shipInventory[2]), 3], color = (20,185,20))
-    Texthelper.write(screen, [("left+935",10), "credits:" + str(shipInventory[3]), 3], color = (230,180,20))
+    Texthelper.write(screen, [("left+10",10), f"metal:{shipInventory[0]}", 3], color = (120,120,120))
+    Texthelper.write(screen, [("left+315",10), f"gas:{shipInventory[1]}", 3], color = (185,20,20))
+    Texthelper.write(screen, [("left+560",10), f"circuits:{shipInventory[2]}", 3], color = (20,185,20))
+    Texthelper.write(screen, [("left+965",10), f"credits:{shipInventory[3]}", 3], color = (230,180,20))
     

@@ -920,10 +920,9 @@ def main():
                 if object_list[i+4] in d_debris:
                     numdebris += 1
             if numdebris == 0 and clearedSector[sectornum] == False:
-                addCredits = (sectornum-5)//3*35
-                addCredits = max(addCredits, 0)
-                addCredits += 50
-                object_list[6].addInventory([0,0,0,addCredits]) #adds credits to ship inventory
+                reward_credits = (sectornum-5)//3*35
+                reward_credits = max(reward_credits, 0) + 50
+                object_list[6].addInventory([0,0,0,reward_credits]) #adds credits to ship inventory
                 SoundVault.play('money')
                 clearedSector[sectornum] = True
                 sectorsCleared = 0
@@ -938,7 +937,7 @@ def main():
                 elif sectorsCleared != 1:
                     AnnouncementBox(loadImage("announcements/ai.png"),
                                     loadSound("announcements/sector-cleared.ogg"),
-                                    "Sector cleared. " + str(addCredits) + " Credits acquired.")
+                                    f"Sector cleared. {reward_credits} Credits acquired.")
 
             # deaderizer
             object_list = deaderizer(object_list)
@@ -1016,6 +1015,9 @@ def main():
             pygame.mouse.set_visible(True)
             Screenhelper.greyOut(screen)
             Font.set_scramble_paused(True) #pauses any scrambling going on
+
+            #rewards the player for killing the final boss
+            object_list[6].addInventory([250,250,100,1000]) 
 
             #tries to save all the game progress stuff, but it's no big deal if it can't
             try:

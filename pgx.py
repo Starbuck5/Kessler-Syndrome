@@ -137,7 +137,6 @@ def handlePath(path):
     path = re.split("[(\\\\)|(/)]", path)
     if path[0].lower() == "assets":
         path = path[1:]
-    print(os.path.join(BASEPATH, *path))
     return os.path.join(BASEPATH, *path)
 
 def loadImage(path):
