@@ -567,7 +567,7 @@ def main():
 
             if file_settings[3] == 1:
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                loadSound("Assets\\announcements\\1r.ogg", 75),
+                                loadSound("Assets\\announcements\\warden1.ogg", 75),
                                 "You're still alive? Well then go pick up some space debris like a good prisoner!")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                 loadSound("Assets\\announcements\\ai-intro1.ogg"),
@@ -681,7 +681,7 @@ def main():
                                 loadSound("Assets\\announcements\\airman8.ogg"),
                                 "I'm in! We've transmitted an account of the President's crimes to the whole world.")
                 AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                loadSound("Assets\\announcements\\w_trouble.ogg", 90),
+                                loadSound("Assets\\announcements\\warden-president.ogg", 90),
                                 "Oh boy you're in trouble now.")
                 AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                 loadSound("Assets\\announcements\\ai-president.ogg"),
@@ -867,16 +867,16 @@ def main():
                             if discoverSector[sectornum] == False:
                                 if sectornum == 4:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\3r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden3.ogg", 75),
                                                     "Jesus! Took you long enough to get here. Now get to work on this sector.")
                                 if sectornum == 6:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\4r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden4.ogg", 75),
                                                     ("I see you finally decided to travel further. Better pray to the "
                                                      "Virgin Mary that you don't die."))
                                 if sectornum == 9:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\5r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden5.ogg", 75),
                                                     "Congratulations, you made it to the land of explosives. My favorite part!")
                                     AnnouncementBox(loadImage("Assets\\announcements\\ai.png"),
                                                     loadSound("Assets\\announcements\\ai-warning.ogg"),
@@ -897,16 +897,16 @@ def main():
                                     filehelper.set(file_settings, 0)
                                 if sectornum == 12:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\6r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden6.ogg", 75),
                                                     ("Damn, you're slow. Clean this mess up before I get bored and "
                                                      "launch rockets at you!"))
                                 if sectornum == 17:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\7r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden7.ogg", 75),
                                                     "I see you found some more debris to clean up. make it quick!")
                                 if sectornum == 19:
                                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                                    loadSound("Assets\\announcements\\8r.ogg", 75),
+                                                    loadSound("Assets\\announcements\\warden8.ogg", 75),
                                                     ("Holy Jesus, look at that! You finally made it to the edge of your"
                                                      " cleaning zone. But wait... there's more! You're going to keep "
                                                      "cleaning for the rest of your life!"))
@@ -931,7 +931,7 @@ def main():
                         sectorsCleared += 1
                 if sectorsCleared == 2: #one sector is cleared by default, so 2 means player has actually cleared a sector
                     AnnouncementBox(loadImage("Assets\\announcements\\warden.png"),
-                                    loadSound("Assets\\announcements\\2r.ogg", 75),                             
+                                    loadSound("Assets\\announcements\\warden2.ogg", 75),                             
                                     ("Finally! You've cleared your first sector! Now here's a reward for your obedience."
                                      " Don't get lazy now!"))
                 elif sectorsCleared != 1:
