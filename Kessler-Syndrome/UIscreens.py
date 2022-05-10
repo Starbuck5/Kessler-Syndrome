@@ -721,7 +721,7 @@ def optionsUI(screen, file_settings):
         filehelper.setElement("2", 0, 3)
 
     if Texthelper.writeButtonBox(screen, [("center", 400 + spacing * 9), "Restore Default Settings", 3]):
-        default = Filehelper("saves/efaultgamedata.txt")
+        default = Filehelper("saves/defaultgamedata.txt")
         default_settings = default.get(0)
         default_settings[3] = file_settings[3] #don't want to change gamestate
         for i in range(len(file_settings)): #has to be like this becuase of scope
