@@ -443,22 +443,24 @@ class PrezAI(DroneAI, ArmorManager):
             for i in range(6):
                 object_list += particlemaker(*inp)
             repetitions = len(object_list)
-            safethings = [
-                1,
-                100,
-                101,
-                102,
-                103,
-                104,
-                105,
-                106,
-                107,
-                108,
-                109,
-                2,
-                4,
-                666,
-            ]
+            safethings = set(
+                (
+                    1,
+                    100,
+                    101,
+                    102,
+                    103,
+                    104,
+                    105,
+                    106,
+                    107,
+                    108,
+                    109,
+                    2,
+                    4,
+                    666,
+                )
+            )
             for i in range(0, repetitions, 8):
                 if object_list[i + 4] not in safethings and object_list[i + 4] > 10:
                     inp = object_list[i : i + 4]
@@ -613,15 +615,17 @@ def doPhysics(object_list, pdt):
 def specedPhysics(object_list, width, height, max_speed, drag, step_drag, pdt):
     for i in range(0, len(object_list), 8):
         # decaying objects
-        if object_list[4 + i] in [
-            2,
-            8,
-            5,
-            4,
-            9,
-            122,
-            699,
-        ]:  # stuff in list should have a decrement to their life force
+        if object_list[4 + i] in set(
+            (
+                2,
+                8,
+                5,
+                4,
+                9,
+                122,
+                699,
+            )
+        ):  # stuff in list should have a decrement to their life force
             object_list[7 + i] -= pdt
 
         # speed limit for ship
@@ -734,10 +738,10 @@ def leveler(
     d_fighters,
     sectornum,
 ):
-    mineGeneration = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-    droneGeneration = [14, 15, 16, 17, 18, 19]
-    supplyGeneration = [12, 13, 14, 15, 16, 17, 18, 19]
-    fighterGeneration = [11, 12, 13, 14, 15, 16, 17, 18, 19]
+    mineGeneration = set((9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19))
+    droneGeneration = set((14, 15, 16, 17, 18, 19))
+    supplyGeneration = set((12, 13, 14, 15, 16, 17, 18, 19))
+    fighterGeneration = set((11, 12, 13, 14, 15, 16, 17, 18, 19))
     additionalEntities = 0  # allows different sectors to generate greater numbers of entities than the base
     if sectornum in droneGeneration:
         ASTEROID = 15
@@ -901,7 +905,7 @@ def sectorDestinations(sectornum):
 # returns true if an infinite level that always regenerates
 # else returns false to signal a level that doesn't get regenerated
 def sectorGeneration(sectornum):
-    infinite_sectors = [4, 12, 15]
+    infinite_sectors = set((4, 12, 15))
     if sectornum in infinite_sectors:
         return True
     return False
@@ -1149,7 +1153,7 @@ def deleteObject(toDelete, delSector, width, height):
 
 # mini program to replace the star fields of pre-generated sectors when star generation is changed
 def _changeStars(sectornum):
-    d_stars = [100, 101, 102, 103, 104, 105]
+    d_stars = set((100, 101, 102, 103, 104, 105))
     newstars = generateStars(1920, 1080)
     sector1 = getObjects(sectornum, 1920, 1080)
     for i in range(0, len(sector1), 8):
